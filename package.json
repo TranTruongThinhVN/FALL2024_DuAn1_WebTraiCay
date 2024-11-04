@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "concurrently": "^9.0.1",
+    "sass": "^1.80.6"
+  },
+  "scripts": {
+    "sass": "sass --quiet-deps ./App/Styles/main.scss ./public/styles/main.css --watch",
+    "format": "prettier --write .",
+    "php-server": "php -S localhost:8080",
+    "dev": "concurrently \"npm run sass\" \"npm run php-server\"",
+    "desc": " concurrently là một công cụ giúp  chạy nhiều lệnh cùng lúc khỏi cần phải mở nhiều terminal"
+  }
+}

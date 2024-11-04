@@ -1,0 +1,7 @@
+@use '../abstracts';
+.main-container {
+    width: abstracts.$container-width;
+    max-width: calc(100% - 48px);
+    margin-left: auto;
+    margin-right: auto;
+  }

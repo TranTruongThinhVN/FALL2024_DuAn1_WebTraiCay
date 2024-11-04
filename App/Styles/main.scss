@@ -1,0 +1,17 @@
+// * thư viện
+@use './vendors/bootstrap-5.3.3-dist/scss/bootstrap.scss';
+/* Variable */
+
+@use './abstracts';
+
+// * components
+
+@use './components';
+// * layouts
+@use './layouts';
+// base
+
+@use './base';
+// * pages/
+@use './pages';
+
