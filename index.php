@@ -19,7 +19,8 @@ require_once 'config.php';
 
 // *** Client
 Route::get('/', 'App\Controllers\Client\HomeController@index');
-
+Route::get('/contact', 'App\Controllers\Client\ContactController@index');
+Route::get('/checkout', 'App\Controllers\Client\CheckoutController@index');
 // *** Admin
 
 Route::get('/admin', 'App\Controllers\Admin\HomeController@index');
