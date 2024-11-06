@@ -1,0 +1,156 @@
+@use '../abstracts';
+
+body {
+    font-family: Arial, sans-serif;
+
+    margin: 0;
+    padding: 0;
+    // display: flex;
+    justify-content: center;
+
+    .checkout-container {
+        background-color: #f9f9f9;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        //  
+        padding: 20px;
+        background-color: #ffffff;
+        margin: 20px 0;
+
+        .checkout-form,
+        .summary {
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: #ffffff;
+        }
+
+        .checkout-form {
+            flex: 2;
+        }
+
+        .summary {
+            &__item {
+                display: flex;
+                align-items: flex-start;
+                gap: 8px;
+                padding-bottom: 14px;
+
+
+            }
+
+            &__image {
+                img {
+                    width: 64px;
+                    height: 64px;
+                    margin-right: 14px;
+                    border: solid #333 0.4px;
+                }
+
+            }
+
+            &__title {
+                flex-grow: 1;
+                display: inline-block;
+                @include abstracts.max-line(2);
+            }
+
+            &__price {
+                margin-left: auto; // Pushes price to the far right
+                text-align: right;
+            }
+
+            &__voucher {
+
+                input {
+                    width: 100%;
+                    padding: 10px;
+                    font-size: 14px;
+                    border: 1px solid #ddd;
+                    border-radius: 4px;
+                }
+            }
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+
+            .radio-label {
+                display: flex;
+                align-items: center;
+                padding: 14px 8px;
+                border: solid 1px;
+                // border-radius: 5px;
+
+            }
+
+            .topp {
+                overflow: hidden;
+            }
+
+            .my-1 {
+                border-top: none;
+                ;
+            }
+
+            label {
+                display: block;
+                font-size: 14px;
+                color: #555;
+                // margin-bottom: 5px;
+            }
+
+            input[type='radio'] {
+                width: 24px !important;
+            }
+
+            input,
+            select {
+                width: 100%;
+                padding: 10px;
+                font-size: 14px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+
+                &.radio {
+                    width: auto;
+                    margin-right: 5px;
+                }
+            }
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+
+            input {
+                width: auto;
+                margin-right: 5px;
+            }
+        }
+
+        .summary-item {
+            // // display: flex;
+            // justify-content: space-between;
+            // font-size: 16px;
+            // padding: 10px 0;
+            // border-bottom: 1px solid #ddd;
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    }
+}

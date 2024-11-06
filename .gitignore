@@ -1,0 +1,11 @@
+# 
+.env
+node_modules/
+vendor/
+composer i
+composer.lock
+package-lock.json
+.idea/
+.vscode/
+public/styles/main.css
+public/styles/main.css.map
