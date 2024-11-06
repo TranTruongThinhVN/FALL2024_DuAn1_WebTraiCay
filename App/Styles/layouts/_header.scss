@@ -1,0 +1,436 @@
+@use "../abstracts";
+// topbar
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  background: abstracts.$color-primary;
+  padding: 10px 0;
+}
+
+.marquee-content {
+  display: flex;
+  animation: marquee 20s linear infinite;
+}
+
+.marquee-list {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.marquee-content li {
+  display: inline-block;
+  color: abstracts.$color-text-light;
+  margin-right: 8rem;
+  font-size: 12px;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+// navbar
+
+.header-bottom {
+  border-bottom: 2px solid abstracts.$color-primary;
+  padding: 10px 30px;
+}
+
+.navbar {
+  @include abstracts.flex-center;
+  justify-content: space-between;
+  height: 70px;
+  // padding: 0 20px;
+}
+
+.logo img {
+  width: 200px;
+  height: auto;
+}
+
+.menu {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+
+  li {
+    margin-left: 20px;
+    position: relative;
+
+    a {
+      text-decoration: none;
+      color: #000;
+      font-size: 1.6rem;
+      font-weight: 520;
+      transition: color 0.3s ease;
+      .fas.fa-chevron-down {
+        margin-left: 5px;
+        transition: transform 0.3s ease-in-out;
+      }
+      &:not(.no-underline) {
+        &::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: -5px;
+          width: 0;
+          height: 2px;
+          background-color: abstracts.$color-primary;
+          transition: width 0.3s ease;
+        }
+
+        &:hover::after {
+          width: 100%;
+        }
+      }
+
+      &:hover {
+        color: abstracts.$color-primary;
+      }
+    }
+    .sub-menu {
+      opacity: 0;
+      visibility: hidden;
+      position: absolute;
+      top: 105%;
+      left: 0;
+      z-index: 999;
+      background-color: abstracts.$color-text-light;
+      padding: 10px 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      border-radius: 4px;
+      min-width: 190px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease-in-out;
+
+      a {
+        display: block;
+        padding: 10px 20px;
+        color: #333;
+        text-decoration: none;
+        font-size: 1.4rem;
+        &::after {
+          content: none;
+        }
+        &:hover {
+          background-color: abstracts.$color-primary;
+          color: abstracts.$color-text-light;
+        }
+      }
+    }
+    &:hover .sub-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    &:hover .fas.fa-chevron-down {
+      transform: rotate(180deg);
+    }
+  }
+}
+.navbar-icons {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+
+  .icon {
+    position: relative;
+    font-size: 1.8rem;
+    color: #000;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: abstracts.$color-primary;
+    }
+  }
+
+  .search-icon-container {
+    position: relative;
+
+    .search-dropdown {
+      display: none;
+      position: absolute;
+      top: 120%;
+      right: 0;
+      z-index: 999;
+      width: 250px;
+      padding: 5px;
+      background-color: abstracts.$color-text-light;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      border-radius: 4px;
+
+      input {
+        width: 100%;
+        padding: 8px;
+        font-size: 1.6rem;
+        border: 1px solid abstracts.$color-text-light;
+        border-radius: 4px;
+        outline: none;
+
+        &:focus {
+          border-color: abstracts.$color-primary;
+        }
+      }
+    }
+
+    &:focus-within .search-dropdown {
+      display: block;
+    }
+  }
+
+  .cart-icon::after {
+    content: "2";
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: abstracts.$color-primary;
+    color: abstracts.$color-text-light;
+    font-size: 1.2rem;
+    padding: 2px 6px;
+    border-radius: 50%;
+  }
+}
+// Offcanvas-cart
+.offcanvas-cart {
+  position: fixed;
+  right: -100%;
+  top: 10px;
+  bottom: 10px;
+  width: 90%;
+  max-width: 600px;
+  height: auto;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  transition: right 0.6s ease;
+  z-index: 1000;
+  padding: 20px 0;
+}
+.offcanvas-cart.open {
+  right: 0;
+}
+.offcanvas-cart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+
+  h2 {
+    font-size: abstracts.$fs-h3;
+    color: abstracts.$color-primary;
+    margin: 0;
+  }
+
+  .offcanvas-cart-close {
+    font-size: 26px;
+    cursor: pointer;
+  }
+}
+
+.offcanvas-cart-body {
+  padding: 20px;
+  margin-top: -10px;
+  flex-grow: 1;
+  overflow-y: auto;
+
+  .free-shipping-text {
+    color: black;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 4px solid abstracts.$color-primary;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 10px 0;
+  }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+
+    .item-quantity-container {
+      display: flex;
+      align-items: center;
+
+      .remove-item {
+        color: #333;
+        font-size: 1.5rem;
+        cursor: pointer;
+        text-decoration: none;
+        margin-left: 10px;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+    img {
+      width: 90px;
+      height: 90px;
+      object-fit: cover;
+      margin-right: 15px;
+      border-radius: 5px;
+    }
+
+    .item-details {
+      flex: 1;
+      line-height: 1.6;
+
+      h4 {
+        font-size: abstracts.$fs-h3;
+        color: #333;
+        font-weight: bold;
+        @include abstracts.max-line(2);
+      }
+
+      span {
+        font-size: 1.4rem;
+        color: #888;
+        display: block;
+      }
+    }
+
+    .item-quantity {
+      width: 40px;
+      padding: 5px;
+      text-align: center;
+      font-size: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+  }
+}
+
+.offcanvas-cart-footer {
+  padding: 20px 15px;
+  border-top: 1px solid #ddd;
+
+  .cart-total {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    h4 {
+      font-size: 2rem;
+      color: black;
+      margin: 0 0 5px;
+    }
+
+    p {
+      font-size: 2rem;
+      color: black;
+      margin: 0;
+    }
+  }
+  .desc-offcanvas-footer {
+    font-size: 1.4rem;
+    margin-top: 7px;
+    color: #333;
+  }
+  .cta-button-offcanvas{
+    display: flex;
+    justify-content: center;
+  }
+  .view-cart-btn,
+  .checkout-btn {
+    width: 44%;
+    padding: 16px;
+    font-size: 1.6rem;
+    margin-top: 30px;
+    cursor: pointer;
+    border-radius: 999px;
+
+    &.view-cart-btn {
+      color: #000;
+      margin-right: 4%;
+      border: 1px solid #000;
+      &:before {
+        content: '';
+        background-color: #000; 
+      }
+      &:hover {
+        color: #fff;
+        z-index: 1;
+      }
+    }
+  }
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  z-index: 999;
+  transition: opacity 3s ease;
+}
+
+.offcanvas-cart.open + .overlay {
+  opacity: 1;
+  visibility: visible;
+}
+.menu-toggle {
+  display: none;
+}
+@media (max-width: 768px) {
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 -48px;
+  }
+  .menu-toggle {
+    display: inline-flex;
+    font-size: 1.8rem;
+    color: #000;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  .search-icon-container {
+    display: inline-flex;
+    font-size: 1.8rem;
+    color: #000;
+    margin-left: 10px;
+  }
+  .logo {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+  }
+  .logo img {
+    width: 120px;
+    height: auto;
+  }
+  .icon-cart {
+    font-size: 1.8rem;
+    color: #000;
+    margin-left: auto;
+  }
+  .menu {
+    display: none;
+  }
+
+  .icon-account {
+    display: none;
+  }
+}
+
