@@ -24,6 +24,9 @@ Route::get('/checkout', 'App\Controllers\Client\CheckoutController@index');
 
 Route::get('/introduce', 'App\Controllers\Client\IntroduceController@index');
 
+Route::get('/store', 'App\Controllers\Client\StoreController@index');
+
+Route::get('/cart', 'App\Controllers\Client\CartController@index');
 // *** Admin
 
 Route::get('/admin', 'App\Controllers\Admin\HomeController@index');
