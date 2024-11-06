@@ -1,20 +1,9 @@
 @use '../abstracts';
 
 /* Global Variables */
-:root {
-    --primary-color: rgb(20, 83, 45); /* Main green color */
-    --secondary-color: rgb(14, 62, 34); /* Darker shade of the main color */
-    --light-background: #e8f5e9; /* Soft green background */
-    --text-color: #2e2e2e; /* Dark text color for contrast */
-    --border-color: #cfd8dc; /* Light border color */
-    --shadow-color: rgba(0, 0, 0, 0.1);
-}
 
 
-/* SCSS Variables */
-$banner-height: 250px;
-$banner-overlay-color: rgba(0, 0, 0, 0.5);
-$banner-text-color: white;
+
 
 .store-banner {
     position: relative;
@@ -78,7 +67,7 @@ $banner-text-color: white;
 
         &-item {
             font-size: 0.9em;
-            color: var(--text-color);
+            color: abstracts.$text-color;
             padding: 8px 0;
             cursor: pointer;
             transition: color 0.3s;
@@ -86,7 +75,7 @@ $banner-text-color: white;
        
 
             &:hover {
-                color: var(--secondary-color);
+                color: abstracts.$store-secondary-color;
                 font-weight: bold;
 
             }
@@ -100,7 +89,7 @@ $banner-text-color: white;
         &-title {
             font-size: 1.4em;
             margin-bottom: 20px;
-            color: var(--primary-color);
+            color: abstracts.$color-primary;
         }
 
         &-cards {
@@ -113,11 +102,11 @@ $banner-text-color: white;
 
 /* Store Card */
 .store-card {
-    border: 1px solid var(--border-color);
+    border: 1px solid abstracts.$store-border-light;
     padding: 15px;
-    background-color: #fff;
+    background-color: abstracts.$color-text-light;
     border-radius: 8px;
-    box-shadow: 0 4px 8px var(--shadow-color);
+    box-shadow: 0 4px 8px abstracts.$store-shadow-light;
     transition: transform 0.3s;
 
     &:hover {
@@ -134,7 +123,7 @@ $banner-text-color: white;
 
     &__name {
         font-size: 1.1em;
-        color: var(--text-color);
+        color: abstracts.$banner-text-color;
         margin-bottom: 5px;
         font-weight: bold;
     }
@@ -143,8 +132,8 @@ $banner-text-color: white;
         display: inline-block;
         margin: 10px 0;
         padding: 11px 30%;
-        background-color: var(--light-background);
-        color: var(--primary-color);
+        background-color: abstracts.$store-background-light;
+        color: abstracts.$color-primary;
         font-size: 0.9em;
         text-decoration: none;
         border-radius: 5px;
@@ -160,7 +149,7 @@ $banner-text-color: white;
     &__address,
     &__time {
         font-size: 0.9em;
-        color: var(--text-color);
+        color: abstracts.$store-text-color-dark;
         margin-bottom: 10px;
     }
 
@@ -169,7 +158,7 @@ $banner-text-color: white;
         flex-wrap: wrap;
         gap: 10px;
         font-size: 0.85em;
-        color: var(--text-color);
+        color: abstracts.$store-text-color-dark;
         margin-bottom: 10px;
 
         &-feature {
@@ -178,7 +167,7 @@ $banner-text-color: white;
 
             i {
                 margin-right: 5px;
-                color: var(--primary-color);
+                color: abstracts.$color-primary;
             }
         }
     }
@@ -200,7 +189,7 @@ $banner-text-color: white;
             transition: color 0.3s;
 
             &:hover {
-                color: var(--primary-color);
+                color: abstracts.$color-primary;
             }
         }
     }
@@ -211,12 +200,12 @@ $banner-text-color: white;
     flex-direction: column;
     align-items: center;
     padding: 20px 0;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid abstracts.$store-border-light;
 
     &-title {
         font-size: 1.4em;
         font-weight: bold;
-        color: var(--primary-color);
+        color: abstracts.$color-primary;
         margin-bottom: 15px;
     }
 
@@ -228,17 +217,17 @@ $banner-text-color: white;
             width: 100%;
             font-size: 1em;
             padding: 10px 15px;
-            border: 1px solid var(--border-color);
+            border: 1px solid abstracts.$store-border-light;
             border-radius: 8px;
             background-color: #fff;
-            color: var(--text-color);
+            color: abstracts.$store-text-color-dark;
             appearance: none;
             outline: none;
             cursor: pointer;
             transition: border-color 0.3s;
 
             &:focus {
-                border-color: var(--primary-color);
+                border-color: abstracts.$color-primary;
             }
 
             &::-ms-expand {
@@ -252,7 +241,7 @@ $banner-text-color: white;
             top: 50%;
             right: 15px;
             transform: translateY(-50%);
-            color: var(--text-color);
+            color: abstracts.$store-text-color-dark;
             pointer-events: none;
             font-size: 0.8em;
         }
@@ -265,7 +254,7 @@ $banner-text-color: white;
 }
 
 .store__see-more-button {
-    background-color: var(--primary-color);
+    background-color: abstracts.$color-primary;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -275,7 +264,7 @@ $banner-text-color: white;
 }
 
 .store__see-more-button:hover {
-    background-color: var(--secondary-color);
+    background-color: abstracts.$store-secondary-color;
 }
 // 
 .hidden {
@@ -283,7 +272,7 @@ $banner-text-color: white;
 }
 
 .store__see-more-button {
-    background-color: var(--primary-color);
+    background-color: abstracts.$color-primary;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -292,7 +281,7 @@ $banner-text-color: white;
     border-radius: 5px;
 
     &:hover {
-        background-color: var(--secondary-color);
+        background-color: abstracts.$store-secondary-color;
     }
 }
 
@@ -310,7 +299,7 @@ $banner-text-color: white;
         padding-right: 0;
         padding-top: 20px;
         border-right: none;
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid abstracts.$store-border-light;
         margin-bottom: 20px;
     }
 
