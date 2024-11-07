@@ -1,0 +1,193 @@
+@use '../abstracts';
+.footer {
+    &__container {
+        background-color: #000;
+        padding: 20px;
+        font-size: 14px;
+        color: #fff;
+    }
+    &__logo-image {
+        width: 120px; 
+        height: auto;
+        max-width: 100%;
+        display: block;
+        margin-bottom: 13px;
+    }
+    
+    &__columns {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 10px;
+    }
+
+    &__column {
+        flex: 1 1 calc(20% - 15px);
+        min-width: 160px;
+    }
+
+    &__title {
+        font-size: abstracts.$fs-h3;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    &__description {
+        font-size: abstracts.$fs-body;
+    }
+
+    &__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            margin-bottom: 5px;
+            line-height: 1.9;
+
+            a {
+                font-size: 13px;
+                color: #fff;
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                    color: abstracts.$color-primary;
+                }
+            }
+        }
+    }
+
+    &__bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 20px;
+        font-size: 14px;
+        color: #fff;
+        
+        p {
+            margin: 0;
+            font-size: 12px;
+            color: #fff;
+        }
+    }
+    
+    &__social-icons {
+        display: flex;
+        gap: 10px;
+
+        a {
+            color: #fff;
+            font-size: 20px;
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: #aaa;
+            }
+
+            i {
+                display: inline-block;
+            }
+        }
+    }
+}
+.ad-footer{
+    max-width: 250px;
+}
+.prose__form__input {
+    position: relative;
+    width: 90%;
+    // height: 60px;
+
+    &__email {
+        width: 90%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 0.5px solid rgba(0, 0, 0, 0.295);
+    }
+
+    &__next {
+        background: rgba(0, 0, 0, 0.181);
+        border: 0px;
+        position: absolute;
+        right: 13%;
+        top: 13%;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        &:hover{
+            background-color: abstracts.$color-primary;
+        }
+    }
+}
+.footer__contact-info {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+        margin-bottom: 10px;
+        line-height: 1.6;
+    }
+
+    a {
+        font-size: abstracts.$fs-body;
+        color: #333;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+            color: abstracts.$color-primary;
+        }
+    }
+}
+@media (max-width: 992px) {
+    .footer__columns {
+        flex-wrap: wrap;
+    }
+
+    .footer__column {
+        flex: 1 1 45%;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer__columns {
+        flex-direction: column;
+    }
+
+    .footer__column {
+        flex: 1 1 100%;
+    }
+
+    .footer__title {
+        font-size: 1.8rem;
+    }
+
+    .footer__bottom {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        
+        p {
+            font-size: 10px;
+        }
+
+        .footer__social-icons {
+            margin-top: 10px;
+
+            a {
+                font-size: 18px; // Slightly smaller icons for mobile
+            }
+        }
+    }
+
+    .prose__form__input__email {
+        width: 80%;
+    }
+
+    .prose__form__input__next {
+        right: 23%;
+    }
+}
