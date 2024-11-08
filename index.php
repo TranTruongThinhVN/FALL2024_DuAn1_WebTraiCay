@@ -3,7 +3,7 @@ session_start();
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
-ini_set('log_errors', TRUE); 
+ini_set('log_errors', TRUE);
 ini_set('error_log', './logs/php/php-errors.log');
 
 use App\Route;
@@ -21,6 +21,9 @@ require_once 'config.php';
 Route::get('/', 'App\Controllers\Client\HomeController@index');
 Route::get('/contact', 'App\Controllers\Client\ContactController@index');
 Route::get('/checkout', 'App\Controllers\Client\CheckoutController@index');
+
+Route::get('/introduce', 'App\Controllers\Client\IntroduceController@index');
+
 // *** Admin
 
 Route::get('/admin', 'App\Controllers\Admin\HomeController@index');
