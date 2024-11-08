@@ -55,3 +55,18 @@ $breakpoints: (
     justify-content: center;
     flex-direction: column;
 }
+
+// checkout mixin intput
+@mixin input-style {
+    width: 100%;
+    padding: 10px;
+    // font-size: 14px;
+    border: 1px solid #0000007d;
+    border-radius: 4px;
+    outline: none;
+  }
+  
+  input,
+  select {
+    @include input-style;
+  }
