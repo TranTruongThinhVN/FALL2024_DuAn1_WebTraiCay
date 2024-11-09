@@ -77,9 +77,9 @@ class Header extends BaseView
         <div class="header-bottom">
           <div class="main-container">
             <div class="navbar">
-            <button class="menu-toggle icon">
-          <i class="fas fa-bars"></i>
-        </button>
+              <button class="menu-toggle icon">
+                <i class="fas fa-bars"></i>
+              </button>
               <div class="logo">
                 <img src="<?= APP_URL ?>public/assets/client/images/home/logo (1).png" alt="Logo đây nhé " />
               </div>
@@ -98,7 +98,7 @@ class Header extends BaseView
                 <li>
                   <a href="#">Về Chúng Tôi<i class="fas fa-chevron-down"></i></a>
                   <div class="sub-menu">
-                    <a href="#">Giới thiệu</a>
+                    <a href="/introduce">Giới thiệu</a>
                     <a href="#">Cửa hàng</a>
                     <a href="#">Chính sách & Ưu đãi</a>
                   </div>
@@ -172,12 +172,12 @@ class Header extends BaseView
                   Đã bao gồm thuế
                 </p>
                 <p class="desc-offcanvas-footer">
-                Phí ship sẽ được tính khi thanh toán
-                  </p>
-              <div class="cta-button-offcanvas">
-              <button class="cta-button view-cart-btn">Xem giỏ hàng</button>
-              <button class="cta-button checkout-btn">Thanh toán</button>
-              </div>
+                  Phí ship sẽ được tính khi thanh toán
+                </p>
+                <div class="cta-button-offcanvas">
+                  <button class="cta-button view-cart-btn">Xem giỏ hàng</button>
+                  <button class="cta-button checkout-btn">Thanh toán</button>
+                </div>
               </div>
             </div>
             <div class="overlay" id="overlay" onclick="toggleOffcanvasCart()"></div>
@@ -191,4 +191,4 @@ class Header extends BaseView
 }
 
   ?>
- <script src="<?=APP_URL?>public/assets/client/js/offcanvas_cart.js"></script>
+  <script src="<?= APP_URL ?>public/assets/client/js/offcanvas_cart.js"></script>

@@ -9,3 +9,4 @@ package-lock.json
 .vscode/
 public/styles/main.css
 public/styles/main.css.map
+/log/php-erros.log

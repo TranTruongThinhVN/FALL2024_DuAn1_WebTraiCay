@@ -12,3 +12,22 @@ $color-footer-trans: #f2f2f2;
 
 $color-box-dark: #0000;
 
+$secondary-color: #ff6600;
+$light-background: #fff3e0;
+$text-color: #333;
+$border-color: #ddd;
+$shadow-color: rgba(0, 0, 0, 0.1);
+
+$store-secondary-color: rgb(
+  14,
+  62,
+  34
+); /* Darker shade complementing the primary color */
+$store-background-light: #e8f5e9; /* Soft green background for a fresh look */
+$store-text-color-dark: #2e2e2e; /* Dark text for readability */
+$store-border-light: #cfd8dc; /* Subtle border color for soft contrast */
+$store-shadow-light: rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+
+$banner-height: 250px;
+$banner-overlay-color: rgba(0, 0, 0, 0.5);
+$banner-text-color: white;

@@ -1,11 +1,46 @@
 @use "../abstracts";
 
+.introduce-banner {
+  position: relative;
+  width: 100%;
+  height: abstracts.$banner-height;
+  overflow: hidden;
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: abstracts.$banner-text-color;
+    text-align: center;
+    background: abstracts.$banner-overlay-color; // Optional for better text readability
+    padding: 20px;
+    border-radius: 5px;
+
+    h1 {
+      font-size: 2em;
+      margin: 0;
+    }
+
+    p {
+      font-size: 1.2em;
+      margin: 5px 0 0;
+    }
+  }
+}
+
 .why-choose {
   text-align: center;
   margin-bottom: 50px;
 
   &__title {
-    font-size: 2em;
+    font-size: abstracts.$fs-h3;
     margin-bottom: 20px;
 
     @include abstracts.down(md) {
@@ -168,9 +203,41 @@
 }
 
 .philosophy {
-  text-align: center;
+  min-height: 450px;
+  &__item {
+    flex: 1 1 300px;
+    position: relative;
+    max-width: 300px;
+    margin-bottom: 2rem;
+    cursor: pointer;
+    &:hover .philosophy__item-inner {
+      transform: rotateY(180deg);
+    }
+
+    @include abstracts.down(md) {
+      max-width: 50%;
+    }
+
+    @include abstracts.down(sm) {
+      max-width: 100%;
+    }
+  }
+
+  &__items {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: stretch;
+
+    @include abstracts.down(sm) {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
 
   &__title {
+    text-align: center;
     font-size: 2em;
     color: #a0522d;
     margin-bottom: 30px;
@@ -180,60 +247,50 @@
     }
   }
 
-  &__items {
-    display: flex;
-    gap: 20px;
-    justify-content: space-around;
-    flex-wrap: wrap;
-
-    @include abstracts.down(md) {
-      flex-direction: column;
-      align-items: center;
-    }
+  &__item-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
   }
 
-  &__item {
-    text-align: center;
-    max-width: 200px;
-    position: relative;
-    cursor: pointer;
-    transition: transform 0.5s ease;
-
-    &:hover {
-      transform: rotate(360deg);
-    }
-
-    @include abstracts.down(sm) {
-      max-width: 100%;
-    }
+  &__image,
+  &__text-content {
+    position: absolute;
+    width: 100%;
+    height: 320px;
+    backface-visibility: hidden; // Ẩn mặt sau khi quay
+    border-radius: abstracts.$radius-md;
   }
 
   &__image {
     width: 100%;
-    height: auto;
-    border-radius: 10px;
+    height: 320px;
+    border-radius: abstracts.$radius-md;
+    transform: rotateY(0); // Đặt ảnh ở mặt trước
     object-fit: cover;
+
+    @include abstracts.down(md) {
+      height: 250px;
+    }
+
+    @include abstracts.down(sm) {
+      height: 200px;
+    }
   }
 
-  .text-content {
-    display: none; // Ẩn nội dung mặc định
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.9);
+  &__text-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: abstracts.$light-background;
+    height: 320px;
+    border: solid 1px abstracts.$color-primary-dark;
+    transform: rotateY(180deg); // Đặt nội dung ở mặt sau
     padding: 10px;
-    border-radius: 5px;
     font-size: 1em;
     color: #333;
-  }
-
-  &.show-text .text-content {
-    display: block; // Hiển thị nội dung khi thêm lớp `show-text`
-  }
-  &__caption {
-    margin-top: 10px;
-    font-size: 1em;
-    color: #333;
+    border-radius: abstracts.$radius-md;
   }
 }
