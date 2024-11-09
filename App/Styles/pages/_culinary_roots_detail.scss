@@ -1,0 +1,399 @@
+@use "../abstracts";
+
+.RecipeDetail {
+  &__Banner {
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+    padding: 100px 20px;
+    position: relative;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    width: 45%;
+    height: auto;
+    margin-left: 36rem;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.8),
+        abstracts.$banner-overlay-color
+      );
+      border-radius: 12px;
+      z-index: 1;
+    }
+  }
+
+  &__Title,
+  &__Description {
+    position: relative;
+    z-index: 2;
+  }
+
+  &__Title {
+    font-size: 56px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: abstracts.$color-text-light;
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.9);
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.9);
+  }
+
+  &__Description {
+    font-size: 22px;
+    max-width: 700px;
+    margin: 0 auto;
+    color: abstracts.$color-text-light;
+  }
+
+  &__Content {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  &__Gallery {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    margin-bottom: 30px;
+
+    &Image {
+      width: 100%;
+      height: 40%;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px abstracts.$shadow-color;
+      object-fit: cover;
+      transition: transform 0.2s;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  &__Ingredients,
+  &__Instructions {
+    background-color: abstracts.$color-text-light;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px abstracts.$shadow-color;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease-in-out forwards;
+  }
+
+  &__SectionTitle {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: abstracts.$color-primary;
+    text-align: center;
+  }
+
+  &__List {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 10px;
+  }
+
+  &__Item {
+    font-size: 16px;
+    margin: 12px 0;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background-color: abstracts.$color-footer-trans;
+    position: relative;
+    transition: background-color 0.3s, transform 0.3s, color 0.3s,
+      box-shadow 0.3s;
+    box-shadow: 0 2px 6px abstracts.$shadow-color;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &:before {
+      content: "•";
+      margin-right: 10px;
+      color: abstracts.$color-primary;
+      font-size: 20px;
+    }
+
+    &:hover {
+      background-color: lighten(abstracts.$color-primary, 40%);
+      color: abstracts.$color-primary;
+      transform: scale(1.03);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &__Button {
+    background-color: abstracts.$color-primary;
+    color: abstracts.$color-text-light;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken(abstracts.$color-primary, 10%);
+    }
+  }
+}
+
+.RelatedRecipes {
+  background-color: abstracts.$color-text-light;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px abstracts.$shadow-color;
+  margin-top: 30px;
+
+  &__Header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  &__Title {
+    font-size: 24px;
+    font-weight: bold;
+    color: abstracts.$color-primary;
+  }
+
+  &__Link {
+    font-size: 16px;
+    color: abstracts.$color-primary;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 12px;
+    border: 2px solid abstracts.$color-primary;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+
+    &:hover {
+      background-color: abstracts.$color-primary;
+      color: abstracts.$color-text-light;
+    }
+  }
+
+  &__List {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    justify-content: center;
+  }
+
+  &__Item {
+    background-color: abstracts.$color-text-light;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px abstracts.$shadow-color;
+    text-align: center;
+    padding: 15px;
+    transition: transform 0.3s, box-shadow 0.3s;
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  &__Image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  &__Name {
+    font-size: 18px;
+    font-weight: bold;
+    color: abstracts.$color-primary;
+    margin-top: 10px;
+  }
+
+  &__Description {
+    font-size: 14px;
+    color: abstracts.$color-text-gray;
+    margin-top: 8px;
+  }
+}
+
+.RecipeComments {
+  background-color: abstracts.$color-text-light;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px abstracts.$shadow-color;
+  margin-top: 30px;
+
+  &__Title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: abstracts.$color-primary;
+    text-align: center;
+  }
+
+  &__List {
+    margin-bottom: 20px;
+  }
+
+  &__Comment {
+    background-color: abstracts.$color-footer-trans;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px abstracts.$shadow-color;
+  }
+
+  &__Text {
+    font-size: 16px;
+    color: abstracts.$text-color;
+    margin-bottom: 8px;
+  }
+
+  &__Author {
+    font-size: 14px;
+    color: abstracts.$color-text-gray;
+    font-style: italic;
+  }
+
+  &__Form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__Input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid abstracts.$border-color;
+    font-size: 16px;
+    resize: vertical;
+  }
+
+  &__Button {
+    background-color: abstracts.$color-primary;
+    color: abstracts.$color-text-light;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken(abstracts.$color-primary, 10%);
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .RelatedRecipes__List {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .RelatedRecipes__List {
+    grid-template-columns: 1fr;
+  }
+
+  .RelatedRecipes__Header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .RelatedRecipes__Image {
+    height: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .RecipeDetail__Banner {
+    padding: 50px 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    text-align: center;
+  }
+
+  .RecipeDetail__Content {
+    grid-template-columns: 1fr;
+    padding: 0 10px;
+  }
+
+  .RecipeDetail__Gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .RecipeDetail__Ingredients,
+  .RecipeDetail__Instructions {
+    padding: 15px;
+  }
+
+  .RecipeDetail__SectionTitle,
+  .RecipeComments__Title {
+    font-size: 20px;
+  }
+
+  .RelatedRecipes__List {
+    grid-template-columns: 1fr;
+  }
+
+  .RecipeComments__Form .RecipeComments__Input {
+    font-size: 14px;
+  }
+
+  .RecipeComments__Form .RecipeComments__Button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .RecipeDetail__Title {
+    font-size: 36px;
+  }
+
+  .RecipeDetail__Description {
+    font-size: 16px;
+  }
+
+  .RelatedRecipes__Image {
+    height: 100px;
+  }
+
+  .RecipeComments__Text {
+    font-size: 14px;
+  }
+
+  .RecipeComments__Author {
+    font-size: 12px;
+  }
+}
