@@ -34,6 +34,9 @@ Route::get('/store', 'App\Controllers\Client\StoreController@index');
 Route::get('/cart', 'App\Controllers\Client\CartController@index');
 Route::get('/Culinary_roots', 'App\Controllers\Client\Culinary_rootsController@index');
 Route::get('/Culinary_roots_detail', 'App\Controllers\Client\Culinary_rootsController@detail');
+
+Route::get('/Policy', 'App\Controllers\Client\PolicyController@index');
+
 // *** Admin
 
 Route::get('/admin', 'App\Controllers\Admin\HomeController@index');
