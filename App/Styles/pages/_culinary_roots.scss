@@ -1,0 +1,177 @@
+@use "../abstracts";
+
+// Banner
+.CulinaryRoots__Banner {
+  background-size: 100% 400px;
+  padding: 60px 20px;
+  text-align: center;
+  color: abstracts.$color-text-light;
+  background-repeat: no-repeat;
+  height: 400px;
+
+  &Content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+    top: 7rem;
+  }
+
+  &Title {
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: abstracts.$color-text-dark;
+    font-weight: bold;
+  }
+
+  &Description {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: abstracts.$color-text-dark;
+  }
+}
+
+// Main Content Layout
+.CulinaryRoots__MainContent {
+  display: flex;
+  gap: 20px;
+  padding: 40px 20px;
+}
+
+// Recipe Categories
+.CulinaryRoots__Categories {
+  width: 25%;
+  padding: 0px 20px 0px;
+  background-color: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  // Search Bar
+  .CulinaryRoots__SearchBar {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    &Input {
+      flex: 1;
+      padding: 10px 10px;
+
+      font-size: 16px;
+      border: none;
+      outline: none;
+    }
+
+    &Button {
+      background-color: abstracts.$color-primary;
+      color: abstracts.$color-text-light;
+      padding: 11px 10px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: darken(abstracts.$color-primary, 10%);
+      }
+    }
+  }
+
+  &Title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 29px;
+    color: abstracts.$color-primary;
+    font-weight: bold;
+  }
+
+  &Items {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .CulinaryRoots__CategoryCard {
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px abstracts.$shadow-color;
+    text-align: center;
+    background-color: abstracts.$color-primary;
+    color: abstracts.$color-text-light;
+    font-size: 16px;
+    font-weight: bold;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+// Recipe List
+.CulinaryRoots__RecipeList {
+  width: 75%;
+
+  &Title {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+    color: abstracts.$color-primary;
+  }
+
+  &Items {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .CulinaryRoots__RecipeCard {
+    background-color: abstracts.$color-text-light;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px abstracts.$shadow-color;
+    overflow: hidden;
+    padding: 10px;
+    transition: transform 0.2s;
+    height: 300px;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    &Image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    &Title {
+      font-size: 20px;
+      margin: 10px 0;
+      font-weight: bold;
+      text-align: center;
+      color: abstracts.$color-primary;
+      @include abstracts.max-line(1);
+    }
+
+    &Description {
+      font-size: 16px;
+      color: abstracts.$color-text-gray;
+      @include abstracts.max-line(2);
+    }
+  }
+}
+
+// Load More Button
+.CulinaryRoots__LoadMoreContainer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.Hidden {
+  display: none;
+}

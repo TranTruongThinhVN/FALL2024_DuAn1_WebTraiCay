@@ -23,6 +23,11 @@ Route::get('/contact', 'App\Controllers\Client\ContactController@index');
 Route::get('/checkout', 'App\Controllers\Client\CheckoutController@index');
 
 Route::get('/introduce', 'App\Controllers\Client\IntroduceController@index');
+Route::get('/products', 'App\Controllers\Client\ProductController@index');
+Route::get('/product-detail', 'App\Controllers\Client\ProductController@detail');
+
+Route::get('/news', 'App\Controllers\Client\NewsController@index');
+Route::get('/news-detail', 'App\Controllers\Client\NewsController@detail');
 
 Route::get('/store', 'App\Controllers\Client\StoreController@index');
 

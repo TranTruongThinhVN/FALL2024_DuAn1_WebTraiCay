@@ -1,4 +1,4 @@
-@use '../abstracts';
+@use "../abstracts";
 // * {
 //     box-sizing: border-box;
 //     margin: 0;
@@ -72,136 +72,123 @@ $gutter: 48px;
 //
 
 .container__content {
-    
+  .breadcrumbs__path {
+    font-size: 14px;
+    color: #888;
+  }
 
-    .breadcrumbs__path {
+  .contact {
+    &__map {
+      outline: none;
+      border: none;
+      margin-bottom: 20px;
+
+      iframe {
+        width: 100%;
+        border: none;
+        height: 500px;
+      }
+    }
+
+    &__details {
+      display: flex;
+      gap: 24px;
+    }
+
+    &__info {
+      &-title {
+        font-size: 24px;
+        font-weight: bold;
+        padding: 14px;
+      }
+
+      &-list,
+      &__form-title {
+        list-style: none;
+        padding: 20px;
+      }
+
+      &-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 15px;
+
+        .contact__info-icon {
+          font-size: $fs-icons;
+          margin-right: 10px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #e36a00;
+          color: #fff;
+          padding: 14px;
+          height: 40px;
+          width: 40px;
+          border-radius: 50%;
+          transition: 0.6s;
+        }
+        .contact__info-icon:hover {
+          opacity: 0.8;
+        }
+        .contact__text b {
+          margin-bottom: 10px; /* Tạo khoảng cách giữa b và nội dung sau */
+        }
+
+        .contact__text br {
+          margin-bottom: 10px; /* Tạo khoảng cách dưới mỗi thẻ <br> */
+          display: block; /* Đảm bảo margin có hiệu lực */
+        }
+      }
+    }
+
+    &__form {
+      &-title {
+        padding: 14px;
+      }
+
+      &-description {
+        font-size: $fs-body;
+        color: #666;
+        padding: 14px;
+      }
+
+      &-group {
+        margin-bottom: 15px;
+      }
+
+      &-input,
+      &-textarea {
+        width: 100%;
+        padding: 8px 20px;
         font-size: 14px;
-        color: #888;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        outline: none;
+        opacity: 0.8;
+      }
+      &-textarea {
+        width: 100%; /* Đặt chiều rộng cố định */
+        height: 150px; /* Đặt chiều cao cố định */
+        resize: none;
+      }
+
+      &-button {
+        padding: 10px 20px;
+        background-color: #e36a00;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+
+      &-note {
+        font-size: 12px;
+        color: #aaa;
+      }
     }
-
-    .contact {
-        &__map {
-                outline: none;
-                border: none;
-            margin-bottom: 20px;
-
-            iframe {
-                width: 100%;
-                border: none;
-                height: 500px;
-                
-            }
-        }
-
-        &__details {
-            display: flex;
-            gap: 24px;
-        }
-
-        &__info {
-            &-title {
-                font-size: 24px;
-                font-weight: bold;
-                padding: 14px;
-            }
-
-            &-list,
-            &__form-title {
-                list-style: none;
-                padding: 20px;
-            }
-
-            &-item {
-                display: flex;
-                align-items: flex-start;
-                margin-bottom: 15px;
-
-                .contact__info-icon {
-                    font-size: $fs-icons;
-                    margin-right: 10px;
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    background-color: #e36a00;
-                    color: #fff;
-                    padding: 14px;
-                    height: 40px;
-                    width: 40px;
-                    border-radius: 50%;
-                    transition: 0.6s;
-                }
-                .contact__info-icon:hover {
-                    opacity: 0.8;
-                }
-                .contact__text b {
-                    margin-bottom: 10px; /* Tạo khoảng cách giữa b và nội dung sau */
-                }
-                
-                .contact__text br {
-                    margin-bottom: 10px; /* Tạo khoảng cách dưới mỗi thẻ <br> */
-                    display: block; /* Đảm bảo margin có hiệu lực */
-                }
-                
-            }
-        }
-
-        &__form {
-            &-title {
-                padding: 14px;
-            }
-
-            &-description {
-                font-size: $fs-body;
-                color: #666;
-                padding: 14px;
-            }
-
-            &-group {
-                margin-bottom: 15px;
-                
-            }
-           
-            &-input,
-            &-textarea {
-               
-                width: 100%;
-                padding: 8px 20px;
-                font-size: 14px;
-                margin-top: 5px;
-                border: 1px solid #ddd;
-                outline: none;
-                opacity: .8;
-            }
-            &-textarea {
-                width: 100%;   /* Đặt chiều rộng cố định */
-                height: 150px;  /* Đặt chiều cao cố định */
-                resize: none;
-            }
-
-            &-button {
-                padding: 10px 20px;
-                background-color: #e36a00;
-                color: #fff;
-                border: none;
-                cursor: pointer;
-            }
-
-            &-note {
-                font-size: 12px;
-                color: #aaa;
-            }
-            
-        }
-        .dflex {
-            display: flex; 
-            gap: 10px;
-            
-        }
+    .dflex {
+      display: flex;
+      gap: 10px;
     }
-    // footer 
-    
-    
-    
-    
-         
+  }
+  // footer
 }

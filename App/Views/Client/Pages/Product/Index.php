@@ -215,8 +215,6 @@ class Index extends BaseView
 
         </div>
         </section>
-
-
       </div>
       </div>
     </main>

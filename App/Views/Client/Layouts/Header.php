@@ -77,71 +77,65 @@ class Header extends BaseView
         <div class="header-bottom">
           <div class="main-container">
             <div class="navbar">
-              <<<<<<< HEAD
-                <button class="menu-toggle icon">
+              <!-- Hamburger Menu Icon for Mobile -->
+              <button class="menu-toggle icon" onclick="toggleOffcanvasNavbar()">
                 <i class="fas fa-bars"></i>
-                </button>
-                =======
-                <!-- Hamburger Menu Icon for Mobile -->
-                <button class="menu-toggle icon" onclick="toggleOffcanvasNavbar()">
-                  <i class="fas fa-bars"></i>
-                </button>
+              </button>
 
-                >>>>>>> 09d6012 ([HTML/SCSS] - CLIENT - FIX_HEADER)
-                <div class="logo">
-                  <a href="/"> <img src="<?= APP_URL ?>public/assets/client/images/home/logo (1).png" alt="Logo đây nhé " /></a>
-                </div>
-                <ul class="menu">
-                  <li><a href="/">Trang chủ</a></li>
-                  <li>
-                    <a href="/products">Sản phẩm<i class="fas fa-chevron-down"></i></a>
-                    <div class="sub-menu">
-                      <a href="./sanpham.html">Trái Ngon Hôm Nay</a>
-                      <a href="./sanpham.html">Trái Cây Việt Nam</a>
-                      <a href="./sanpham.html">Trái Cây Nhập Khẩu</a>
-                      <a href="./sanpham.html">Trái Cây Cắt Sẵn</a>
-                      <a href="">Quà Tặng Trái Cây</a>
-                    </div>
-                  </li>
-                  <li>
-                    <a href="#">Về Chúng Tôi<i class="fas fa-chevron-down"></i></a>
-                    <div class="sub-menu">
-                      <a href="/introduce">Giới thiệu</a>
-                      <a href="#">Cửa hàng</a>
-                      <a href="#">Chính sách & Ưu đãi</a>
-                    </div>
-                  </li>
-                  <li>
-                    <a href="#">Góc Ẩm Thực</a>
-                  </li>
-                  <li><a href="/news">Tin Tức</a></li>
-                  <li><a href="">Liên hệ</a></li>
-                </ul>
-                <div class="navbar-icons">
-                  <div class="search-icon-container">
-                    <a href="javascript:void(0);" class="icon" onclick="toggleSearchOverlay()">
-                      <svg role="presentation" stroke-width="2" focusable="false" width="22" height="22" class="icon icon-search" viewBox="0 0 22 22">
-                        <circle cx="11" cy="10" r="7" fill="none" stroke="currentColor"></circle>
-                        <path d="m16 15 3 3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-                      </svg>
-                    </a>
+              <div class="logo">
+                <a href="/"> <img src="<?= APP_URL ?>public/assets/client/images/home/logo (1).png" alt="Logo đây nhé " /></a>
+              </div>
+              <ul class="menu">
+                <li><a href="/">Trang chủ</a></li>
+                <li>
+                  <a href="/products">Sản phẩm<i class="fas fa-chevron-down"></i></a>
+                  <div class="sub-menu">
+                    <a href="./sanpham.html">Trái Ngon Hôm Nay</a>
+                    <a href="./sanpham.html">Trái Cây Việt Nam</a>
+                    <a href="./sanpham.html">Trái Cây Nhập Khẩu</a>
+                    <a href="./sanpham.html">Trái Cây Cắt Sẵn</a>
+                    <a href="">Quà Tặng Trái Cây</a>
                   </div>
-
-                  <a href="javascript:void(0);" class="icon cart-icon" onclick="toggleOffcanvasCart()">
-                    <svg role="presentation" stroke-width="2" focusable="false" width="22" height="22" class="icon icon-cart" viewBox="0 0 22 22">
-                      <path d="M11 7H3.577A2 2 0 0 0 1.64 9.497l2.051 8A2 2 0 0 0 5.63 19H16.37a2 2 0 0 0 1.937-1.503l2.052-8A2 2 0 0 0 18.422 7H11Zm0 0V1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                </li>
+                <li>
+                  <a href="#">Về Chúng Tôi<i class="fas fa-chevron-down"></i></a>
+                  <div class="sub-menu">
+                    <a href="/introduce">Giới thiệu</a>
+                    <a href="/store">Cửa hàng</a>
+                    <a href="#">Chính sách & Ưu đãi</a>
+                  </div>
+                </li>
+                <li>
+                  <a href="/Culinary_roots">Góc Ẩm Thực</a>
+                </li>
+                <li><a href="/news">Tin Tức</a></li>
+                <li><a href="/contact">Liên hệ</a></li>
+              </ul>
+              <div class="navbar-icons">
+                <div class="search-icon-container">
+                  <a href="javascript:void(0);" class="icon" onclick="toggleSearchOverlay()">
+                    <svg role="presentation" stroke-width="2" focusable="false" width="22" height="22" class="icon icon-search" viewBox="0 0 22 22">
+                      <circle cx="11" cy="10" r="7" fill="none" stroke="currentColor"></circle>
+                      <path d="m16 15 3 3" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
                   </a>
-                  <a href="javascript:void(0);" class="icon" onclick="toggleLoginModal()">
-                    <svg role="presentation" stroke-width="2" focusable="false" width="22" height="22" class="icon icon-account" viewBox="0 0 22 22">
-                      <circle cx="11" cy="7" r="4" fill="none" stroke="currentColor"></circle>
-                      <path d="M3.5 19c1.421-2.974 4.247-5 7.5-5s6.079 2.026 7.5 5" fill="none" stroke="currentColor" stroke-linecap="round"></path>
-                    </svg>
-                  </a>
-
-
-                  <!--  -->
                 </div>
+
+                <a href="javascript:void(0);" class="icon cart-icon" onclick="toggleOffcanvasCart()">
+                  <svg role="presentation" stroke-width="2" focusable="false" width="22" height="22" class="icon icon-cart" viewBox="0 0 22 22">
+                    <path d="M11 7H3.577A2 2 0 0 0 1.64 9.497l2.051 8A2 2 0 0 0 5.63 19H16.37a2 2 0 0 0 1.937-1.503l2.052-8A2 2 0 0 0 18.422 7H11Zm0 0V1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </a>
+                <a href="javascript:void(0);" class="icon" onclick="toggleLoginModal()">
+                  <svg role="presentation" stroke-width="2" focusable="false" width="22" height="22" class="icon icon-account" viewBox="0 0 22 22">
+                    <circle cx="11" cy="7" r="4" fill="none" stroke="currentColor"></circle>
+                    <path d="M3.5 19c1.421-2.974 4.247-5 7.5-5s6.079 2.026 7.5 5" fill="none" stroke="currentColor" stroke-linecap="round"></path>
+                  </svg>
+                </a>
+
+
+                <!--  -->
+              </div>
             </div>
             <div class="offcanvas-cart" id="offcanvasCart">
               <div class="offcanvas-cart-header">
@@ -188,8 +182,8 @@ class Header extends BaseView
                   Phí ship sẽ được tính khi thanh toán
                 </p>
                 <div class="cta-button-offcanvas">
-                  <button class="cta-button view-cart-btn">Xem giỏ hàng</button>
-                  <button class="cta-button checkout-btn">Thanh toán</button>
+                  <a class="cta-button view-cart-btn" href="/cart">Xem giỏ hàng</a>
+                  <a class="cta-button checkout-btn">Thanh toán</a>
                 </div>
               </div>
             </div>
@@ -324,179 +318,174 @@ class Header extends BaseView
 }
 
   ?>
-  <<<<<<< HEAD
-    <script src="<?= APP_URL ?>public/assets/client/js/offcanvas_cart.js">
-    </script>
-    =======
-    <!-- <script src="<?= APP_URL ?>public/assets/client/js/offcanvas_cart.js"></script> -->
-    <script>
-      function toggleLoginModal() {
-        const loginModal = document.getElementById('loginModal');
-        const loginOverlay = document.getElementById('loginOverlay');
-        const signupModal = document.getElementById('signupModal');
+  <!-- <script src="<?= APP_URL ?>public/assets/client/js/offcanvas_cart.js"></script> -->
+  <script>
+    function toggleLoginModal() {
+      const loginModal = document.getElementById('loginModal');
+      const loginOverlay = document.getElementById('loginOverlay');
+      const signupModal = document.getElementById('signupModal');
 
-        // Close the signup modal if it's open
-        if (signupModal.classList.contains('active')) {
-          signupModal.classList.remove('active');
-        }
-
-        // Toggle the login modal and overlay
-        const isLoginOpen = loginModal.classList.toggle('active');
-        loginOverlay.classList.toggle('active', isLoginOpen);
-        document.body.classList.toggle('modal-open', isLoginOpen);
-      }
-
-      function toggleSignupModal() {
-        const signupModal = document.getElementById('signupModal');
-        const loginModal = document.getElementById('loginModal');
-        const loginOverlay = document.getElementById('loginOverlay');
-
-        // Close the login modal if it's open
-        if (loginModal.classList.contains('active')) {
-          loginModal.classList.remove('active');
-        }
-
-        // Toggle the signup modal and overlay
-        const isSignupOpen = signupModal.classList.toggle('active');
-        loginOverlay.classList.toggle('active', isSignupOpen);
-        document.body.classList.toggle('modal-open', isSignupOpen);
-      }
-
-      function switchToSignup() {
-        const loginModal = document.getElementById('loginModal');
-        const signupModal = document.getElementById('signupModal');
-        const overlay = document.getElementById('loginOverlay');
-
-        // Close the login modal
-        loginModal.classList.remove('active');
-
-        // Open the signup modal and keep the overlay active
-        signupModal.classList.add('active');
-        overlay.classList.add('active');
-        document.body.classList.add('modal-open');
-      }
-
-      function switchToLogin() {
-        const signupModal = document.getElementById('signupModal');
-        const loginModal = document.getElementById('loginModal');
-        const overlay = document.getElementById('loginOverlay');
-
-        // Close the signup modal
+      // Close the signup modal if it's open
+      if (signupModal.classList.contains('active')) {
         signupModal.classList.remove('active');
-
-        // Open the login modal and keep the overlay active
-        loginModal.classList.add('active');
-        overlay.classList.add('active');
-        document.body.classList.add('modal-open');
       }
 
-      function toggleOffcanvasCart() {
-        const cart = document.getElementById('offcanvasCart');
-        const cartOverlay = document.getElementById('cartOverlay');
-        const loginModal = document.getElementById('loginModal');
-        const loginOverlay = document.getElementById('loginOverlay');
-        const signupModal = document.getElementById('signupModal');
+      // Toggle the login modal and overlay
+      const isLoginOpen = loginModal.classList.toggle('active');
+      loginOverlay.classList.toggle('active', isLoginOpen);
+      document.body.classList.toggle('modal-open', isLoginOpen);
+    }
 
-        // Đóng modal đăng nhập và đăng ký nếu đang mở
-        if (loginModal.classList.contains('active')) {
-          loginModal.classList.remove('active');
-          loginOverlay.classList.remove('active');
-        }
-        if (signupModal.classList.contains('active')) {
-          signupModal.classList.remove('active');
-          loginOverlay.classList.remove('active');
-        }
+    function toggleSignupModal() {
+      const signupModal = document.getElementById('signupModal');
+      const loginModal = document.getElementById('loginModal');
+      const loginOverlay = document.getElementById('loginOverlay');
 
-        // Mở hoặc đóng giỏ hàng
-        const isCartOpen = cart.classList.toggle('open');
-        cartOverlay.classList.toggle('active', isCartOpen);
-
-        document.body.classList.toggle('modal-open', isCartOpen);
+      // Close the login modal if it's open
+      if (loginModal.classList.contains('active')) {
+        loginModal.classList.remove('active');
       }
 
-      function switchToSignup() {
-        // Đóng modal đăng nhập nếu nó đang mở
-        const loginModal = document.getElementById('loginModal');
-        if (loginModal.classList.contains('active')) {
-          loginModal.classList.remove('active');
-        }
+      // Toggle the signup modal and overlay
+      const isSignupOpen = signupModal.classList.toggle('active');
+      loginOverlay.classList.toggle('active', isSignupOpen);
+      document.body.classList.toggle('modal-open', isSignupOpen);
+    }
 
-        // Mở modal đăng ký
-        const signupModal = document.getElementById('signupModal');
-        signupModal.classList.add('active');
+    function switchToSignup() {
+      const loginModal = document.getElementById('loginModal');
+      const signupModal = document.getElementById('signupModal');
+      const overlay = document.getElementById('loginOverlay');
 
-        // Đảm bảo overlay được bật
-        const loginOverlay = document.getElementById('loginOverlay');
-        loginOverlay.classList.add('active');
+      // Close the login modal
+      loginModal.classList.remove('active');
 
-        // Bật lớp CSS để ngăn cuộn
-        document.body.classList.add('modal-open');
+      // Open the signup modal and keep the overlay active
+      signupModal.classList.add('active');
+      overlay.classList.add('active');
+      document.body.classList.add('modal-open');
+    }
+
+    function switchToLogin() {
+      const signupModal = document.getElementById('signupModal');
+      const loginModal = document.getElementById('loginModal');
+      const overlay = document.getElementById('loginOverlay');
+
+      // Close the signup modal
+      signupModal.classList.remove('active');
+
+      // Open the login modal and keep the overlay active
+      loginModal.classList.add('active');
+      overlay.classList.add('active');
+      document.body.classList.add('modal-open');
+    }
+
+    function toggleOffcanvasCart() {
+      const cart = document.getElementById('offcanvasCart');
+      const cartOverlay = document.getElementById('cartOverlay');
+      const loginModal = document.getElementById('loginModal');
+      const loginOverlay = document.getElementById('loginOverlay');
+      const signupModal = document.getElementById('signupModal');
+
+      // Đóng modal đăng nhập và đăng ký nếu đang mở
+      if (loginModal.classList.contains('active')) {
+        loginModal.classList.remove('active');
+        loginOverlay.classList.remove('active');
+      }
+      if (signupModal.classList.contains('active')) {
+        signupModal.classList.remove('active');
+        loginOverlay.classList.remove('active');
       }
 
-      function toggleOffcanvasNavbar() {
-        const navbar = document.getElementById('offcanvasNavbar');
-        const navbarOverlay = document.getElementById('navbarOverlay');
-        const cart = document.getElementById('offcanvasCart');
-        const cartOverlay = document.getElementById('cartOverlay');
-        const loginModal = document.getElementById('loginModal');
-        const signupModal = document.getElementById('signupModal');
-        const loginOverlay = document.getElementById('loginOverlay');
+      // Mở hoặc đóng giỏ hàng
+      const isCartOpen = cart.classList.toggle('open');
+      cartOverlay.classList.toggle('active', isCartOpen);
 
-        // Close other modals if they're open
-        if (cart.classList.contains('open')) {
-          cart.classList.remove('open');
-          cartOverlay.classList.remove('active');
-        }
-        if (loginModal.classList.contains('active')) {
-          loginModal.classList.remove('active');
-          loginOverlay.classList.remove('active');
-        }
-        if (signupModal.classList.contains('active')) {
-          signupModal.classList.remove('active');
-          loginOverlay.classList.remove('active');
-        }
+      document.body.classList.toggle('modal-open', isCartOpen);
+    }
 
-        // Toggle the navbar and overlay
-        const isNavbarOpen = navbar.classList.toggle('open');
-        navbarOverlay.classList.toggle('active', isNavbarOpen);
-
-        document.body.classList.toggle('modal-open', isNavbarOpen);
+    function switchToSignup() {
+      // Đóng modal đăng nhập nếu nó đang mở
+      const loginModal = document.getElementById('loginModal');
+      if (loginModal.classList.contains('active')) {
+        loginModal.classList.remove('active');
       }
 
-      function toggleOffcanvasNavbar() {
-        const navbar = document.getElementById('offcanvasNavbar');
-        const isNavbarOpen = navbar.classList.toggle('open');
-        document.body.classList.toggle('modal-open', isNavbarOpen);
+      // Mở modal đăng ký
+      const signupModal = document.getElementById('signupModal');
+      signupModal.classList.add('active');
+
+      // Đảm bảo overlay được bật
+      const loginOverlay = document.getElementById('loginOverlay');
+      loginOverlay.classList.add('active');
+
+      // Bật lớp CSS để ngăn cuộn
+      document.body.classList.add('modal-open');
+    }
+
+    function toggleOffcanvasNavbar() {
+      const navbar = document.getElementById('offcanvasNavbar');
+      const navbarOverlay = document.getElementById('navbarOverlay');
+      const cart = document.getElementById('offcanvasCart');
+      const cartOverlay = document.getElementById('cartOverlay');
+      const loginModal = document.getElementById('loginModal');
+      const signupModal = document.getElementById('signupModal');
+      const loginOverlay = document.getElementById('loginOverlay');
+
+      // Close other modals if they're open
+      if (cart.classList.contains('open')) {
+        cart.classList.remove('open');
+        cartOverlay.classList.remove('active');
+      }
+      if (loginModal.classList.contains('active')) {
+        loginModal.classList.remove('active');
+        loginOverlay.classList.remove('active');
+      }
+      if (signupModal.classList.contains('active')) {
+        signupModal.classList.remove('active');
+        loginOverlay.classList.remove('active');
       }
 
-      function toggleSubMenu(menuId) {
-        const subMenu = document.getElementById(menuId);
+      // Toggle the navbar and overlay
+      const isNavbarOpen = navbar.classList.toggle('open');
+      navbarOverlay.classList.toggle('active', isNavbarOpen);
 
-        if (window.innerWidth < 769) { // Kiểm tra nếu màn hình nhỏ hơn 769px (mobile)
-          if (subMenu.classList.contains('open')) {
-            subMenu.classList.remove('open');
-          } else {
-            // Đóng tất cả các submenu khác trước khi mở submenu hiện tại
-            const allSubMenus = document.querySelectorAll('.sub-menu');
-            allSubMenus.forEach((menu) => menu.classList.remove('open'));
+      document.body.classList.toggle('modal-open', isNavbarOpen);
+    }
 
-            // Mở submenu hiện tại
-            subMenu.classList.add('open');
-          }
+    function toggleOffcanvasNavbar() {
+      const navbar = document.getElementById('offcanvasNavbar');
+      const isNavbarOpen = navbar.classList.toggle('open');
+      document.body.classList.toggle('modal-open', isNavbarOpen);
+    }
+
+    function toggleSubMenu(menuId) {
+      const subMenu = document.getElementById(menuId);
+
+      if (window.innerWidth < 769) { // Kiểm tra nếu màn hình nhỏ hơn 769px (mobile)
+        if (subMenu.classList.contains('open')) {
+          subMenu.classList.remove('open');
+        } else {
+          // Đóng tất cả các submenu khác trước khi mở submenu hiện tại
+          const allSubMenus = document.querySelectorAll('.sub-menu');
+          allSubMenus.forEach((menu) => menu.classList.remove('open'));
+
+          // Mở submenu hiện tại
+          subMenu.classList.add('open');
         }
       }
+    }
 
 
 
 
-      function toggleSearchOverlay() {
-        const searchOverlay = document.querySelector('.search-overlay');
-        const overlaySearch = document.querySelector('.overlay-search');
+    function toggleSearchOverlay() {
+      const searchOverlay = document.querySelector('.search-overlay');
+      const overlaySearch = document.querySelector('.overlay-search');
 
-        const isOpen = searchOverlay.classList.toggle('open');
-        overlaySearch.classList.toggle('active', isOpen);
+      const isOpen = searchOverlay.classList.toggle('open');
+      overlaySearch.classList.toggle('active', isOpen);
 
-        document.body.classList.toggle('modal-open', isOpen);
-      }
-    </script>
-    >>>>>>> 09d6012 ([HTML/SCSS] - CLIENT - FIX_HEADER)
+      document.body.classList.toggle('modal-open', isOpen);
+    }
+  </script>
