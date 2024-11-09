@@ -95,61 +95,7 @@ class Contact extends BaseView
                         </div>
                     </div>
                 </section>
-                <!-- footer -->
-                <footer class="footer__container">
-                    <section class="footer__section">
-                        <div class="footer__columns">
-                            <!-- Column 1: Giới Thiệu -->
-                            <div class="footer__column">
-                                <h6 class="footer__title">Giới Thiệu</h6>
-                                <p class="footer__description">Chào mừng bạn đến với trang web bán trái cây tươi ngon của chúng tôi! Tại đây, bạn sẽ tìm thấy đa dạng các loại trái cây từ vườn đến bàn, đảm bảo tươi mới, chất lượng cao và an toàn cho sức khỏe. Chúng tôi cam kết cung cấp sản phẩm từ những nông trại uy tín, giúp bạn thưởng thức hương vị tự nhiên tuyệt vời nhất. Hãy ghé thăm và trải nghiệm dịch vụ giao hàng nhanh chóng, tiện lợi của chúng tôi ngay hôm nay!</p>
-                            </div>
-
-                            <!-- Column 2: Liên Kết -->
-                            <div class="footer__column">
-                                <h6 class="footer__title">Liên Kết</h6>
-                                <ul class="footer__list">
-                                    <li><a href="#">Tìm Kiếm</a></li>
-                                    <li><a href="#">Giới Thiệu</a></li>
-                                    <li><a href="#">Chính Sách Đổi Trả</a></li>
-                                    <li><a href="#">Chính Sách Bảo Mật</a></li>
-                                    <li><a href="#">Liên Hệ</a></li>
-                                    <li><a href="#">Chính Sách Thanh Toán</a></li>
-                                    <li><a href="#">Chính Sách Giao Hàng</a></li>
-                                    <li><a href="#">Chính Sách Trả Hàng</a></li>
-                                </ul>
-                            </div>
-
-                            <!-- Column 3: Thông Tin Liên Hệ -->
-                            <div class="footer__column">
-                                <h6 class="footer__title">Thông Tin Liên Hệ</h6>
-                                <ul class="footer__list">
-                                    <li><a href="#">KDC Hoàng Quân, Phường Trường Thạnh, Quận Caái Răng, TP Cần Thơ</a></li>
-                                    <li><a href="#">Email: contact@gmail.com</a></li>
-                                    <li><a href="#">HotLine: 1900 0000</a></li>
-                                    <li><a href="#">HotLine: 1900 2222</a></li>
-                                </ul>
-                            </div>
-
-                            <!-- Column 4: Panpage -->
-                            <div class="footer__column">
-                                <h6 class="footer__title">Panpage</h6>
-                                <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FCDFPTCT%3Flocale%3Dvi_VN&tabs&width=340&height=130&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId" width="340" height="130" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
-                            </div>
-                        </div>
-
-                        <!-- Footer Image -->
-                        <div class="footer__image">
-                            <img src="https://webmedia.com.vn/images/2021/09/logo-da-thong-bao-bo-cong-thuong-mau-xanh.png" alt="">
-                        </div>
-
-                        <hr class="footer__border">
-                    </section>
-
-                    <div class="footer__bottom">
-                        <p class="footer__legal">Công Ty Cổ Phần Thực Phẩm, mã số thuế 0123456789, do ông Nguyễn Văn A làm người đại diện pháp luật, có trụ sở tại Tầng 10, Tòa Nhà LandMark 81, Quận 1, TP. Hồ Chí Minh. Mọi thắc mắc vui lòng liên hệ qua email: contact@gmail.com. &copy;2024 Công Ty Cổ Phần Thực Phẩm. Mọi quyền được bảo lưu.</p>
-                    </div>
-                </footer> 
+                <!-- footer --> 
             </div>
            </div> 
 
