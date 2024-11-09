@@ -102,7 +102,7 @@ class Header extends BaseView
                   <div class="sub-menu">
                     <a href="/introduce">Giới thiệu</a>
                     <a href="/store">Cửa hàng</a>
-                    <a href="#">Chính sách & Ưu đãi</a>
+                    <a href="/Policy">Chính sách & Ưu đãi</a>
                   </div>
                 </li>
                 <li>
