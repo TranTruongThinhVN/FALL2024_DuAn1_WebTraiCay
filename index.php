@@ -39,6 +39,8 @@ Route::get('/Policy', 'App\Controllers\Client\PolicyController@index');
 
 // *** Admin
 
-Route::get('/admin', 'App\Controllers\Admin\HomeController@index');
+Route::get('/admin', 'App\Controllers\Admin\DashboardController@index');
+Route::get('/product', 'App\Controllers\Admin\ProductController@index');
+Route::get('/admin/add-product', 'App\Controllers\Admin\ProductController@create');
 
 Route::dispatch($_SERVER['REQUEST_URI']);

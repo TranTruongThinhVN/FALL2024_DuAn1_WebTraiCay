@@ -4,7 +4,7 @@ namespace App\Views\Client\Pages\Cart;
 
 use App\Views\BaseView;
 
-class Index extends BaseView
+class index extends BaseView
 {
     public static function render($data = null)
     {
@@ -165,9 +165,9 @@ class Index extends BaseView
 
                 <!-- Thanh toán tổng -->
                 <div class="shopping-cart__summary-bottom">
-                    <div class="shopping-cart__summary-left">
+                    <div class="shopping-cart__summary-lefts">
                         <input type="checkbox" class="shopping-cart__summary-select-all">
-                        <span class="click-all-left">Chọn tất cả</span>
+                        <span class="click-all-lefts">Chọn tất cả</span>
                         <a class="shopping-cart__summary-delete-selected">Xóa</a>
                     </div>
                     <div class="summary-right">

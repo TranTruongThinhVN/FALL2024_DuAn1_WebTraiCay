@@ -6,83 +6,49 @@ use App\Views\BaseView;
 
 class Footer extends BaseView
 {
-        public static function render($data = null)
-        {
+  public static function render($data = null)
+  {
 
 ?>
+    <footer class="footer">
+      <div class="d-sm-flex justify-content-center justify-content-sm-between">
+        <span class="text-center text-sm-left d-block d-sm-inline-block">Copyright © <a href="https://www.bootstrapdash.com/" target="_blank">bootstrapdash.com</a> 2020</span>
+        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Free <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap dashboard </a>templates from Bootstrapdash.com</span>
+      </div>
+    </footer>
+    <!-- partial -->
+    </ddi
+      </div>
+    <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- base:js -->
+    <script src="public/assets/admin/vendors/js/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page-->
+    <!-- End plugin js for this page-->
+    <!-- inject:js -->
+    <script src="public/assets/admin/js/off-canvas.js"></script>
+    <script src="public/assets/admin/js/hoverable-collapse.js"></script>
+    <script src="public/assets/admin/js/template.js"></script>
+    <script src="public/assets/admin/js/settings.js"></script>
+    <script src="public/assets/admin/js/todolist.js"></script>
+    <!-- endinject -->
+    <!-- plugin js for this page -->
+    <script src="public/assets/admin/vendors/progressbar.js/progressbar.min.js"></script>
+    <script src="public/assets/admin/vendors/chart.js/Chart.min.js"></script>
+    <!-- End plugin js for this page -->
+    <!-- Custom js for this page-->
+    <script src="public/assets/admin/js/dashboard.js"></script>
+    <!-- End custom js for this page-->
 
-                <!-- footer -->
-                <!-- ============================================================== -->
-                <footer class="footer text-center">
-                        Copyright &copy; by Chihihi
-                </footer>
-                <!-- ============================================================== -->
-                <!-- End footer -->
-                <!-- ============================================================== -->
-                </div>
-                <!-- ============================================================== -->
-                <!-- End Page wrapper  -->
-                <!-- ============================================================== -->
-                </div>
-                <!-- ============================================================== -->
-                <!-- End Wrapper -->
-                <!-- ============================================================== -->
-                <!-- ============================================================== -->
-                <!-- All Jquery -->
-                <!-- ============================================================== -->
-                <script src="<?=APP_URL?>/public/assets/admin/libs/jquery/dist/jquery.min.js"></script>
-                <!-- Bootstrap tether Core JavaScript -->
-                <script src="<?=APP_URL?>/public/assets/admin/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/extra-libs/sparkline/sparkline.js"></script>
-                <!--Wave Effects -->
-                <script src="<?=APP_URL?>/public/assets/admin/dist/js/waves.js"></script>
-                <!--Menu sidebar -->
-                <script src="<?=APP_URL?>/public/assets/admin/dist/js/sidebarmenu.js"></script>
-                <!--Custom JavaScript -->
-                <script src="<?=APP_URL?>/public/assets/admin/dist/js/custom.min.js"></script>
-                <!--This page JavaScript -->
-                <!-- <script src="<?=APP_URL?>/public/assets/admin/dist/js/pages/dashboards/dashboard1.js"></script> -->
-                <!-- Charts js Files -->
-                <script src="<?=APP_URL?>/public/assets/admin/libs/flot/excanvas.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/flot/jquery.flot.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/flot/jquery.flot.pie.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/flot/jquery.flot.time.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/flot/jquery.flot.stack.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/flot/jquery.flot.crosshair.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/flot.tooltip/js/jquery.flot.tooltip.min.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/dist/js/pages/chart/chart-page-init.js"></script>
+    </body>
 
-                <script src="<?=APP_URL?>/public/assets/admin/extra-libs/multicheck/datatable-checkbox-init.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/extra-libs/multicheck/jquery.multicheck.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/extra-libs/DataTables/datatables.min.js"></script>
-                <script>
-                        /****************************************
-                         *       Basic Table                   *
-                         ****************************************/
-                        $('#zero_config').DataTable();
-                </script>
-
-                <script src="<?=APP_URL?>/public/assets/admin/libs/inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/dist/js/pages/mask/mask.init.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/select2/dist/js/select2.full.min.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/select2/dist/js/select2.min.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/jquery-asColor/dist/jquery-asColor.min.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/jquery-asGradient/dist/jquery-asGradient.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/jquery-asColorPicker/dist/jquery-asColorPicker.min.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/jquery-minicolors/jquery.minicolors.min.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/quill/dist/quill.min.js"></script>
-
-
-                </script>
-
-
-                </body>
-
-                </html>
+    </html>
 <?php
-        }
+  }
 }
 
 ?>
