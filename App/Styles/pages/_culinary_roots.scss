@@ -30,14 +30,14 @@
   }
 }
 
-// Main Content Layout
+// main
 .CulinaryRoots__MainContent {
   display: flex;
   gap: 20px;
   padding: 40px 20px;
 }
 
-// Recipe Categories
+//
 .CulinaryRoots__Categories {
   width: 25%;
   padding: 0px 20px 0px;
@@ -53,6 +53,11 @@
     align-items: center;
     border-radius: 8px;
     overflow: hidden;
+    position: fixed;
+    top: 20px;
+    align-self: flex-start;
+    height: fit-content;
+    z-index: 999;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
     &Input {
@@ -81,7 +86,7 @@
 
   &Title {
     text-align: center;
-    font-size: 24px;
+    font-size: 20px;
     margin-bottom: 29px;
     color: abstracts.$color-primary;
     font-weight: bold;
@@ -93,85 +98,101 @@
     gap: 15px;
   }
 
+  //
   .CulinaryRoots__CategoryCard {
     padding: 10px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px abstracts.$shadow-color;
-    text-align: center;
-    background-color: abstracts.$color-primary;
-    color: abstracts.$color-text-light;
+    border: 2px solid abstracts.$color-primary;
+
+    background-color: white;
+    color: abstracts.$color-primary;
     font-size: 16px;
     font-weight: bold;
-    transition: transform 0.2s;
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
+    transition: transform 0.3s, background-color 0.3s, color 0.3s,
+      box-shadow 0.3s;
+  }
+  .CulinaryRoots__CategoryCard:hover {
+    transform: scale(1.05);
+    background-color: abstracts.$color-primary;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 }
-
-// Recipe List
-.CulinaryRoots__RecipeList {
-  width: 75%;
-
-  &Title {
-    font-size: 28px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: bold;
-    color: abstracts.$color-primary;
-  }
-
-  &Items {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-
-  .CulinaryRoots__RecipeCard {
-    background-color: abstracts.$color-text-light;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px abstracts.$shadow-color;
-    overflow: hidden;
-    padding: 10px;
-    transition: transform 0.2s;
-    height: 300px;
-
-    &:hover {
-      transform: translateY(-5px);
-    }
-
-    &Image {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-
-    &Title {
-      font-size: 20px;
-      margin: 10px 0;
-      font-weight: bold;
-      text-align: center;
-      color: abstracts.$color-primary;
-      @include abstracts.max-line(1);
-    }
-
-    &Description {
-      font-size: 16px;
-      color: abstracts.$color-text-gray;
-      @include abstracts.max-line(2);
-    }
-  }
+// Layout
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
 }
 
-// Load More Button
-.CulinaryRoots__LoadMoreContainer {
-  text-align: center;
-  margin-top: 20px;
+/* Recipe Card */
+.recipe-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-width: 300px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.recipe-card:hover {
+  transform: translateY(-5px);
+}
+
+.recipe-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.recipe-content {
+  padding: 15px;
+  text-align: left;
+}
+
+.recipe-title {
+  margin-top: 6px;
+  @include abstracts.max-line(1);
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 10px;
+}
+
+.recipe-description {
+  @include abstracts.max-line(2);
+  font-size: 1.3rem;
+  color: #666;
+  margin: 0 0 15px;
+}
+
+.recipe-link {
+  font-size: 1.2rem;
+  color: abstracts.$color-primary;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.recipe-link span {
+  margin-left: 5px;
+  transition: margin-left 0.2s;
+}
+
+.recipe-link:hover span {
+  margin-left: 10px;
 }
 
 .Hidden {
   display: none;
+}
+.CulinaryRoots__RecipeListTitle {
+  font-size: 20px;
+  padding-left: 16px;
+  margin-bottom: 29px;
+  color: abstracts.$color-primary;
+  font-weight: bold;
 }

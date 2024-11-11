@@ -14,13 +14,11 @@ class store  extends BaseView
             <img src="<?= APP_URL ?>/public/assets/client/images/store/banner.webp" alt="Banner - Fresh Fruit Store" class="store-banner__image">
             <div class="store-banner__content">
                 <h1>Welcome to Trái Cây Tươi</h1>
-                <p>Discover the freshest fruits directly from the farm to your table!</p>
+                <p>Khám phá những trái cây tươi ngon nhất từ nông trại đến bàn ăn của bạn!</p>
             </div>
         </div>
 
         <div class="main-container">
-            <!-- Banner Section -->
-
             <main class="store">
                 <aside class="store__sidebar">
                     <h2 class="store__sidebar-title">Theo khu vực</h2>
@@ -66,7 +64,7 @@ class store  extends BaseView
                             <p class="store-card__time">8:00 - 20:00</p>
                             <div class="store-card__features">
                                 <span class="store-card__feature"><i class="fas fa-car"></i> Có chỗ đỗ xe hơi</span>
-                                <span class="store-card__feature"><i class="fas fa-child"></i>thân thiện</span>
+                                <span class="store-card__feature"><i class="fas fa-child"></i>Thân thiện</span>
                                 <span class="store-card__feature"><i class="fas fa-shopping-bag"></i>Mua mang về</span>
                             </div>
                             <div class="store-card__share">
@@ -85,7 +83,7 @@ class store  extends BaseView
                             <p class="store-card__time">8:00 - 20:00</p>
                             <div class="store-card__features">
                                 <span class="store-card__feature"><i class="fas fa-car"></i> Có chỗ đỗ xe hơi</span>
-                                <span class="store-card__feature"><i class="fas fa-child"></i>thân thiện</span>
+                                <span class="store-card__feature"><i class="fas fa-child"></i>Thân thiện</span>
                                 <span class="store-card__feature"><i class="fas fa-shopping-bag"></i>Mua mang về</span>
                             </div>
                             <div class="store-card__share">
@@ -103,9 +101,9 @@ class store  extends BaseView
                             <p class="store-card__address">789 Đường Hoa Quả, Quận 5, Thành phố Hồ Chí Minh</p>
                             <p class="store-card__time">8:00 - 20:00</p>
                             <div class="store-card__features">
-                                <span class="store-card__feature"><i class="fas fa-car"></i> Có chỗ đỗ xe hơi</span>
-                                <span class="store-card__feature"><i class="fas fa-child"></i>thân thiện</span>
-                                <span class="store-card__feature"><i class="fas fa-shopping-bag"></i>Mua mang về</span>
+                                <i class="fas fa-car"></i><span class="store-card__feature"> Có chỗ đỗ xe hơi</span>
+                                <i class="fas fa-child"></i><span class="store-card__feature">Thân thiện</span>
+                                <i class="fas fa-shopping-bag"></i> <span class="store-card__feature">Mua mang về</span>
                             </div>
                             <div class="store-card__share">
                                 <span>Share on:</span>
@@ -122,7 +120,7 @@ class store  extends BaseView
                             <p class="store-card__address">159 Đường Hương Vị, Quận 4, Thành phố Hồ Chí Minh</p>
                             <p class="store-card__time">8:00 - 20:00</p>
                             <div class="store-card__features">
-                                <span class="store-card__feature"><i class="fas fa-car"></i>thân thiện</span>
+                                <span class="store-card__feature"><i class="fas fa-car"></i>Thân thiện</span>
                                 <span class="store-card__feature"><i class="fas fa-shopping-bag"></i>Mua mang về</span>
                             </div>
                             <div class="store-card__share">

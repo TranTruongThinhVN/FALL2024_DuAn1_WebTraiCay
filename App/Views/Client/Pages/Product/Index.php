@@ -16,8 +16,6 @@ class Index extends BaseView
 
 
       <div class="content-container">
-
-
         <aside class="sidebar">
 
           <div class="search-bar">
@@ -64,7 +62,6 @@ class Index extends BaseView
           </div>
 
         </aside>
-
         <div class="product-section__category product-section__category--vietnam-fruits">
           <div class="product-section__header">
             <div class="product-section__title-count">

@@ -15,15 +15,15 @@ class Sidebar extends BaseView
         <li class="nav-item">
           <div class="d-flex sidebar-profile">
             <div class="sidebar-profile-image">
-              <img src="images/faces/face29.png" alt="image">
+              <img src="<?= APP_URL ?>/public/assets/client/images/home/logo (1).png" alt="image">
               <span class="sidebar-status-indicator"></span>
             </div>
             <div class="sidebar-profile-name">
               <p class="sidebar-name">
-                Kenneth Osborne
+                Admin
               </p>
               <p class="sidebar-designation">
-                Welcome
+                Xin chào
               </p>
             </div>
           </div>
@@ -67,8 +67,8 @@ class Sidebar extends BaseView
           </a>
           <div class="collapse" id="form-elements">
             <ul class="nav flex-column sub-menu">
-              <li class="nav-item"><a class="nav-link" href="">Thêm sản phẩm</a></li>
-              <li class="nav-item"><a class="nav-link" href="/product">Danh sách sản phẩm</a></li>
+              <li class="nav-item"><a class="nav-link" href="/admin/add-product">Thêm sản phẩm</a></li>
+              <li class="nav-item"><a class="nav-link" href="/admin/product">Danh sách sản phẩm</a></li>
               <li class="nav-item"><a class="nav-link" href="">Tất cả danh mục</a></li>
             </ul>
           </div>

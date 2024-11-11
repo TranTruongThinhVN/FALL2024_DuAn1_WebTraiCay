@@ -4,7 +4,7 @@ namespace App\Views\Client\Pages\Culinary_roots;
 
 use App\Views\BaseView;
 
-class detail_culinary_roots extends BaseView
+class Detail_culinary_roots extends BaseView
 {
     public static function render($data = null)
     {
@@ -44,34 +44,64 @@ class detail_culinary_roots extends BaseView
                         </ol>
                     </section>
                 </div>
-                <section class="RelatedRecipes">
-                    <div class="RelatedRecipes__Header">
-                        <h2 class="RelatedRecipes__Title">Công Thức Liên Quan</h2>
-                        <a href="<?= APP_URL ?>/related-recipes" class="RelatedRecipes__Link">Xem Thêm Công Thức</a>
+                <section class="culinary-section">
+                    <div class="culinary-header">
+                        <h2 class="culinary-title">Công Thức Liên Quan</h2>
+                        <a href="<?= APP_URL ?>/related-recipes" class="culinary-link">Xem Thêm Công Thức</a>
                     </div>
-                    <div class="RelatedRecipes__List">
-                        <div class="RelatedRecipes__Item">
-                            <img src="<?= APP_URL ?>/public/assets/client/images/Culinary_roots/CongThuc_smoothiesTraSuaDau.jpg" alt="Related Recipe 1" class="RelatedRecipes__Image">
-                            <h4 class="RelatedRecipes__Name">Smoothie Dâu Tươi</h4>
-                            <p class="RelatedRecipes__Description">Thơm ngon và bổ dưỡng.</p>
+                    <div class="culinary-grid">
+                        <div class="culinary-card" onclick="location.href='/culinary_roots_detail'">
+                            <img src="public/assets/client/images/Culinary_roots/CongThuc_KemTraiCay.jpg" alt="Mô tả hình ảnh" class="culinary-image">
+                            <div class="culinary-content">
+                                <h3 class="culinary-heading">BẮT GẶP SÀI GÒN XƯA TRONG MÓN UỐNG HIỆN ĐẠI</h3>
+                                <p class="culinary-description">Dấu qua bao nhiêu lớp sóng thời gian, người ta vẫn có thể tìm lại những dấu ấn thăng trầm...</p>
+                                <a href="#" class="culinary-detail-link">CHI TIẾT <span>→</span></a>
+                            </div>
                         </div>
-                        <div class="RelatedRecipes__Item">
-                            <img src="<?= APP_URL ?>/public/assets/client/images/Culinary_roots/CongThuc_BanhTaoNuong.jpg" alt="Related Recipe 2" class="RelatedRecipes__Image">
-                            <h4 class="RelatedRecipes__Name">Bánh Táo Nướng</h4>
-                            <p class="RelatedRecipes__Description">Giòn tan và ngọt ngào.</p>
+                        <div class="culinary-card" onclick="location.href='/culinary_roots_detail'">
+                            <img src="public/assets/client/images/Culinary_roots/CongThuc_KemTraiCay.jpg" alt="Mô tả hình ảnh" class="culinary-image">
+                            <div class="culinary-content">
+                                <h3 class="culinary-heading">BẮT GẶP SÀI GÒN XƯA TRONG MÓN UỐNG HIỆN ĐẠI</h3>
+                                <p class="culinary-description">Dấu qua bao nhiêu lớp sóng thời gian, người ta vẫn có thể tìm lại những dấu ấn thăng trầm...</p>
+                                <a href="#" class="culinary-detail-link">CHI TIẾT <span>→</span></a>
+                            </div>
                         </div>
-                        <div class="RelatedRecipes__Item">
-                            <img src="<?= APP_URL ?>/public/assets/client/images/Culinary_roots/CongThuc_salad.jpg" alt="Related Recipe 3" class="RelatedRecipes__Image">
-                            <h4 class="RelatedRecipes__Name">Salad Hoa Quả</h4>
-                            <p class="RelatedRecipes__Description">Tươi mát và đầy màu sắc.</p>
+                        <div class="culinary-card" onclick="location.href='/culinary_roots_detail'">
+                            <img src="public/assets/client/images/Culinary_roots/CongThuc_KemTraiCay.jpg" alt="Mô tả hình ảnh" class="culinary-image">
+                            <div class="culinary-content">
+                                <h3 class="culinary-heading">BẮT GẶP SÀI GÒN XƯA TRONG MÓN UỐNG HIỆN ĐẠI</h3>
+                                <p class="culinary-description">Dấu qua bao nhiêu lớp sóng thời gian, người ta vẫn có thể tìm lại những dấu ấn thăng trầm...</p>
+                                <a href="#" class="culinary-detail-link">CHI TIẾT <span>→</span></a>
+                            </div>
                         </div>
-                        <div class="RelatedRecipes__Item">
-                            <img src="<?= APP_URL ?>/public/assets/client/images/Culinary_roots/Congthuc_SinhToChuoiXoai.jpg" alt="Related Recipe 4" class="RelatedRecipes__Image">
-                            <h4 class="RelatedRecipes__Name">Sinh Tố Xoài</h4>
-                            <p class="RelatedRecipes__Description">Tươi mát và thơm lừng.</p>
+                        <div class="culinary-card" onclick="location.href='/culinary_roots_detail'">
+                            <img src="public/assets/client/images/Culinary_roots/CongThuc_KemTraiCay.jpg" alt="Mô tả hình ảnh" class="culinary-image">
+                            <div class="culinary-content">
+                                <h3 class="culinary-heading">BẮT GẶP SÀI GÒN XƯA TRONG MÓN UỐNG HIỆN ĐẠI</h3>
+                                <p class="culinary-description">Dấu qua bao nhiêu lớp sóng thời gian, người ta vẫn có thể tìm lại những dấu ấn thăng trầm...</p>
+                                <a href="#" class="culinary-detail-link">CHI TIẾT <span>→</span></a>
+                            </div>
                         </div>
+                        <div class="culinary-card" onclick="location.href='/culinary_roots_detail'">
+                            <img src="public/assets/client/images/Culinary_roots/CongThuc_KemTraiCay.jpg" alt="Mô tả hình ảnh" class="culinary-image">
+                            <div class="culinary-content">
+                                <h3 class="culinary-heading">BẮT GẶP SÀI GÒN XƯA TRONG MÓN UỐNG HIỆN ĐẠI</h3>
+                                <p class="culinary-description">Dấu qua bao nhiêu lớp sóng thời gian, người ta vẫn có thể tìm lại những dấu ấn thăng trầm...</p>
+                                <a href="#" class="culinary-detail-link">CHI TIẾT <span>→</span></a>
+                            </div>
+                        </div>
+                        <div class="culinary-card" onclick="location.href='/culinary_roots_detail'">
+                            <img src="public/assets/client/images/Culinary_roots/CongThuc_KemTraiCay.jpg" alt="Mô tả hình ảnh" class="culinary-image">
+                            <div class="culinary-content">
+                                <h3 class="culinary-heading">BẮT GẶP SÀI GÒN XƯA TRONG MÓN UỐNG HIỆN ĐẠI</h3>
+                                <p class="culinary-description">Dấu qua bao nhiêu lớp sóng thời gian, người ta vẫn có thể tìm lại những dấu ấn thăng trầm...</p>
+                                <a href="#" class="culinary-detail-link">CHI TIẾT <span>→</span></a>
+                            </div>
+                        </div>
+
                     </div>
                 </section>
+
 
 
                 <section class="RecipeComments">

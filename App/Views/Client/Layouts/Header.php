@@ -29,12 +29,9 @@ class Header extends BaseView
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
       <link rel="stylesheet" href="<?= APP_URL ?>/public/styles/main.css">
-
-
     </head>
 
     <body>
-
       <header class="header">
         <!-- Topbar -->
         <div class="marquee-container">
@@ -77,7 +74,6 @@ class Header extends BaseView
         <div class="header-bottom">
           <div class="main-container">
             <div class="navbar">
-              <!-- Hamburger Menu Icon for Mobile -->
               <button class="menu-toggle icon" onclick="toggleOffcanvasNavbar()">
                 <i class="fas fa-bars"></i>
               </button>
@@ -102,11 +98,11 @@ class Header extends BaseView
                   <div class="sub-menu">
                     <a href="/introduce">Giới thiệu</a>
                     <a href="/store">Cửa hàng</a>
-                    <a href="/Policy">Chính sách & Ưu đãi</a>
+                    <a href="/policy">Chính sách & Ưu đãi</a>
                   </div>
                 </li>
                 <li>
-                  <a href="/Culinary_roots">Góc Ẩm Thực</a>
+                  <a href="/culinary_roots">Góc Ẩm Thực</a>
                 </li>
                 <li><a href="/news">Tin Tức</a></li>
                 <li><a href="/contact">Liên hệ</a></li>
@@ -183,15 +179,16 @@ class Header extends BaseView
                 </p>
                 <div class="cta-button-offcanvas">
                   <a class="cta-button view-cart-btn" href="/cart">Xem giỏ hàng</a>
-                  <a class="cta-button checkout-btn">Thanh toán</a>
+                  <a class="cta-button checkout-btn" href="/checkout">Thanh toán</a>
                 </div>
               </div>
             </div>
 
           </div>
         </div>
+        <!-- End Navbar -->
+        <!-- Đăng nhập overlay -->
         <div class="overlay" id="cartOverlay" onclick="toggleOffcanvasCart()"></div>
-        <!-- Login Modal -->
         <div class="login-modal" id="loginModal">
           <div class="login-modal-content">
             <span class="close-button" onclick="toggleLoginModal()">&times;</span>
@@ -228,47 +225,43 @@ class Header extends BaseView
             <p class="signup-prompt">Chưa có tài khoản? <a href="#" onclick="switchToSignup()">Đăng ký</a></p>
           </div>
         </div>
-
-
-
-        <!-- Dark Overlay for Login Modal -->
+        <!-- End đăng nhập overlay -->
+        <!-- Đăng ký overlay -->
         <div class="overlay" id="loginOverlay" onclick="toggleLoginModal()"></div>
-
         <div class="login-modal" id="signupModal">
           <div class="login-modal-content">
             <span class="close-button" onclick="toggleSignupModal()">&times;</span>
             <img src="<?= APP_URL ?>public/assets/client/images/home/logo (1).png" alt="Logo" class="logo-login-image" />
             <h2 class="login-title-content">Chào mừng bạn đến với Website</h2>
             <p class="login-title-desc">Tìm những ý tưởng mới để thử</p>
-            <form>
+            <form action="" method="post">
               <label for="username">Tên đăng nhập</label>
-              <input type="text" id="username" placeholder="Tên đăng nhập" required>
+              <input type="text" id="username" name="username" placeholder="Tên đăng nhập" required>
+
               <label for="gender">Giới tính</label>
-              <select id="gender" required>
+              <select id="gender" name="gender" required>
                 <option value="">Chọn giới tính</option>
                 <option value="male">Nam</option>
                 <option value="female">Nữ</option>
                 <option value="other">Khác</option>
               </select>
+
               <label for="password">Mật khẩu</label>
-              <input type="password" id="signupPassword" placeholder="Tạo mật khẩu" required>
+              <input type="password" id="signupPassword" name="password" placeholder="Tạo mật khẩu" required>
 
               <label for="confirmPassword">Xác nhận mật khẩu</label>
-              <input type="password" id="confirmPassword" placeholder="Xác nhận mật khẩu" required>
+              <input type="password" id="confirmPassword" name="confirm_password" placeholder="Xác nhận mật khẩu" required>
 
               <button type="submit" class="login-btn">Tiếp tục</button>
             </form>
+
 
             <p class="description">Bằng cách tiếp tục, bạn đồng ý với các <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách quyền riêng tư</a> của chúng tôi.</p>
             <p class="signup-prompt">Đã là thành viên? <a href="#" onclick="switchToLogin()">Đăng nhập</a></p>
           </div>
         </div>
-
-
-
-
-        <!--  -->
-        <!-- Off-Canvas Navbar -->
+        <!-- End đăng ký overlay -->
+        <!-- Navbar của mobile -->
         <div class=" offcanvas-navbar" id="offcanvasNavbar"> <button class="offcanvas-close" onclick="toggleOffcanvasNavbar()">&times;</button>
           <ul class="menu">
             <li><a href="/">Trang chủ</a></li>
@@ -285,23 +278,17 @@ class Header extends BaseView
               <ul class="sub-menu" id="aboutSubMenu">
                 <li><a href="/about/introduce">Giới thiệu</a></li>
                 <li><a href="/about/stores">Cửa hàng</a></li>
-                <li><a href="/about/policies">Chính sách & Ưu đãi</a></li>
+                <li><a href="/policy">Chính sách & Ưu đãi</a></li>
               </ul>
             </li>
-            <li><a href="/recipes">Góc Ẩm Thực</a></li>
+            <li><a href="/culinary_roots">Góc Ẩm Thực</a></li>
             <li><a href="/news">Tin Tức</a></li>
             <li><a href="/contact">Liên hệ</a></li>
           </ul>
         </div>
-
-
-
-
-        <!-- Overlay for Off-Canvas Navbar -->
+        <!-- End navbar mobile -->
+        <!-- Tìm kiếm overlay nhé -->
         <div class="overlay" id="navbarOverlay" onclick="toggleOffcanvasNavbar()"></div>
-
-
-        <!-- Search Overlay -->
         <div class="search-overlay" id="searchOverlay">
           <div class="row-search-overlay">
             <input type="text" placeholder="Tìm..." />
@@ -309,7 +296,7 @@ class Header extends BaseView
           </div>
         </div>
         <div class="overlay-search" onclick="toggleSearchOverlay()"></div>
-
+        <!-- End tìm kiếm -->
 
       </header>
   <?php
@@ -318,174 +305,4 @@ class Header extends BaseView
 }
 
   ?>
-  <!-- <script src="<?= APP_URL ?>public/assets/client/js/offcanvas_cart.js"></script> -->
-  <script>
-    function toggleLoginModal() {
-      const loginModal = document.getElementById('loginModal');
-      const loginOverlay = document.getElementById('loginOverlay');
-      const signupModal = document.getElementById('signupModal');
-
-      // Close the signup modal if it's open
-      if (signupModal.classList.contains('active')) {
-        signupModal.classList.remove('active');
-      }
-
-      // Toggle the login modal and overlay
-      const isLoginOpen = loginModal.classList.toggle('active');
-      loginOverlay.classList.toggle('active', isLoginOpen);
-      document.body.classList.toggle('modal-open', isLoginOpen);
-    }
-
-    function toggleSignupModal() {
-      const signupModal = document.getElementById('signupModal');
-      const loginModal = document.getElementById('loginModal');
-      const loginOverlay = document.getElementById('loginOverlay');
-
-      // Close the login modal if it's open
-      if (loginModal.classList.contains('active')) {
-        loginModal.classList.remove('active');
-      }
-
-      // Toggle the signup modal and overlay
-      const isSignupOpen = signupModal.classList.toggle('active');
-      loginOverlay.classList.toggle('active', isSignupOpen);
-      document.body.classList.toggle('modal-open', isSignupOpen);
-    }
-
-    function switchToSignup() {
-      const loginModal = document.getElementById('loginModal');
-      const signupModal = document.getElementById('signupModal');
-      const overlay = document.getElementById('loginOverlay');
-
-      // Close the login modal
-      loginModal.classList.remove('active');
-
-      // Open the signup modal and keep the overlay active
-      signupModal.classList.add('active');
-      overlay.classList.add('active');
-      document.body.classList.add('modal-open');
-    }
-
-    function switchToLogin() {
-      const signupModal = document.getElementById('signupModal');
-      const loginModal = document.getElementById('loginModal');
-      const overlay = document.getElementById('loginOverlay');
-
-      // Close the signup modal
-      signupModal.classList.remove('active');
-
-      // Open the login modal and keep the overlay active
-      loginModal.classList.add('active');
-      overlay.classList.add('active');
-      document.body.classList.add('modal-open');
-    }
-
-    function toggleOffcanvasCart() {
-      const cart = document.getElementById('offcanvasCart');
-      const cartOverlay = document.getElementById('cartOverlay');
-      const loginModal = document.getElementById('loginModal');
-      const loginOverlay = document.getElementById('loginOverlay');
-      const signupModal = document.getElementById('signupModal');
-
-      // Đóng modal đăng nhập và đăng ký nếu đang mở
-      if (loginModal.classList.contains('active')) {
-        loginModal.classList.remove('active');
-        loginOverlay.classList.remove('active');
-      }
-      if (signupModal.classList.contains('active')) {
-        signupModal.classList.remove('active');
-        loginOverlay.classList.remove('active');
-      }
-
-      // Mở hoặc đóng giỏ hàng
-      const isCartOpen = cart.classList.toggle('open');
-      cartOverlay.classList.toggle('active', isCartOpen);
-
-      document.body.classList.toggle('modal-open', isCartOpen);
-    }
-
-    function switchToSignup() {
-      // Đóng modal đăng nhập nếu nó đang mở
-      const loginModal = document.getElementById('loginModal');
-      if (loginModal.classList.contains('active')) {
-        loginModal.classList.remove('active');
-      }
-
-      // Mở modal đăng ký
-      const signupModal = document.getElementById('signupModal');
-      signupModal.classList.add('active');
-
-      // Đảm bảo overlay được bật
-      const loginOverlay = document.getElementById('loginOverlay');
-      loginOverlay.classList.add('active');
-
-      // Bật lớp CSS để ngăn cuộn
-      document.body.classList.add('modal-open');
-    }
-
-    function toggleOffcanvasNavbar() {
-      const navbar = document.getElementById('offcanvasNavbar');
-      const navbarOverlay = document.getElementById('navbarOverlay');
-      const cart = document.getElementById('offcanvasCart');
-      const cartOverlay = document.getElementById('cartOverlay');
-      const loginModal = document.getElementById('loginModal');
-      const signupModal = document.getElementById('signupModal');
-      const loginOverlay = document.getElementById('loginOverlay');
-
-      // Close other modals if they're open
-      if (cart.classList.contains('open')) {
-        cart.classList.remove('open');
-        cartOverlay.classList.remove('active');
-      }
-      if (loginModal.classList.contains('active')) {
-        loginModal.classList.remove('active');
-        loginOverlay.classList.remove('active');
-      }
-      if (signupModal.classList.contains('active')) {
-        signupModal.classList.remove('active');
-        loginOverlay.classList.remove('active');
-      }
-
-      // Toggle the navbar and overlay
-      const isNavbarOpen = navbar.classList.toggle('open');
-      navbarOverlay.classList.toggle('active', isNavbarOpen);
-
-      document.body.classList.toggle('modal-open', isNavbarOpen);
-    }
-
-    function toggleOffcanvasNavbar() {
-      const navbar = document.getElementById('offcanvasNavbar');
-      const isNavbarOpen = navbar.classList.toggle('open');
-      document.body.classList.toggle('modal-open', isNavbarOpen);
-    }
-
-    function toggleSubMenu(menuId) {
-      const subMenu = document.getElementById(menuId);
-
-      if (window.innerWidth < 769) { // Kiểm tra nếu màn hình nhỏ hơn 769px (mobile)
-        if (subMenu.classList.contains('open')) {
-          subMenu.classList.remove('open');
-        } else {
-          // Đóng tất cả các submenu khác trước khi mở submenu hiện tại
-          const allSubMenus = document.querySelectorAll('.sub-menu');
-          allSubMenus.forEach((menu) => menu.classList.remove('open'));
-
-          // Mở submenu hiện tại
-          subMenu.classList.add('open');
-        }
-      }
-    }
-
-
-
-
-    function toggleSearchOverlay() {
-      const searchOverlay = document.querySelector('.search-overlay');
-      const overlaySearch = document.querySelector('.overlay-search');
-
-      const isOpen = searchOverlay.classList.toggle('open');
-      overlaySearch.classList.toggle('active', isOpen);
-
-      document.body.classList.toggle('modal-open', isOpen);
-    }
-  </script>
+  <script src="<?= APP_URL ?>public/assets/client/js/overlay.js"></script>

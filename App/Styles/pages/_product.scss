@@ -4,7 +4,8 @@
 }
 .content-container {
   display: flex;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 5px;
   padding: 0 0 30px 0;
 }
 .product-section h1 {
@@ -47,17 +48,18 @@
   width: 100%;
   padding: 8px 12px;
 }
+//
 .sidebar {
-  width: 250px;
+  width: 320px;
   padding: 20px 0;
   background-color: #f9f9f9;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
-  margin-right: 20px;
-  align-items: center;
   position: sticky;
-  top: 20pxx;
+  top: 20px;
+  align-self: flex-start;
   height: fit-content;
+  z-index: 10;
 
   .search-bar {
     display: flex;
@@ -134,7 +136,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 0;
+  padding: 10px 0;
 }
 
 .product-section__title-count {
@@ -152,7 +154,7 @@
 .product-count {
   font-size: 1rem;
   color: #888;
-  margin-left: 8px; /* Adjust this value to control spacing between title and count */
+  margin-left: 8px;
 }
 
 .sort-dropdown {
@@ -236,18 +238,18 @@
 }
 
 .product-section {
-  padding: 20px;
+  padding: 10px;
 
   &__title {
     font-size: 2.4rem;
     color: abstracts.$color-primary;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 16px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
     row-gap: 20px;
   }
   &__category {
@@ -437,4 +439,7 @@
     padding: 8px;
     font-size: 1.2rem;
   }
+}
+input {
+  width: 10%;
 }

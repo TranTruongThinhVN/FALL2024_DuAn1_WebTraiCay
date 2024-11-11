@@ -37,6 +37,12 @@
 }
 
 // navbar
+.header {
+  position: sticky;
+  top: 0; 
+  z-index: 1000; 
+  background-color: #fff;
+}
 
 .header-bottom {
   border-bottom: 2px solid abstracts.$color-primary;
@@ -208,7 +214,7 @@
   top: 10px;
   bottom: 10px;
   width: 90%;
-  max-width: 600px;
+  max-width: 500px;
   height: auto;
   background-color: #fff;
   border-radius: 10px;
@@ -443,15 +449,11 @@
     display: none;
   }
 }
-//
-/* Login Modal */
+// đăng nhập overlay
 .overlay.active {
   opacity: 1;
   visibility: visible;
 }
-
-/* Modal Container */
-
 .login-modal {
   display: none;
   position: fixed;
@@ -620,8 +622,6 @@
   text-align: center;
   font-size: 1.4rem;
 }
-
-/* Icon Styling */
 .social-login-btn img,
 .social-login-btn svg {
   width: 20px;
@@ -671,7 +671,7 @@ body.modal-open {
   justify-content: flex-start;
 }
 //
-/* Overlay for dimming background */
+
 .overlay.active {
   opacity: 1;
   visibility: visible;
@@ -684,22 +684,21 @@ body.modal-open {
   border: 1px solid #ddd;
   border-radius: 15px;
   outline: none;
-  background-color: transparent; /* Adjust background color */
+  background-color: transparent;
   color: #333;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  padding-right: 30px; /* Add space on the right for custom arrow */
+  padding-right: 30px;
   background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5 5-5H7z"/></svg>');
   background-repeat: no-repeat;
-  background-position: right 10px center; /* Adjust arrow closer to the right edge */
+  background-position: right 10px center;
 }
 
 #gender:focus {
   border-color: #0056b3;
 }
-/* Off-canvas navbar styles */
-/* Off-canvas navbar styles */
+// Navbar
 .sub-menu {
   display: block;
   margin-top: 10px;
@@ -748,8 +747,6 @@ body.modal-open {
   color: #333;
   cursor: pointer;
 }
-
-/* Main Menu Items */
 .offcanvas-navbar .menu {
   display: flex;
   flex-direction: column;
@@ -768,20 +765,20 @@ body.modal-open {
   justify-content: space-between;
   align-items: center;
 }
-/* Style the Search Overlay */
+// Tìm kiếm overlay
 .search-overlay {
   position: fixed;
   right: -100%;
-  top: 20px; /* Added some space from the top */
-  bottom: 20px; /* Added some space from the bottom */
+  top: 20px;
+  bottom: 20px;
   width: 90%;
-  max-width: 600px;
+  max-width: 500px;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   transition: right 0.6s ease;
   z-index: 1000;
-  padding: 30px; /* Add padding for spacing inside */
+  padding: 30px;
 }
 .row-search-overlay {
   display: flex;
@@ -790,14 +787,12 @@ body.modal-open {
 .search-overlay.open {
   right: 0;
 }
-
-/* Style the input field to match the clean look */
 .search-overlay input[type="text"] {
   width: 100%;
   font-weight: 600;
-  padding: 10px 0; /* Adjust padding for better spacing */
-  font-size: 1.9rem; /* Make font larger for visibility */
-  border: none; /* Remove border */
+  padding: 10px 0;
+  font-size: 1.9rem;
+  border: none;
   border-bottom: 2px solid abstracts.$color-primary;
   outline: none;
   color: #333;
@@ -805,6 +800,9 @@ body.modal-open {
 
 .search-overlay input[type="text"]::placeholder {
   color: #aaa;
+}
+.overlay-close {
+  cursor: pointer;
 }
 .overlay-search {
   position: fixed;
@@ -823,31 +821,28 @@ body.modal-open {
   opacity: 1;
   visibility: visible;
 }
-/* Tablet and Mobile view - slide down from the top, centered, and compact */
 @media (max-width: 768px) {
   .search-overlay {
     position: fixed;
-    top: -100%; /* Start hidden above the viewport */
+    top: -100%;
     right: 0;
     left: 0;
-    margin: 0 auto; /* Center on screen */
-    width: 90%; /* Adjusted width for tablet and mobile */
-    width: 100%; /* Max width to prevent it from stretching too wide */
-    max-height: 100px; /* Limit height for dropdown effect */
+    margin: 0 auto;
+    width: 90%;
+    width: 100%;
+    max-height: 100px;
     background-color: #fff;
-    border-radius: 10px; /* Rounded corners */
-    transition: top 0.4s ease; /* Slide down animation */
-    padding: 15px 20px; /* Adjusted padding */
+    border-radius: 10px;
+    transition: top 0.4s ease;
+    padding: 15px 20px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000;
   }
 
   .search-overlay.open {
-    top: 20px; /* Slide in from the top on tablet/mobile */
+    top: 20px;
   }
 }
-
-/* Overlay for background dim - only apply for desktop */
 .overlay-search {
   position: fixed;
   top: 0;
@@ -860,8 +855,6 @@ body.modal-open {
   z-index: 999;
   transition: opacity 0.6s ease;
 }
-
-/* Only show dim overlay on desktop */
 @media (min-width: 769px) {
   .search-overlay.open + .overlay-search {
     opacity: 1;

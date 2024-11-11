@@ -23,36 +23,31 @@ class Contact extends BaseView
                             referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
 
-                    <div class="contact__details">
+                    <div class="contact__wrapper">
                         <div class="contact__info">
                             <h1 class="contact__info-title">Thông Tin Liên Hệ</h1>
                             <ul class="contact__info-list">
                                 <li class="contact__info-item">
                                     <span class="contact__info-icon"><i class="fa-solid fa-location-dot"></i></span>
                                     <p class="contact-text">
-                                        <b>Chi nhánh 1:</b> <br> Lầu 1, 43 Nguyễn Thái Học, phường Cầu Ông Lãnh, quận 1, TP. Hồ
-                                        Chí Minh.<br>
-                                        <b>Chi nhánh 2:</b> <br> SAV.7-00.01, Tầng trệt Tháp 7, The Sun Avenue, 28 Mai Chí Thọ,
-                                        phường An Phú, thành phố Thủ Đức.
+                                        FPT POLYTECHNIC, KDC Hoàng Quân, phường Thường Thạnh, quận Cái Răng, Cần Thơ
                                     </p>
                                 </li>
                                 <li class="contact__info-item">
                                     <span class="contact__info-icon"><i class="fa-solid fa-envelope"></i></span>
                                     <p class="contact__text">
-                                        <b>Email</b> <br>hello@morningfruit.com.vn
+                                        khainqpc08388@gmail.com
                                     </p>
                                 </li>
                                 <li class="contact__info-item">
                                     <span class="contact__info-icon"><i class="fa-solid fa-phone"></i></span>
-                                    <p class="contact__text"><strong>Điện thoại</strong>
-                                        <br><b>Hotline 1:</b>0865660775<br>
-                                        <b>Hotline 2:</b>0327400880
-                                    </p>
+                                    <p class="contact__text">0878999894</p>
+
                                 </li>
                                 <li class="contact__info-item">
                                     <span class="contact__info-icon"><i class="fa-solid fa-clock"></i></span>
-                                    <p class="contact__text"><strong>Thời gian làm việc</strong>
-                                        <br>Thứ 2 đến Chủ nhật từ 8h đến 20h
+                                    <p class="contact__text">Thứ 2 đến Chủ nhật từ 8h đến 20h
+
                                     </p>
                                 </li>
                             </ul>
@@ -60,8 +55,9 @@ class Contact extends BaseView
 
                         <div class="contact__form">
                             <h1 class="contact__form-title">Tư Vấn Quà Tặng Doanh Nghiệp</h1>
-                            <p class="contact__form-description">Nếu bạn có thắc mắc gì, có thể gửi yêu cầu cho chúng tôi, và
-                                chúng tôi sẽ liên lạc lại với bạn sớm nhất có thể.</p>
+                            <p class="contact__form-description">
+                                Nếu bạn có thắc mắc gì, có thể gửi yêu cầu cho chúng tôi, và chúng tôi sẽ liên lạc lại với bạn sớm nhất có thể.
+                            </p>
                             <form action="">
                                 <div class="contact__form-group">
                                     <input type="text" class="contact__form-input" placeholder="Tên của bạn">
@@ -72,7 +68,6 @@ class Contact extends BaseView
                                 </div>
                                 <div class="contact__form-group">
                                     <textarea class="contact__form-textarea" placeholder="Nội dung"></textarea>
-                                    <p class="contact__form-note">This site is protected by reCAPTCHA and the Google</p>
                                 </div>
                                 <div class="contact__form-group">
                                     <button class="contact__form-button">Gửi cho chúng tôi</button>
@@ -81,9 +76,9 @@ class Contact extends BaseView
                         </div>
                     </div>
                 </section>
-                <!-- footer -->
             </div>
         </div>
 <?php
     }
 }
+?>

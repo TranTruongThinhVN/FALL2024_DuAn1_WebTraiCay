@@ -7,6 +7,7 @@ use App\Views\Admin\Layouts\Header;
 use App\Views\Admin\Layouts\Navbar;
 use App\Views\Admin\Layouts\Settings_panel;
 use App\Views\Admin\Layouts\Sidebar;
+use App\Views\Admin\Pages\Product\Create;
 use App\Views\Admin\Pages\Product\Product;
 
 class ProductController
@@ -19,6 +20,15 @@ class ProductController
         Sidebar::render();
         Settings_panel::render();
         Product::render();
+        Footer::render();
+    }
+    public static function create()
+    {
+        Header::render();
+        Navbar::render();
+        Sidebar::render();
+        Settings_panel::render();
+        Create::render();
         Footer::render();
     }
 }

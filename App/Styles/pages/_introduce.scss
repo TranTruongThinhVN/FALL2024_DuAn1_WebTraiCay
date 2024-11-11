@@ -1,105 +1,61 @@
 @use "../abstracts";
-
-.introduce-banner {
-  position: relative;
+.slide__image {
   width: 100%;
-  height: abstracts.$banner-height;
-  overflow: hidden;
-
-  &__image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  &__content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: abstracts.$banner-text-color;
-    text-align: center;
-    background: abstracts.$banner-overlay-color; // Optional for better text readability
-    padding: 20px;
-    border-radius: 5px;
-
-    h1 {
-      font-size: 2em;
-      margin: 0;
-    }
-
-    p {
-      font-size: 1.2em;
-      margin: 5px 0 0;
-    }
-  }
+  height: 550px;
+  object-fit: cover;
 }
-
 .why-choose {
+  margin-top: 30px;
   text-align: center;
   margin-bottom: 50px;
+}
 
-  &__title {
-    font-size: abstracts.$fs-h3;
-    margin-bottom: 20px;
+.why-choose__title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #333;
+}
 
-    @include abstracts.down(md) {
-      font-size: 1.5em;
-    }
-  }
+.why-choose__highlight {
+  color: abstracts.$color-primary;
+  font-weight: bold;
+}
 
-  &__highlight {
-    color: #a0522d;
-    font-weight: bold;
-  }
+.why-choose__items {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+}
 
-  &__items {
-    display: flex;
-    justify-content: space-around;
-    gap: 20px;
+.why-choose__item {
+  text-align: center;
+  max-width: 500px;
+  margin-top: 30px;
+}
 
-    @include abstracts.down(md) {
-      flex-direction: column;
-    }
-  }
+.why-choose__icon {
+  font-size: 3em;
+  color: #333;
+  margin-bottom: 15px;
+}
 
-  &__item {
-    text-align: center;
-    max-width: 400px;
+.why-choose__item-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 5px;
+  padding-bottom: 18px; /* Space between text and underline */
+  border-bottom: 2px dotted abstracts.$color-primary; /* Dotted underline */
+  transition: border-bottom 0.3s ease; /* Smooth transition */
+}
 
-    @include abstracts.down(sm) {
-      max-width: 100%;
-    }
-  }
+.why-choose__item-title:hover {
+  border-bottom: 2px solid abstracts.$color-primary; /* Solid underline on hover */
+}
 
-  &__icon {
-    font-size: 3em;
-    color: #333;
-    margin-bottom: 10px;
-
-    @include abstracts.down(sm) {
-      font-size: 2.5em;
-    }
-  }
-
-  &__item-title {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-bottom: 5px;
-
-    @include abstracts.down(sm) {
-      font-size: 1em;
-    }
-  }
-
-  &__item-description {
-    font-size: 0.9em;
-    color: #666;
-
-    @include abstracts.down(sm) {
-      font-size: 0.8em;
-    }
-  }
+.why-choose__item-description {
+  font-size: 0.9em;
+  margin-top: 15px;
+  color: #666;
 }
 
 .brand-introduction {
@@ -133,7 +89,7 @@
 
       h2 {
         font-size: 2.4rem;
-        color: #8b4513;
+        color: abstracts.$color-primary;
         margin-bottom: 20px;
 
         @include abstracts.down(sm) {
@@ -203,94 +159,99 @@
 }
 
 .philosophy {
-  min-height: 450px;
-  &__item {
-    flex: 1 1 300px;
-    position: relative;
-    max-width: 300px;
-    margin-bottom: 2rem;
-    cursor: pointer;
-    &:hover .philosophy__item-inner {
-      transform: rotateY(180deg);
-    }
+  text-align: center;
+  padding: 20px;
+  z-index: 1;
+  margin-top: 20px;
 
-    @include abstracts.down(md) {
-      max-width: 50%;
-    }
+  margin-bottom: 60px;
+}
 
-    @include abstracts.down(sm) {
-      max-width: 100%;
-    }
-  }
+.philosophy__title {
+  font-size: 2em;
+  color: abstracts.$color-primary;
+  margin-bottom: 30px;
+}
 
-  &__items {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: stretch;
+.philosophy__items {
+  display: flex;
+  gap: 20px;
 
-    @include abstracts.down(sm) {
-      flex-direction: column;
-      align-items: center;
-    }
-  }
+  justify-content: center;
+  flex-wrap: wrap;
+}
 
-  &__title {
-    text-align: center;
-    font-size: 2em;
-    color: #a0522d;
-    margin-bottom: 30px;
+.philosophy__item {
+  width: 300px;
+  margin-top: 30px;
+  height: 370px;
+  perspective: 1000px;
+  cursor: pointer;
+}
 
-    @include abstracts.down(sm) {
-      font-size: 1.8em;
-    }
-  }
+.philosophy__item-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
 
-  &__item-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-    transition: transform 0.5s ease;
-  }
+.philosophy__item:hover .philosophy__item-inner,
+.philosophy__item.flipped .philosophy__item-inner {
+  transform: rotateY(180deg);
+}
 
-  &__image,
-  &__text-content {
-    position: absolute;
-    width: 100%;
-    height: 320px;
-    backface-visibility: hidden; // Ẩn mặt sau khi quay
-    border-radius: abstracts.$radius-md;
-  }
+.philosophy__image,
+.philosophy__text-content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 8px;
+}
 
-  &__image {
-    width: 100%;
-    height: 320px;
-    border-radius: abstracts.$radius-md;
-    transform: rotateY(0); // Đặt ảnh ở mặt trước
-    object-fit: cover;
+.philosophy__image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
 
-    @include abstracts.down(md) {
-      height: 250px;
-    }
+.philosophy__caption {
+  background-color: abstracts.$color-primary;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 0 0 8px 8px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
 
-    @include abstracts.down(sm) {
-      height: 200px;
-    }
-  }
+.philosophy__text-content {
+  background-color: #fff;
+  color: #333;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 20px;
+  border: 1px solid abstracts.$color-primary;
+  transform: rotateY(180deg);
+  border-radius: 8px;
+  box-sizing: border-box;
+}
 
-  &__text-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: abstracts.$light-background;
-    height: 320px;
-    border: solid 1px abstracts.$color-primary-dark;
-    transform: rotateY(180deg); // Đặt nội dung ở mặt sau
-    padding: 10px;
-    font-size: 1em;
-    color: #333;
-    border-radius: abstracts.$radius-md;
-  }
+.philosophy__text-content h3 {
+  color: abstracts.$color-primary;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.philosophy__text-content p {
+  color: #666;
+  font-size: 1em;
+  text-align: justify;
+  line-height: 1.5;
 }
