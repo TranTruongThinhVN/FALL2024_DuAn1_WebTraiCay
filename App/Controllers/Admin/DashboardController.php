@@ -14,10 +14,7 @@ class DashboardController
     // hiển thị danh sách
     public static function index()
     {
-        Header::render();
-        Navbar::render();
-        Sidebar::render();
-        Settings_panel::render();
+        Header::render(); 
         Index::render();
         Footer::render();
     }

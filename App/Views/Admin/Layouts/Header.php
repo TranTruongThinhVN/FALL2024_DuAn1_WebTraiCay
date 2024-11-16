@@ -9,35 +9,194 @@ class Header extends BaseView
     public static function render($data = null)
     {
 
-?>
-        <!DOCTYPE html>
-        <html lang="en">
+?> 
+    <!DOCTYPE html>
+        <html dir="ltr" lang="en">
 
         <head>
-            <!-- Required meta tags -->
             <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            <title>CelestialUI Admin</title>
-            <!-- base:css -->
-            <link rel="stylesheet" href="<?= APP_URL ?>/public/assets/admin/vendors/typicons.font/font/typicons.css">
-            <link rel="stylesheet" href="<?= APP_URL ?>/public/assets/admin/vendors/css/vendor.bundle.base.css">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <!-- Tell the browser to be responsive to screen width -->
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Admin</title>
+            <!-- Favicon icon -->
+            <link rel="icon" type="image/png" sizes="16x16" href="<?= APP_URL ?>/public/assets/admin/images/favicon.png">
+            <!-- CSS -->
+            <link href="<?= APP_URL ?>/public/assets/admin/libs/flot/css/float-chart.css" rel="stylesheet">
+            <link rel="stylesheet" type="text/css" href="<?= APP_URL ?>/public/assets/admin/extra-libs/multicheck/multicheck.css">
+            <link href="<?= APP_URL ?>/public/assets/admin/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <link rel="stylesheet" type="text/css" href="<?= APP_URL ?>/public/assets/admin/libs/select2/dist/css/select2.min.css">
+            <link rel="stylesheet" type="text/css" href="<?= APP_URL ?>/public/assets/admin/libs/jquery-minicolors/jquery.minicolors.css">
+            <link rel="stylesheet" type="text/css" href="<?= APP_URL ?>/public/assets/admin/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+            <link rel="stylesheet" type="text/css" href="<?= APP_URL ?>/public/assets/admin/libs/quill/dist/quill.snow.css">
 
-            <link rel="stylesheet" href="<?= APP_URL ?>/public/assets/admin/css/vertical-layout-light/style.css">
-            <!-- endinject -->
-            <link rel="shortcut icon" href="<?= APP_URL ?>images/favicon.png" />
+            <!-- Custom CSS -->
+            <link href="<?= APP_URL ?>/public/assets/admin/dist/css/style.min.css" rel="stylesheet">
+
         </head>
 
         <body>
 
-            <div class="row" id="proBanner">
-                <div class="col-12">
-                    <span class="d-flex align-items-center purchase-popup">
-                        <!-- <p>Get tons of UI components, Plugins, multiple layouts, 20+ sample pages, and more!</p> -->
-                        <!-- <a href="https://www.bootstrapdash.com/product/celestial-admin-template/?utm_source=organic&utm_medium=banner&utm_campaign=free-preview" target="_blank" class="btn download-button purchase-button ml-auto">Upgrade To Pro</a> -->
-                        <i class="typcn typcn-delete-outline" id="bannerClose"></i>
-                    </span>
-                </div>
-            </div>
+            <!-- ============================================================== -->
+            <!-- Main wrapper - style you can find in pages.scss -->
+            <!-- ============================================================== -->
+            <div id="main-wrapper" data-layout="vertical" data-navbarbg="skin5" data-sidebartype="full" data-sidebar-position="absolute" data-header-position="absolute" data-boxed-layout="full">
+                <!-- ============================================================== -->
+                <!-- Topbar header - style you can find in pages.scss -->
+                <!-- ============================================================== -->
+                <header class="topbar" data-navbarbg="skin5">
+                    <nav class="navbar top-navbar navbar-expand-md navbar-dark">
+                        <div class="navbar-header" data-logobg="skin5">
+
+                            <!-- ============================================================== -->
+                            <!-- Logo -->
+                            <!-- ============================================================== -->
+                            <a class="navbar-brand" href="/admin">
+                                <!-- Logo icon -->
+                                <b class="logo-icon ps-2">
+                                    <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                                    <!-- Dark Logo icon -->
+                                    <img src="../public/assets/client/images/home/logo (1).png" alt="homepage" width="120px" class="light-logo" />
+
+                                </b>
+                                <!--End Logo icon -->
+                                <!-- Logo text -->
+                                <span class="logo-text">
+                                    <!-- dark Logo text --> 
+
+                                </span>
+                                <!-- Logo icon -->
+                                <!-- <b class="logo-icon"> -->
+                                <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                                <!-- Dark Logo icon -->
+                                <!-- <img src="<?= APP_URL ?>/public/assets/admin/images/logo-text.png" alt="homepage" class="light-logo" /> -->
+
+                                <!-- </b> -->
+                                <!--End Logo icon -->
+                            </a> 
+                            <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- End Logo -->
+                        <!-- ============================================================== -->
+                        <div class="navbar-collapse collapse" id="navbarSupportedContent" data-navbarbg="skin5">
+                            <!-- ============================================================== -->
+                            <!-- toggle and nav items -->
+                            <!-- ============================================================== -->
+                            <ul class="navbar-nav float-start me-auto">
+                                <li class="nav-item d-none d-lg-block"><a class="nav-link sidebartoggler waves-effect waves-light" href="javascript:void(0)" data-sidebartype="mini-sidebar"><i class="mdi mdi-menu font-24"></i></a></li>
+                                <!-- ============================================================== -->
+                            </ul>
+                            <!-- ============================================================== -->
+                            <!-- Right side toggle and nav items -->
+                            <!-- ============================================================== -->
+                            <ul class="navbar-nav float-end">                
+                                <!-- ============================================================== -->
+                                <!-- User profile and search -->
+                                <!-- ============================================================== -->
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <img src="https://yt3.ggpht.com/ytc/AKedOLTDDKsQ3oJg1JFnTgjvEwvJI3wvhOYinq2CDTW9=s900-c-k-c0x00ffffff-no-rj" alt="user" class="rounded-circle" width="31">
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end user-dd animated" aria-labelledby="navbarDropdown">
+
+                                        <a class="dropdown-item" href=""><i class="fa fa-power-off me-1 ms-1"></i> Đăng xuất</a>
+                                    </ul>
+                                </li>
+                                <!-- ============================================================== -->
+                                <!-- User profile and search -->
+                                <!-- ============================================================== -->
+                            </ul>
+                        </div>
+                    </nav>
+                </header> 
+                <!-- ============================================================== -->
+                <aside class="left-sidebar" data-sidebarbg="skin5">
+                    <!-- Sidebar scroll-->
+                    <div class="scroll-sidebar">
+                        <!-- Sidebar navigation-->
+                        <nav class="sidebar-nav">
+                            <ul id="sidebarnav" class="pt-4">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/admin" aria-expanded="false"><i class="mdi mdi-view-dashboard"></i><span class="hide-menu">Thống kê</span></a>
+                                </li>
+
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-solid fa-box"></i><span class="hide-menu">Loại sản phẩm </span></a>
+                                    <ul aria-expanded="false" class="collapse  first-level">
+                                        <li class="sidebar-item">
+                                            <a href="/admin/categories" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Danh sách </span></a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/admin/add-category" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Thêm mới </span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="mdi mdi-receipt"></i><span class="hide-menu">Sản phẩm </span></a>
+                                    <ul aria-expanded="false" class="collapse  first-level">
+                                        <li class="sidebar-item">
+                                            <a href="/admin/product" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Danh sách </span></a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/admin/add-product" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Thêm mới </span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-solid fa-comment"></i></i><span class="hide-menu">Bình luận </span></a>
+                                    <ul aria-expanded="false" class="collapse  first-level">
+                                        <li class="sidebar-item">
+                                            <a href="/comments" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Danh sách </span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-solid fa-cart-shopping"></i></i><span class="hide-menu">Đơn hàng </span></a>
+                                    <ul aria-expanded="false" class="collapse  first-level">
+                                        <li class="sidebar-item">
+                                            <a href="/admin/order" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Danh sách </span></a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/admin/add-category" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Thêm mới </span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-regular fa-credit-card"></i></i></i><span class="hide-menu">Thanh toán </span></a>
+                                    <ul aria-expanded="false" class="collapse  first-level">
+                                        <li class="sidebar-item">
+                                            <a href="/admin/checkout" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Danh sách </span></a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/admin/add-category" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Thêm mới </span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-solid fa-user"></i><span class="hide-menu">Người dùng </span></a>
+                                    <ul aria-expanded="false" class="collapse  first-level">
+                                        <li class="sidebar-item">
+                                            <a href="/admin/user" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Danh sách </span></a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/admin/add-category" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Thêm mới </span></a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="sidebar-item p-3">
+                                    <a href="https://github.com/wrappixel/matrix-admin-lite" target="_blank" class="w-100 btn btn-cyan d-flex align-items-center text-white"><i class="mdi mdi-cloud-download font-20 me-2"></i>Theme</a>
+                                </li>
+                            </ul>
+                        </nav>
+                        <!-- End Sidebar navigation -->
+                    </div>
+                    <!-- End Sidebar scroll-->
+                </aside>
+                <!-- ============================================================== -->
+                <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+                <!-- ============================================================== -->
 
     <?php
 

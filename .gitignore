@@ -10,3 +10,107 @@ package-lock.json
 public/styles/main.css
 public/styles/main.css.map
 /log/php-erros.log
+
+#
+# Các file tạm thời của hệ thống
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+*.swo
+
+#
+# Logs
+*.log
+logs/
+storage/logs/
+
+# Cache
+.cache/
+*.cache
+bootstrap/cache/
+
+#
+# File cấu hình cục bộ hoặc nhạy cảm
+*.env.*
+.env.local
+.env.backup
+.env.testing
+
+#
+# Dependency lock files
+yarn.lock
+pnpm-lock.yaml
+
+#
+# File compiled
+*.class
+*.pyc
+*.pyo
+*.exe
+*.dll
+*.so
+*.dylib
+*.o
+*.a
+
+#
+# Laravel specific
+/vendor/
+storage/framework/sessions/
+storage/framework/views/
+storage/framework/cache/data/
+node_modules/
+
+# Hệ thống và file tạm
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+*.swo
+
+# Môi trường và cấu hình
+.env
+.env.*
+.env.local
+.env.backup
+.env.testing
+
+# Cache và logs
+*.log
+logs/
+storage/logs/
+.cache/
+*.cache
+bootstrap/cache/
+
+# Dependencies
+node_modules/
+vendor/
+composer.lock
+yarn.lock
+pnpm-lock.yaml
+
+# File compiled hoặc build
+/public/build/
+dist/
+out/
+*.class
+*.pyc
+*.pyo
+*.exe
+*.dll
+*.so
+*.dylib
+*.o
+*.a
+
+# Laravel/PHP specific
+storage/framework/sessions/
+storage/framework/views/
+storage/framework/cache/data/
+public/styles/main.css
+public/styles/main.css.map
+/log/php-erros.log
+.idea/
+.vscode/
