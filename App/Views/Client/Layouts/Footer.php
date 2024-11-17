@@ -84,8 +84,10 @@ class Footer extends BaseView
                 </div>
             </div>
         </footer>
+        <script src="<?= getenv('APP_URL ') ?>App/Styles/Vendors/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js">
+        </script>
+        <script src="<?= APP_URL ?>public/assets/client/js/overlay.js"></script>
         </body>
-        <script src="<?= getenv('APP_URL ') ?>App/Styles/Vendors/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
 
         </html>
 

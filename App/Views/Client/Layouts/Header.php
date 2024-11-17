@@ -305,4 +305,3 @@ class Header extends BaseView
 }
 
   ?>
-  <script src="<?= APP_URL ?>public/assets/client/js/overlay.js"></script>

@@ -7,20 +7,19 @@ use App\Views\Client\Components\Category;
 
 class Index extends BaseView
 {
-  public static function render($data = null)
+  public static function render($products = null)
   {
 
 ?>
 
     <main class="main-container">
-
-
       <div class="content-container">
         <aside class="sidebar">
-
           <div class="search-bar">
-            <input type="text" placeholder="Bạn muốn tìm gì?" />
-            <button><i class="fas fa-search"></i></button>
+            <form method="GET" action="/product-search">
+              <input type="text" name="keyword" placeholder="Bạn muốn tìm gì?" value="<?= isset($_GET['keyword']) ? $_GET['keyword'] : '' ?>" />
+              <button type="submit" value="Tìm kiếm"><i class="fas fa-search"></i></button>
+            </form>
           </div>
 
           <div class="category-section">
@@ -32,6 +31,30 @@ class Index extends BaseView
               <li class="hover-target"><a href="#">Quà Tặng Trái Cây</a></li>
               <li class="hover-target"><a href="#">Mâm Ngũ Quả</a></li>
             </ul>
+          </div>
+
+          <div class="category-section">
+            <h2>Lọc giá</h2>
+            <form method="GET" action="/product-filter">
+              <ul>
+                <li>
+                  <input type="radio" name="price_range" value="0-50000" <?= isset($_GET['price_range']) && $_GET['price_range'] == '0-50000' ? 'checked' : '' ?> /> Dưới 50.000₫
+                </li>
+                <li>
+                  <input type="radio" name="price_range" value="50000-100000" <?= isset($_GET['price_range']) && $_GET['price_range'] == '50000-100000' ? 'checked' : '' ?> /> 50.000₫ - 100.000₫
+                </li>
+                <li>
+                  <input type="radio" name="price_range" value="100000-500000" <?= isset($_GET['price_range']) && $_GET['price_range'] == '100000-500000' ? 'checked' : '' ?> /> 100.000₫ - 500.000₫
+                </li>
+                <li>
+                  <input type="radio" name="price_range" value="500000-1000000" <?= isset($_GET['price_range']) && $_GET['price_range'] == '500000-1000000' ? 'checked' : '' ?> /> 500.000₫ - 1.000.000₫
+                </li>
+                <li>
+                  <input type="radio" name="price_range" value="1000000-1000000000" <?= isset($_GET['price_range']) && $_GET['price_range'] == '1000000-1000000000' ? 'checked' : '' ?> /> Trên 1.000.000₫
+                </li>
+              </ul>
+              <button type="submit" class="product-section__show-more">Áp dụng</button>
+            </form>
           </div>
 
           <div class="category-section">
@@ -50,17 +73,6 @@ class Index extends BaseView
             </ul>
           </div>
 
-          <div class="category-section">
-            <h2>Lọc giá</h2>
-            <ul>
-              <li><input type="checkbox" /> Dưới 500.000₫</li>
-              <li><input type="checkbox" /> 500.000₫ - 1.000.000₫</li>
-              <li><input type="checkbox" /> 1.000.000₫ - 2.500.000₫</li>
-              <li><input type="checkbox" /> 2.500.000₫ - 5.000.000₫</li>
-              <li><input type="checkbox" /> Trên 5.000.000₫</li>
-            </ul>
-          </div>
-
         </aside>
         <div class="product-section__category product-section__category--vietnam-fruits">
           <div class="product-section__header">
@@ -73,151 +85,43 @@ class Index extends BaseView
                 <i class="fas fa-sort"></i> Sắp xếp
               </button>
               <div class="sort-dropdown__menu">
-                <a href="#">Sản phẩm nổi bật</a>
                 <a href="#">Giá: Tăng dần</a>
                 <a href="#">Giá: Giảm dần</a>
                 <a href="#">Tên: A-Z</a>
                 <a href="#">Tên: Z-A</a>
-                <a href="#">Cũ nhất</a>
-                <a href="#">Mới nhất</a>
-                <a href="#">Bán chạy nhất</a>
-                <a href="#">Tồn kho giảm dần</a>
               </div>
             </div>
           </div>
 
           <div class="product-section__grid" onclick="location.href='/product-detail'">
-            <div class="product-card">
-              <img src="<?= APP_URL ?>public/assets/client/images/product/buoi_da_xanh.webp" alt="Dừa xiêm gọt trọc" class="product-card__image" />
-              <div class="product-card__info">
-                <h3 class="product-card__name">Dừa xiêm gọt trọc</h3>
-                <p class="product-card__price">15,500₫</p>
-                <button class="product-card__button">
-                  <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card" onclick="location.href='/product-detail'">
-              <img src="<?= APP_URL ?>public/assets/client/images/product/luu_tu_xuyen.webp" alt="Dừa xiêm gọt trọc" class="product-card__image" />
-              <div class="product-card__info">
-                <h3 class="product-card__name">Dừa xiêm gọt trọc</h3>
-                <p class="product-card__price">15,500₫</p>
-                <button class="product-card__button">
-                  <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card" onclick="location.href='/product-detail'">
-              <img src="<?= APP_URL ?>public/assets/client/images/product/quyt_duong_lao.webp" alt="Dừa xiêm gọt trọc" class="product-card__image" />
-              <div class="product-card__info">
-                <h3 class="product-card__name">Dừa xiêm gọt trọc</h3>
-                <p class="product-card__price">15,500₫</p>
-                <button class="product-card__button">
-                  <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card" onclick="location.href='/product-detail'">
-              <img src="<?= APP_URL ?>public/assets/client/images/product/chomchom_giong_thai.webp" alt="Dừa xiêm gọt trọc" class="product-card__image" />
-              <div class="product-card__info">
-                <h3 class="product-card__name">Dừa xiêm gọt trọc</h3>
-                <p class="product-card__price">15,500₫</p>
-                <button class="product-card__button">
-                  <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card" onclick="location.href='/product-detail'">
-              <img src="<?= APP_URL ?>public/assets/client/images/product/luu_tu_xuyen.webp" alt="Dừa xiêm gọt trọc" class="product-card__image" />
-              <div class="product-card__info">
-                <h3 class="product-card__name">Dừa xiêm gọt trọc</h3>
-                <p class="product-card__price">15,500₫</p>
-                <button class="product-card__button">
-                  <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card" onclick="location.href='/product-detail'">
-              <img src="<?= APP_URL ?>public/assets/client/images/product/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc" class="product-card__image" />
-              <div class="product-card__info">
-                <h3 class="product-card__name">Dừa xiêm gọt trọc</h3>
-                <p class="product-card__price">15,500₫</p>
-                <button class="product-card__button">
-                  <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card" onclick="location.href='/product-detail'">
-              <img src="<?= APP_URL ?>public/assets/client/images/product/quyt_duong_lao.webp" alt="Dừa xiêm gọt trọc" class="product-card__image" />
-              <div class="product-card__info">
-                <h3 class="product-card__name">Dừa xiêm gọt trọc</h3>
-                <p class="product-card__price">15,500₫</p>
-                <button class="product-card__button">
-                  <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card" onclick="location.href='/product-detail'">
-              <img src="<?= APP_URL ?>public/assets/client/images/product/nho_den_my.webp" alt="Dừa xiêm gọt trọc" class="product-card__image" />
-              <div class="product-card__info">
-                <h3 class="product-card__name">Dừa xiêm gọt trọc</h3>
-                <p class="product-card__price">15,500₫</p>
-                <button class="product-card__button">
-                  <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card" onclick="location.href='/product-detail'">
-              <img src="<?= APP_URL ?>public/assets/client/images/product/quyt_duong_lao.webp" alt="Dừa xiêm gọt trọc" class="product-card__image" />
-              <div class="product-card__info">
-                <h3 class="product-card__name">Dừa xiêm gọt trọc</h3>
-                <p class="product-card__price">15,500₫</p>
-                <button class="product-card__button">
-                  <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card" onclick="location.href='/product-detail'">
-              <img src="<?= APP_URL ?>public/assets/client/images/product/dao_tien_uc.webp" alt="Dừa xiêm gọt trọc" class="product-card__image" />
-              <div class="product-card__info">
-                <h3 class="product-card__name">Dừa xiêm gọt trọc</h3>
-                <p class="product-card__price">15,500₫</p>
-                <button class="product-card__button">
-                  <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card" onclick="location.href='/product-detail'">
-              <img src="<?= APP_URL ?>public/assets/client/images/product/dua_luoi_hoang_kim.webp" alt="Dừa xiêm gọt trọc" class="product-card__image" />
-              <div class="product-card__info">
-                <h3 class="product-card__name">Dừa xiêm gọt trọc</h3>
-                <p class="product-card__price">15,500₫</p>
-                <button class="product-card__button">
-                  <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card" onclick="location.href='/product-detail'">
-              <img src="<?= APP_URL ?>public/assets/client/images/product/buoi_da_xanh.webp" alt="Dừa xiêm gọt trọc" class="product-card__image" />
-              <div class="product-card__info">
-                <h3 class="product-card__name">Dừa xiêm gọt trọc</h3>
-                <p class="product-card__price">15,500₫</p>
-                <button class="product-card__button">
-                  <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
+            <?php if ($products): ?>
+              <?php foreach ($products as $product): ?>
+                <div class="product-card" onclick="location.href='/product-detail/<?= $product['id'] ?>'">
+                  <img src="<?= APP_URL ?>public/assets/client/images/product/<?= $product['image'] ?>" alt="<?= $product['name'] ?>" class="product-card__image" />
+                  <div class="product-card__info">
+                    <h3 class="product-card__name"><?= $product['name'] ?></h3>
+                    <h4 class="product-card__price"><?= number_format($product['price']) ?> VNĐ</h4>
+                    <button class="product-card__button">
+                      <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
+                    </button>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <p>Không có sản phẩm nào phù hợp với tìm kiếm của bạn.</p>
+            <?php endif; ?>
           </div>
+
           <button class="product-section__show-more" data-category="vietnam-fruits" onclick="showMoreProducts('vietnam-fruits')">Xem Thêm</button>
 
         </div>
         </section>
       </div>
       </div>
+      <script src="<?= APP_URL ?>public/assets/client/js/products.js"></script>
     </main>
 <?php
 
   }
 }
 ?>
-<script src="<?= APP_URL ?>public/assets/client/js/products.js"></script>

@@ -25,6 +25,8 @@ Route::get('/checkout', 'App\Controllers\Client\CheckoutController@index');
 Route::get('/introduce', 'App\Controllers\Client\IntroduceController@index');
 Route::get('/products', 'App\Controllers\Client\ProductController@index');
 Route::get('/product-detail', 'App\Controllers\Client\ProductController@detail');
+Route::get('/product-search', 'App\Controllers\Client\ProductController@index');
+Route::get('/product-filter', 'App\Controllers\Client\ProductController@index');
 
 Route::get('/news', 'App\Controllers\Client\NewsController@index');
 Route::get('/news-detail', 'App\Controllers\Client\NewsController@detail');
