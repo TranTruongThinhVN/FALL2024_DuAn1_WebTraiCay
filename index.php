@@ -52,9 +52,15 @@ Route::get('/admin/add-category', 'App\Controllers\Admin\CategoryController@crea
 Route::get('/admin/order', 'App\Controllers\Admin\OrderController@index');
 Route::get('/admin/checkout', 'App\Controllers\Admin\CheckoutController@index');
 Route::get('/admin/user', 'App\Controllers\Admin\UserController@index');
-Route::get('/details', 'App\Controllers\Admin\UserController@details');
+Route::get('/users/details', 'App\Controllers\Admin\UserController@details');
 
 
-Route::get('/comments/details', 'App\Controllers\Admin\CommentController@details');
-Route::get('/admin/comments', 'App\Controllers\Admin\CommentController@index');
+// Route::get('/comments/details', 'App\Controllers\Admin\CommentController@details');
+Route::get('/admin/comments', 'App\Controllers\Admin\CommentController@CommentWithProduct');
+Route::get('/admin/comments/{id}', 'App\Controllers\Admin\CommentController@edit');
+Route::get('/comments/details', 'App\Controllers\Admin\CommentController@getCommentsByProductId');
+Route::delete('/comments/delete/{id}', 'App\Controllers\Admin\CommentController@delete');
+Route::get('/comments/edit/{id}', 'App\Controllers\Admin\CommentController@edit');
+Route::put('/comments/update/{id}', 'App\Controllers\Admin\CommentController@update');
+
 Route::dispatch($_SERVER['REQUEST_URI']);

@@ -8,9 +8,10 @@ class Detail extends BaseView
 {
   public static function render($data = null)
   {
-
+    var_dump($data);
 ?>
     <section>
+      
       <div class="main-container">
         <div class="product">
           <div class="product__image-section">
@@ -104,38 +105,50 @@ class Detail extends BaseView
     </section>
 
     <section class="product-reviews-container">
-      <div class="main-container">
-        <div class="product__reviews--boxshadow">
-          <h2>Đánh Giá Sản Phẩm</h2>
-          <div class="product-reviews">
-
-            <div class="review-summary">
-              <div class="rating-summary">
-                <div class="rating-score">
-                  <span class="score">4.5</span> trên 5
-                </div>
-                <div class="rating-stars">
-                  <span>★★★★★</span>
-                </div>
-              </div>
-
-              <div class="filter-options">
-                <button class="active">Tất Cả</button>
-                <button>5 Sao (41,9k)</button>
-                <button>4 Sao (5,3k)</button>
-                <button>3 Sao (2,6k)</button>
-                <button>2 Sao (1,2k)</button>
-                <button>1 Sao (2,5k)</button>
-                <div class="extra-options">
-                  <button>Có Bình Luận (81)</button>
-                  <button>Có Hình Ảnh / Video (48)</button>
-                </div>
-              </div>
+  <div class="main-container">
+    <div class="product__reviews--boxshadow">
+      <h2>Đánh Giá Sản Phẩm</h2>
+      <?php if (is_array($data) && count($data) > 0): ?>
+      <div class="product-reviews">
+        <div class="review-summary">
+          <div class="rating-summary">
+            <div class="rating-score">
+              <span class="score">4.5</span> trên 5
+            </div>
+            <div class="rating-stars">
+              <span>★★★★★</span>
             </div>
           </div>
-          <div class="review-list">
-            <!-- Đánh giá 1 -->
-            <div class="review-item">
+
+          <div class="filter-options">
+            <button class="active">Tất Cả</button>
+            <button>5 Sao (41,9k)</button>
+            <button>4 Sao (5,3k)</button>
+            <button>3 Sao (2,6k)</button>
+            <button>2 Sao (1,2k)</button>
+            <button>1 Sao (2,5k)</button>
+            <div class="extra-options">
+              <button>Có Bình Luận (81)</button>
+              <button>Có Hình Ảnh / Video (48)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-list">
+        <?php foreach ($data as $item): ?>
+        <div class="review-item">
+          <div class="review-header">
+            <img src="<?= APP_URL ?>public/assets/client/images/product/chomchom_giong_thai.webp" alt="User Avatar" class="avatar">
+            <div class="review-info">
+              <span class="reviewer-name"><?= htmlspecialchars($item['first_name'].' '. $item['last_name']) ?></span>
+              <span class="review-rating">★★★★★</span>
+              <div class="review-details">
+                <span class="review-date"><?= htmlspecialchars($item['created_at']) ?></span> |
+                <span class="review-category">Phân loại hàng: <?= htmlspecialchars($item['product_name']) ?></span>
+              </div>
+            </div>
+            <!-- <div class="review-item">
               <div class="review-header">
                 <img src="<?= APP_URL ?>public/assets/client/images/product/chomchom_giong_thai.webp" alt="User Avatar" class="avatar">
                 <div class="review-info">
@@ -264,50 +277,25 @@ class Detail extends BaseView
               <div class="review-likes">
                 <i class="fas fa-thumbs-up"></i> <span>8</span>
               </div>
-            </div>
-            <div class="review-item">
-              <div class="review-header">
-                <img src="<?= APP_URL ?>public/assets/client/images/product/chomchom_giong_thai.webp" alt="User Avatar" class="avatar">
-                <div class="review-info">
-                  <span class="reviewer-name">ygvxujbhme</span>
-                  <span class="review-rating">★★★★★</span>
-                  <div class="review-details">
-                    <span class="review-date">2024-08-28 11:52</span> |
-                    <span class="review-category">Phân loại hàng: 100 Trắng</span>
-                  </div>
-                </div>
-              </div>
-              <p class="review-content">
-                Đóng hàng cẩn thận. Số lượng đúng theo đơn đặt hàng. Khẩu trang ôm mặt, chất liệu tốt...
-              </p>
-              <div class="review-images">
-                <img src="<?= APP_URL ?>public/assets/client/images/product/chomchom_giong_thai.webp" alt="Review Image 1">
-                <img src="<?= APP_URL ?>public/assets/client/images/product/chomchom_giong_thai.webp" alt="Review Image 2">
-                <img src="<?= APP_URL ?>public/assets/client/images/product/chomchom_giong_thai.webp" alt="Review Image 3">
-                <img src="<?= APP_URL ?>public/assets/client/images/product/chomchom_giong_thai.webp" alt="Review Image 4">
-                <img src="<?= APP_URL ?>public/assets/client/images/product/chomchom_giong_thai.webp" alt="Review Image 5">
-              </div>
-              <div class="review-likes">
-                <i class="fas fa-thumbs-up"></i> <span>8</span>
-              </div>
-            </div>
+            </div> -->
             <!-- Đánh giá 2 -->
 
 
             <!-- Thêm các đánh giá khác nếu cần -->
           </div>
 
-          <!-- Phân trang -->
-          <div class="pagination">
-            <button class="page-number">1</button>
-            <button class="page-number">2</button>
-            <button class="page-number">3</button>
-            <button class="page-number">4</button>
-            <button class="page-number">5</button>
-          </div>
-        </div>
+      <!-- Phân trang -->
+      <div class="pagination">
+        <button class="page-number">1</button>
+        <button class="page-number">2</button>
+        <button class="page-number">3</button>
+        <button class="page-number">4</button>
+        <button class="page-number">5</button>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
+
     <section class="related-products">
       <div class="main-container">
         <div class="container">

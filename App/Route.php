@@ -26,8 +26,10 @@ class Route
     public static function delete($url, $controllerMethod)
     {
         if (isset($_POST['method']))
-            if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['method'] == 'DELETE')
-                self::$routes[$url] = $controllerMethod;
+        
+            if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['method'] == 'DELETE'){
+                self::$routes[$url] = $controllerMethod; 
+            }
     }
 
     public static function dispatch($uri)

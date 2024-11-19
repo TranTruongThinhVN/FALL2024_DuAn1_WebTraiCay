@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use DateTime;
 use App\Helpers\NotificationHelper;
 use App\Interfaces\CrudInterface;
 use Exception;
@@ -21,7 +21,16 @@ abstract class BaseModel implements CrudInterface
     {
         $this->_conn = new Database();
     }
-
+    public function formatDate($dateString, $format =  ('d-m-Y H:i:s '))
+    {
+        try {
+            $date = new DateTime($dateString);
+            return $date->format($format);
+        } catch (Exception $e) {
+            error_log("Lỗi định dạng ngày: " . $e->getMessage());
+            return false; // Trả về false nếu có lỗi 
+        }
+    }
     public function getAll()
     {
         $result = [];
@@ -102,7 +111,7 @@ abstract class BaseModel implements CrudInterface
             $stmt = $conn->prepare($sql);
             return $stmt->execute();
         } catch (\Throwable $th) {
-            error_log('Lỗi khi cập nhật dữ liệu: ', $th->getMessage());
+            error_log('Lỗi khi cập nhật dữ liệu: ' . $th->getMessage(), 0);
             return false;
         }
     }
@@ -128,5 +137,20 @@ abstract class BaseModel implements CrudInterface
         $sql = "SELECT * FROM $this->table WHERE status=" . self::STATUS_ENABLE;
         $result = $this->_conn->MySQLi()->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
+    }
+    public function getOneByName($name){
+        $result = [];
+        try {
+            $sql = "SELECT * FROM $this->table WHERE name = ?";
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+
+            $stmt->bind_param('s', $name);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_assoc();
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi lấy bằng tên: ' . $th->getMessage());
+            return $result;
+        }
     }
 }

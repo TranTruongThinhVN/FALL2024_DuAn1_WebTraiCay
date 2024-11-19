@@ -2,17 +2,15 @@
 
 namespace App\Controllers\Admin;
 
-use App\Helpers\NotificationHelper;
-use App\Models\Comment;
-use App\Validations\AuthValidation;
-use App\Validations\CommentValidation;
+use App\Controllers\Client\NewsController;
+use App\Models\Product;
+use App\Models\Comment; 
 use App\Views\Admin\Layouts\Footer;
 use App\Views\Admin\Layouts\Header;
-use App\Views\Admin\Components\Notification;
-use App\Views\Admin\Pages\Comments\Danhsach;
-use App\Views\Admin\Pages\Comments\ListItem;
-// use App\Views\Admin\Pages\Comments\Danhsach\Index;
-use GrahamCampbell\ResultType\Success;
+use App\Views\Admin\Pages\Comments\Details;
+use App\Views\Admin\Pages\Comments\Edit;
+use App\Views\Admin\Pages\Comments\ListComments;
+use App\Views\Admin\Pages\Comments\ListItem; 
 
 class CommentController
 {
@@ -23,22 +21,16 @@ class CommentController
     { 
         $comment = new Comment();
         $data = $comment->getAllCommentJoinProductAndUser();
+        var_dump($data);
         Header::render();
-        ListItem::render();
-        Footer::render();
-
-        // Header::render();
-        // Notification::render();
-        // NotificationHelper::unset();
-        // // hiển thị giao diện danh sách
-        // Index::render($data);
-        // Footer::render();
+        ListItem::render($data);
+        Footer::render(); 
     }
 
 
     // hiển thị giao diện form thêm
-    // public static function create()
-    // {
+    public static function create()
+     {
     //     Header::render();
     //     Notification::render();
     //     NotificationHelper::unset();
@@ -82,7 +74,7 @@ class CommentController
     //         NotificationHelper::error('store', 'Thêm bình luận thất bại');
     //         header('Location: /admin/categories/create');
     //     }
-    // }
+     }
 
 
     // hiển thị chi tiết
@@ -96,80 +88,158 @@ class CommentController
     {
         
         $Comment = new Comment();
-        $data = $Comment->getOneComment($id);
+        $data = $Comment->getOneCommentJoinProductAndUser($id);
+        var_dump($data);
+        // if(!$data){
+        //     NotificationHelper::error('edit', 'Không thể xem bình luận này');
+        //     header('Location : /admin/categories');
+        //     exit;
+        // }
 
-        if(!$data){
-            NotificationHelper::error('edit', 'Không thể xem bình luận này');
-            header('Location : /admin/categories');
-            exit;
-        }
-
-        // Header::render();
-        // Notification::render();
-        // NotificationHelper::unset();
-        // // hiển thị form sửa
-        // Edit::render($data);
-        // Footer::render(); 
+        Header::render(); 
+        Edit::render($data);
+        Footer::render(); 
     }
 
 
-    // xử lý chức năng update
-    // public static function update(int $id)
-    // {
-        
-    //     $is_valid = CommentValidation::edit();
+    //xử lý chức năng update
+    public function update($id)
+{
+    // Kiểm tra nếu phương thức là PUT
+    if ($_POST['method'] !== 'PUT') {
+        echo "Phương thức không hợp lệ.";
+        exit;
+    }
 
-    //     if(!$is_valid){
-    //         NotificationHelper::error('update', 'Cập nhật bình luận thất bại');
-    //         header("Location: /admin/categories/$id");
-    //         exit;
-    //     }
+    // Lấy dữ liệu từ form
+    $content = trim($_POST['content']);
+    $status = $_POST['status'];
+    $productId = $_POST['product_id'];
 
-    //     $name = $_POST['name'];
-    //     $status = $_POST['status'];
-    //     //kiểm tra tên loại trùng tên
-    //     $Comment = new Comment();
-    //     $is_exist = $Comment->getOneCommentByName($name);
+    // Kiểm tra dữ liệu
+    if (empty($content)) {
+        echo "Nội dung không được để trống.";
+        exit;
+    }
 
-    //     if($is_exist){
-    //         if($is_exist['id'] != $id){
-    //             NotificationHelper::error('update', 'Tên bình luận đã tồn tại');
-    //             header("Location: /admin/categories/$id");
-    //             exit;
-    //         }
-    //     }
+    if (!in_array($status, ['0', '1'], true)) {
+        echo "Trạng thái không hợp lệ.";
+        exit;
+    }
 
-    //     $data = [
-    //         'name' => $name,
-    //         'status' => $status
-    //     ]; 
+    // Xử lý ảnh (nếu có)
+    $imageUrls = [];
+    if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
+        $uploadDir = 'public/uploads/comment-images/'; // Đường dẫn thư mục lưu ảnh
+        foreach ($_FILES['images']['name'] as $key => $imageName) {
+            $targetFile = $uploadDir . basename($imageName);
+            // Kiểm tra xem ảnh có hợp lệ không (size, type, etc.)
+            if (move_uploaded_file($_FILES['images']['tmp_name'][$key], $targetFile)) {
+                $imageUrls[] = $targetFile; // Lưu đường dẫn ảnh vào mảng
+            } else {
+                echo "Lỗi tải ảnh lên.";
+                exit;
+            }
+        }
+    }
 
-    //     $result = $Comment->updateComment($id, $data);
+    $Comment = new Comment();
+    $data = [
+        'content' => $content,
+        'status' => $status,
+        'update_at' => date('Y-m-d H:i:s'), // Cập nhật thời gian
+    ];
 
-    //     if($result){
-    //         NotificationHelper::success('update', 'Cập nhật bình luận thành công');
-    //         header('Location: /admin/categories');
-    //     } else {
-    //         NotificationHelper::error('update', 'Cập nhật bình luận thất bại');
-    //         header("Location: /admin/categories/$id");
-    //     }
-    // }
+    // Nếu có ảnh, thêm vào dữ liệu
+    if (!empty($imageUrls)) {
+        $data['images'] = implode(',', $imageUrls); // Lưu đường dẫn ảnh vào cơ sở dữ liệu, nối bằng dấu phẩy
+    }
+
+    var_dump($data);
+
+    // Cập nhật bình luận
+    $data = $Comment->updateComment($id, $data); 
+    var_dump($data); // Kiểm tra giá trị của $result;
+
+    if ($data) {
+        header("Location: /comments/details?product_id=" . $productId);
+        exit;
+    } else {
+        echo "Cập nhật thất bại.";
+    }
+}
 
 
     // thực hiện xoá
-    public static function delete(int $id)
-    {
-        
-            $Comment = new Comment();
-            $result = $Comment->deleteComment($id);
-            
-            if($result){
-                NotificationHelper::success('delete', 'Xóa bình luận thành công');
-            } else {
-                NotificationHelper::error('delete', 'Xóa bình luận thất bại');
+    public function delete($commentId) {
+        // Kiểm tra xem có phải là phương thức DELETE từ form không
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['method']) && $_POST['method'] === 'DELETE') { 
+            // Lấy thông tin từ form
+            $productId = $_POST['product_id'] ?? null;
+            $commentId = $_POST['id'] ?? null;
+    
+            // Kiểm tra tính hợp lệ
+            if (!$productId || !$commentId) {
+                echo "Sản phẩm không hợp lệ.";
+                return;
             }
-            header('Location: /admin/categories');
-
+    
+            // Tạo đối tượng Comment để xử lý việc xóa bình luận
+            $comment = new Comment();
+            $result = $comment->deleteComment($commentId);  // Xóa bình luận theo id
+    
+            if ($result) {
+                // Chuyển hướng về trang chi tiết sản phẩm sau khi xóa
+                header('Location: /comments/details?product_id=' . $productId);
+                exit();  // Đảm bảo mã dừng lại ở đây
+            } else {
+                echo "Lỗi khi xóa bình luận.";
+            }
+        } else { 
+            echo "Phương thức không hợp lệ.";
+        }
     }
+    
+    
+    
+    
+    public static function CommentWithProduct() {
+        $product = new Product();
+        
+        // Lấy danh sách sản phẩm và tổng bình luận
+        $data = $product->getProductsWithCommentCount(); 
+        Header::render();
+        ListComments::render($data);
+        Footer::render();
+    }
+    public static function getCommentsByProductId() {
+        // Lấy product_id từ URL
+        $productId = $_GET['product_id'] ?? null;
+    
+        // Log productId để đảm bảo nó được truyền đúng 
+        // Kiểm tra nếu không có product_id, thì trả về thông báo lỗi
+        if (!$productId) {
+            echo "Sản phẩm không hợp lệ.";
+            return;
+        }
+    
+        // Tạo đối tượng Comment và lấy bình luận cho sản phẩm
+        $comment = new Product();
+        $comments = $comment->getCommentsByProductId($productId); 
+        var_dump($comments);
+        if (empty($comments)) {
+            echo "Không có bình luận nào cho sản phẩm này.";
+        } else {
+            
+            Header::render();  // Hiển thị phần đầu trang
+            Details::render($comments);  // Gọi view để hiển thị danh sách bình luận
+            Footer::render();  // Hiển thị phần chân trang
+        }
+    }
+    
+    
+    
+    
+    
 }
 
