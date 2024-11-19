@@ -57,7 +57,7 @@ class Header extends BaseView
                                 <b class="logo-icon ps-2">
                                     <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                                     <!-- Dark Logo icon -->
-                                    <img src="../public/assets/client/images/home/logo (1).png" alt="homepage" width="120px" class="light-logo" />
+                                    <img src="<?=APP_URL?>/public/assets/client/images/home/logo (1).png" alt="homepage" width="120px" class="light-logo" />
 
                                 </b>
                                 <!--End Logo icon -->
@@ -126,7 +126,7 @@ class Header extends BaseView
                                     <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-solid fa-box"></i><span class="hide-menu">Loại sản phẩm </span></a>
                                     <ul aria-expanded="false" class="collapse  first-level">
                                         <li class="sidebar-item">
-                                            <a href="/admin/categories" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Danh sách </span></a>
+                                            <a href="/admin/category" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Danh sách </span></a>
                                         </li>
                                         <li class="sidebar-item">
                                             <a href="/admin/add-category" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Thêm mới </span></a>

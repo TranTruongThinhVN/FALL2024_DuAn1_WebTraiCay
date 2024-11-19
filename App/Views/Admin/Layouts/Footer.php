@@ -17,7 +17,7 @@ class Footer extends BaseView
                 </footer>
                 </div>
                 </div>
-                <script src="<?=APP_URL?>/public/assets/admin/libs/jquery/dist/jquery.min.js"></script>
+                <script src="<?= APP_URL ?>/public/assets/admin/libs/jquery/dist/jquery.min.js"></script>
                 <!-- Bootstrap tether Core JavaScript -->
                 <script src="<?=APP_URL?>/public/assets/admin/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
                 <script src="<?=APP_URL?>/public/assets/admin/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
@@ -63,8 +63,6 @@ class Footer extends BaseView
 
 
                 </script>
-
-
                 </body>
 
                 </html>

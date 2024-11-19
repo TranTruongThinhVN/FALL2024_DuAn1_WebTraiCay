@@ -8,7 +8,9 @@ class Index extends BaseView
 {
   public static function render($data = null)
   {
+    // var_dump($data);
 ?>
+
     <div class="page-wrapper">
       <!-- ============================================================== -->
       <!-- Bread crumb and right sidebar toggle -->
@@ -42,7 +44,7 @@ class Index extends BaseView
                     </button>
                     <div class="dropdown-menu">
                       <a class="dropdown-item" href="#">Trạng thái hiện</a>
-                      <a class="dropdown-item" href="#">Trạng thái ẩn</a> 
+                      <a class="dropdown-item" href="#">Trạng thái ẩn</a>
                     </div>
                   </div>
                   <div class="btn-group">
@@ -52,7 +54,7 @@ class Index extends BaseView
                     <div class="dropdown-menu">
                       <a class="dropdown-item" href="#">Có nhiều sản phẩm</a>
                       <a class="dropdown-item" href="#">Có ít sản phẩm</a>
-                      <a class="dropdown-item" href="#">Ngày tạo</a> 
+                      <a class="dropdown-item" href="#">Ngày tạo</a>
                     </div>
                   </div>
                   <form class="d-flex">
@@ -64,54 +66,80 @@ class Index extends BaseView
               <div class="table-responsive">
                 <table class="table">
                   <thead class="thead-light">
-                    <tr>
-                      <th>
-                        <label class="customcheckbox mb-3">
-                          <input type="checkbox" id="mainCheckbox">
-                          <span class="checkmark"></span>
-                        </label>
-                      </th>
-                      <th>#</th>
-                      <th scope="col">Tên danh mục</th>
-                      <th scope="col">Ảnh</th>
-                      <th scope="col">Ngày tạo</th>
-                      <th scope="col">Số lượng sản phẩm</th>
-                      <th scope="col">Trạng thái</th>
-                      <th scope="col">Tuỳ chỉnh</th>
+                    <?php
+                    if (count($data)) :
+                    ?>
+                      <tr>
+                        <th>
+                          <label class="customcheckbox mb-3">
+                            <input type="checkbox" id="mainCheckbox">
+                            <span class="checkmark"></span>
+                          </label>
+                        </th>
+                        <th>#</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Tên danh mục</th>
+                        <th scope="col">Mô tả</th>
+                        <th scope="col">Trạng thái</th>
+                        <th></th>
 
-                    </tr>
+                      </tr>
                   </thead>
                   <tbody class="customtable">
-                    <tr>
-                      <th>
-                        <label class="customcheckbox">
-                          <input type="checkbox" class="listCheckbox">
-                          <span class="checkmark"></span>
-                        </label>
-                      </th>
-                      <td>1</td>
-                      <td><a href="">Trái cây hôm nay</a></td>
-                      <td><img src="https://media.loveitopcdn.com/1254/thumb/cam-vang-my-moi-2.jpg" alt="" width="40px"></td>
-                      <td>30-01-2020</td>
-                      <td>4</td>
-                      <td>
-                        <p class="badge bg-success">Còn hàng</p>
-                      </td>
-                      <td>
-                        <div>
-                          <a class="badge bg-success" href="">Chỉnh sửa</a>
-                          <a class="badge bg-danger" href="">Xoá</a>
-                        </div>
-                      </td>
-                    </tr>
+                    <?php
+                      foreach ($data as $item) :
+                    ?>
+                      <tr>
+                        <th>
+                          <label class="customcheckbox">
+                            <input type="checkbox" class="listCheckbox">
+                            <span class="checkmark"></span>
+                          </label>
+                        </th>
+                        <td></td>
+                        <td><?= $item['id'] ?></td>
+                        <td><?= $item['name'] ?></td>
+                        <td><?= $item['description'] ?></td>
+                        <td>
+                          <p class="badge bg-success"><?= ($item['status'] == 1) ? 'Hiện' : 'Ẩn' ?></p>
+                        </td>
+                        <td>
+                          <a href="/admin/category/<?= $item['id'] ?>">
+                          
+                            <label class="badge bg-success">Chỉnh sửa</label>
+                          </a>
+                          <form action="/admin/category/<?= $item['id'] ?>" method="post" style="display: inline-block;"onsubmit="return confirm('Chắc chưa?')" >
+                            <input type="hidden" name="method" value="DELETE" id="">
+                            <button style="margin: 0; padding: 3.5px ; border: 0;" type="submit" class="badge bg-danger">Xoá
+                            </button>
+                          </form>
+                        </td>
+                      </tr>
                   </tbody>
+                <?php
+                      endforeach;
+                ?>
                 </table>
+                </table>
+              <?php
+                    else :
+              ?>
+                <h4>KHông có dữ liệu</h4>
+
+              <?php
+                    endif;
+              ?>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    
+                <script src="<?= APP_URL ?>/public/assets/admin/dist/js/categoryValidation.js"></script>
+
 <?php
+
   }
 }
+

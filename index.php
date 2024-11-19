@@ -47,8 +47,6 @@ Route::get('/admin', 'App\Controllers\Admin\DashboardController@index');
 Route::get('/admin/product', 'App\Controllers\Admin\ProductController@index');
 Route::get('/admin/product-details', 'App\Controllers\Admin\ProductController@details');
 Route::get('/admin/add-product', 'App\Controllers\Admin\ProductController@create');
-Route::get('/admin/categories', 'App\Controllers\Admin\CategoryController@index');
-Route::get('/admin/add-category', 'App\Controllers\Admin\CategoryController@create');
 Route::get('/admin/order', 'App\Controllers\Admin\OrderController@index');
 Route::get('/admin/checkout', 'App\Controllers\Admin\CheckoutController@index');
 Route::get('/admin/user', 'App\Controllers\Admin\UserController@index');
@@ -62,5 +60,21 @@ Route::get('/comments/details', 'App\Controllers\Admin\CommentController@getComm
 Route::delete('/comments/delete/{id}', 'App\Controllers\Admin\CommentController@delete');
 Route::get('/comments/edit/{id}', 'App\Controllers\Admin\CommentController@edit');
 Route::put('/comments/update/{id}', 'App\Controllers\Admin\CommentController@update');
+Route::get('/comments/details', 'App\Controllers\Admin\CommentController@details');
+Route::get('/admin/comments', 'App\Controllers\Admin\CommentController@index');
+
+
+//category
+Route::get('/admin/category', 'App\Controllers\Admin\CategoryController@index');
+Route::get('/admin/add-category', 'App\Controllers\Admin\CategoryController@create');
+Route::post('/admin/add-category', 'App\Controllers\Admin\CategoryController@store'); 
+Route::get('/admin/category/{id}', controllerMethod: 'App\Controllers\Admin\CategoryController@edit');
+Route::delete('/admin/category/{id}', 'App\Controllers\Admin\CategoryController@delete');
+Route::put('/admin/category/{id}', 'App\Controllers\Admin\CategoryController@update');
+
+
+
+
+
 
 Route::dispatch($_SERVER['REQUEST_URI']);
