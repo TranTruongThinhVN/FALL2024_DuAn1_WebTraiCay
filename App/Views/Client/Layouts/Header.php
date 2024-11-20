@@ -3,6 +3,7 @@
 namespace App\Views\Client\Layouts;
 
 use App\Helpers\AuthHelper;
+use App\Helpers\NotificationHelper;
 use App\Views\BaseView;
 
 class Header extends BaseView
@@ -12,7 +13,7 @@ class Header extends BaseView
 
 
 ?>
-
+    <script src="<?= APP_URL ?>public/assets/client/js/overlay.js"></script>
 
     <!DOCTYPE html>
     <html lang="en">
@@ -79,7 +80,7 @@ class Header extends BaseView
               </button>
 
               <div class="logo">
-                <a href="/"> <img src="<?= APP_URL ?>public/assets/client/images/home/logo (1).png" alt="Logo đây nhé " /></a>
+                <a href="/"> <img src="<?= APP_URL ?>/public/assets/client/images/home/logo (1).png" alt="Logo đây nhé " /></a>
               </div>
               <ul class="menu">
                 <li><a href="/">Trang chủ</a></li>
@@ -122,12 +123,38 @@ class Header extends BaseView
                     <path d="M11 7H3.577A2 2 0 0 0 1.64 9.497l2.051 8A2 2 0 0 0 5.63 19H16.37a2 2 0 0 0 1.937-1.503l2.052-8A2 2 0 0 0 18.422 7H11Zm0 0V1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
                   </svg>
                 </a>
-                <a href="javascript:void(0);" class="icon" onclick="toggleLoginModal()">
-                  <svg role="presentation" stroke-width="2" focusable="false" width="22" height="22" class="icon icon-account" viewBox="0 0 22 22">
-                    <circle cx="11" cy="7" r="4" fill="none" stroke="currentColor"></circle>
-                    <path d="M3.5 19c1.421-2.974 4.247-5 7.5-5s6.079 2.026 7.5 5" fill="none" stroke="currentColor" stroke-linecap="round"></path>
-                  </svg>
-                </a>
+                <?php if (isset($_SESSION['user'])): ?>
+                  <div class="user-menu">
+                    <div class="avatar" onclick="toggleDropdown()">
+                      <!-- Show uploaded avatar if it exists; otherwise, show the default initial -->
+                      <?php if (!empty($_SESSION['user']['avatar'])): ?>
+                        <img src="<?= APP_URL ?>/public/uploads/users/<?= $_SESSION['user']['avatar'] ?>" alt="User Avatar" class="user-avatar">
+                      <?php else: ?>
+                        <span class="user-initial"><?= strtoupper(substr($_SESSION['user']['email'], 0, 1)) ?></span>
+                      <?php endif; ?>
+                      <span class="arrow">&#9662;</span>
+                    </div>
+                    <div id="dropdown-menu" class="dropdown-content">
+                      <a href="/users/<?= $_SESSION['user']['id'] ?>">Thông tin tài khoản</a>
+                      <a href="#" id="dropdown-purchase-link" data-section="purchase-history">Đơn mua</a>
+                      <a href="/logout">Đăng xuất</a>
+                    </div>
+
+
+                  </div>
+
+
+                <?php else: ?>
+                  <!-- Login Icon for guest user -->
+                  <a href="/login" class="icon">
+                    <svg role="presentation" stroke-width="2" focusable="false" width="22" height="22" class="icon icon-account" viewBox="0 0 22 22">
+                      <circle cx="11" cy="7" r="4" fill="none" stroke="currentColor"></circle>
+                      <path d="M3.5 19c1.421-2.974 4.247-5 7.5-5s6.079 2.026 7.5 5" fill="none" stroke="currentColor" stroke-linecap="round"></path>
+                    </svg>
+                  </a>
+                <?php endif; ?>
+
+
 
 
                 <!--  -->
@@ -186,81 +213,8 @@ class Header extends BaseView
 
           </div>
         </div>
-        <!-- End Navbar -->
-        <!-- Đăng nhập overlay -->
         <div class="overlay" id="cartOverlay" onclick="toggleOffcanvasCart()"></div>
-        <div class="login-modal" id="loginModal">
-          <div class="login-modal-content">
-            <span class="close-button" onclick="toggleLoginModal()">&times;</span>
-            <img src="<?= APP_URL ?>public/assets/client/images/home/logo (1).png" alt="Logo" class="logo-login-image" />
-            <h2 class="login-title-content">Chào mừng bạn đến với FRUITIFY</h2>
-            <form class="form-id-login">
-              <label for="email">Email</label>
-              <input type="email" id="email" placeholder="Email" required>
-
-              <label for="password">Mật khẩu</label>
-              <div style="position: relative;">
-                <input type="password" id="password" placeholder="Mật khẩu" required>
-              </div>
-
-              <div class="alight-left-forgot">
-                <a class="forgot-password" href="">Quên mật khẩu?</a>
-              </div>
-              <button type="submit" class="login-btn">Đăng nhập</button>
-            </form>
-
-            <p class="or-text">HOẶC</p>
-            <button class="social-login-btn facebook"><img src="public/assets/client/images/home/fb.png" alt="">Tiếp tục với Facebook</button>
-            <button class="social-login-btn google"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="LgbsSe-Bz112c">
-                <g>
-                  <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
-                  <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
-                  <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
-                  <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
-                  <path fill="none" d="M0 0h48v48H0z"></path>
-                </g>
-              </svg>Tiếp tục với Google</button>
-
-            <p class="description">Bằng cách tiếp tục, bạn đồng ý với các <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách quyền riêng tư</a> của chúng tôi.</p>
-            <p class="signup-prompt">Chưa có tài khoản? <a href="#" onclick="switchToSignup()">Đăng ký</a></p>
-          </div>
-        </div>
-        <!-- End đăng nhập overlay -->
-        <!-- Đăng ký overlay -->
-        <div class="overlay" id="loginOverlay" onclick="toggleLoginModal()"></div>
-        <div class="login-modal" id="signupModal">
-          <div class="login-modal-content">
-            <span class="close-button" onclick="toggleSignupModal()">&times;</span>
-            <img src="<?= APP_URL ?>public/assets/client/images/home/logo (1).png" alt="Logo" class="logo-login-image" />
-            <h2 class="login-title-content">Chào mừng bạn đến với Website</h2>
-            <p class="login-title-desc">Tìm những ý tưởng mới để thử</p>
-            <form action="" method="post">
-              <label for="username">Tên đăng nhập</label>
-              <input type="text" id="username" name="username" placeholder="Tên đăng nhập" required>
-
-              <label for="gender">Giới tính</label>
-              <select id="gender" name="gender" required>
-                <option value="">Chọn giới tính</option>
-                <option value="male">Nam</option>
-                <option value="female">Nữ</option>
-                <option value="other">Khác</option>
-              </select>
-
-              <label for="password">Mật khẩu</label>
-              <input type="password" id="signupPassword" name="password" placeholder="Tạo mật khẩu" required>
-
-              <label for="confirmPassword">Xác nhận mật khẩu</label>
-              <input type="password" id="confirmPassword" name="confirm_password" placeholder="Xác nhận mật khẩu" required>
-
-              <button type="submit" class="login-btn">Tiếp tục</button>
-            </form>
-
-
-            <p class="description">Bằng cách tiếp tục, bạn đồng ý với các <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách quyền riêng tư</a> của chúng tôi.</p>
-            <p class="signup-prompt">Đã là thành viên? <a href="#" onclick="switchToLogin()">Đăng nhập</a></p>
-          </div>
-        </div>
-        <!-- End đăng ký overlay -->
+        <!-- End  overlay -->
         <!-- Navbar của mobile -->
         <div class=" offcanvas-navbar" id="offcanvasNavbar"> <button class="offcanvas-close" onclick="toggleOffcanvasNavbar()">&times;</button>
           <ul class="menu">
@@ -286,6 +240,7 @@ class Header extends BaseView
             <li><a href="/contact">Liên hệ</a></li>
           </ul>
         </div>
+
         <!-- End navbar mobile -->
         <!-- Tìm kiếm overlay nhé -->
         <div class="overlay" id="navbarOverlay" onclick="toggleOffcanvasNavbar()"></div>
@@ -305,3 +260,35 @@ class Header extends BaseView
 }
 
   ?>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const avatar = document.querySelector(".user-initial");
+
+      if (avatar) {
+        const userEmail = "<?= $_SESSION['user']['email'] ?? '' ?>";
+        avatar.textContent = userEmail.charAt(0).toUpperCase();
+
+        // Mảng màu chỉ áp dụng vào hình tròn
+        const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#FF8C33"];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        avatar.style.backgroundColor = randomColor; // Chỉ thay đổi màu nền của hình tròn
+      }
+    });
+
+    // Toggle dropdown menu
+    function toggleDropdown() {
+      var dropdown = document.getElementById("dropdown-menu");
+      dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+    }
+
+    // Close dropdown if clicking outside
+    window.onclick = function(event) {
+      if (!event.target.matches('.avatar') && !event.target.matches('.user-initial') && !event.target.matches('.arrow')) {
+        var dropdown = document.getElementById("dropdown-menu");
+        if (dropdown.style.display === "block") {
+          dropdown.style.display = "none";
+        }
+      }
+    }
+  </script>

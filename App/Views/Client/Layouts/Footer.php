@@ -14,7 +14,7 @@ class Footer extends BaseView
                 <section class="footer__section">
                     <div class="footer__columns">
                         <div class="footer__column footer__logo-info">
-                            <img src="<?= APP_URL ?>public/assets/client/images/home/logo (1).png" alt="Logo Công Ty"
+                            <img src="<?= APP_URL ?>/public/assets/client/images/home/logo (1).png" alt="Logo Công Ty"
                                 class="footer__logo-image">
                             <ul class="footer__contact-info">
                                 <li>Điện thoại: 0878.999.894</a></li>
@@ -84,10 +84,12 @@ class Footer extends BaseView
                 </div>
             </div>
         </footer>
-        <script src="<?= getenv('APP_URL ') ?>App/Styles/Vendors/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js">
-        </script>
+        <!-- Đảm bảo đoạn script này nằm ở file Footer hoặc ở cuối trang -->
         <script src="<?= APP_URL ?>public/assets/client/js/overlay.js"></script>
+        <script src="<?= APP_URL ?>public/assets/client/js/auth/main.js"></script>
+        <script src="<?= getenv('APP_URL ') ?>App/Styles/Vendors/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
         </body>
+
 
         </html>
 
@@ -96,3 +98,4 @@ class Footer extends BaseView
 }
 
 ?>
+<?php unset($_SESSION['errors']); ?>

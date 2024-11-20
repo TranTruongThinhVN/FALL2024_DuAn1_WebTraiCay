@@ -1,0 +1,18 @@
+.input-error {
+  border: 1px solid red;
+}
+.error-message {
+  color: #e74c3c; /* Màu đỏ nổi bật */
+  font-size: 13px; /* Kích thước chữ vừa phải */
+  display: flex; /* Hiển thị biểu tượng và text trên cùng dòng */
+  align-items: flex-start; /* Văn bản luôn căn trên cùng với biểu tượng */
+  gap: 8px; /* Khoảng cách giữa biểu tượng và text */
+  margin-top: -8px;
+  font-weight: normal; /* Chữ không quá đậm */
+  text-align: left; /* Căn trái văn bản lỗi */
+  word-wrap: break-word; /* Tự động xuống dòng nếu quá dài */
+  word-break: break-word; /* Tự động xuống dòng nếu cần */
+}
+.server-error {
+  margin-top: 1px !important;
+}

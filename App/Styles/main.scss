@@ -1,17 +1,18 @@
 // * thư viện
-@use './vendors/bootstrap-5.3.3-dist/scss/bootstrap.scss';
+@use "./vendors/bootstrap-5.3.3-dist/scss/bootstrap.scss";
 /* Variable */
 
-@use './abstracts';
+@use "./abstracts";
 
 // * components
 
-@use './components';
+@use "./components";
 // * layouts
-@use './layouts';
+@use "./layouts";
 // base
 
-@use './base';
+@use "./base";
 // * pages/
-@use './pages';
+@use "./pages";
 
+@use "./auth";

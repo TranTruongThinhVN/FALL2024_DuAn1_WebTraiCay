@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
@@ -6,6 +7,7 @@ error_reporting(E_ALL);
 ini_set('log_errors', TRUE);
 ini_set('error_log', './logs/php/php-errors.log');
 
+use App\Helpers\AuthHelper;
 use App\Route;
 
 require_once 'vendor/autoload.php';
@@ -15,7 +17,7 @@ $dotenv->load();
 
 require_once 'config.php';
 
-
+AuthHelper::middleware();
 
 // *** Client
 Route::get('/', 'App\Controllers\Client\HomeController@index');
@@ -38,9 +40,31 @@ Route::get('/culinary_roots', 'App\Controllers\Client\Culinary_rootsController@i
 Route::get('/culinary_roots_detail', 'App\Controllers\Client\culinary_rootsController@detail');
 
 Route::get('/policy', 'App\Controllers\Client\PolicyController@index');
+// Auth
 Route::get('/register', 'App\Controllers\Client\AuthController@register');
 Route::post('/register', 'App\Controllers\Client\AuthController@registerAction');
-// 
+Route::get('/login', 'App\Controllers\Client\AuthController@login');
+Route::post('/login', 'App\Controllers\Client\AuthController@loginAction');
+Route::get('/logout', 'App\Controllers\Client\AuthController@logout');
+Route::get('/logout', 'App\Controllers\Client\AuthController@logout');
+Route::get('/forgot-password', 'App\Controllers\Client\AuthController@forgotPassword');
+
+Route::post('/forgot-password', 'App\Controllers\Client\AuthController@forgotPasswordAction');
+
+Route::get('/reset-password', 'App\Controllers\Client\AuthController@resetPassword');
+
+
+Route::post('/reset-password', 'App\Controllers\Client\AuthController@resetPasswordAction');
+Route::get('/users/{id}', 'App\Controllers\Client\AuthController@edit');
+Route::put('/users/{id}', 'App\Controllers\Client\AuthController@update');
+
+// Route::get('/purchase-history',  'App\Controllers\Client\OrderController@showPurchaseHistory');
+Route::get('/verify-otp',  'App\Controllers\Client\AuthController@verifyOtp');
+Route::post('/verify-otp',  'App\Controllers\Client\AuthController@verifyOtpAction');
+// Thêm vào file routes của bạn
+Route::get('/google-login', 'App\Controllers\Client\AuthController@googleLogin');
+Route::get('/google-callback', 'App\Controllers\Client\AuthController@googleCallback');
+
 
 // *** Admin
 Route::get('/admin', 'App\Controllers\Admin\DashboardController@index');
