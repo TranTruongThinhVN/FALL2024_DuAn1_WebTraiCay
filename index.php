@@ -49,8 +49,13 @@ Route::get('/admin/product-details', 'App\Controllers\Admin\ProductController@de
 Route::get('/admin/add-product', 'App\Controllers\Admin\ProductController@create');
 Route::get('/admin/order', 'App\Controllers\Admin\OrderController@index');
 Route::get('/admin/checkout', 'App\Controllers\Admin\CheckoutController@index');
-Route::get('/admin/user', 'App\Controllers\Admin\UserController@index');
-Route::get('/users/details', 'App\Controllers\Admin\UserController@details');
+Route::get('/admin/users', 'App\Controllers\Admin\UserController@index');
+Route::get('/admin/user-create', 'App\Controllers\Admin\UserController@create');
+Route::post('/admin/user-create', 'App\Controllers\Admin\UserController@store');
+Route::get('/admin/users-edit/{id}', 'App\Controllers\Admin\UserController@edit');
+Route::put('/admin/user-update/{id}', 'App\Controllers\Admin\UserController@update');
+Route::delete('/admin/users-delete/{id}', 'App\Controllers\Admin\UserController@delete');
+Route::get('/admin/user-details', 'App\Controllers\Admin\UserController@details');
 
 
 // Route::get('/comments/details', 'App\Controllers\Admin\CommentController@details');

@@ -17,6 +17,8 @@ class Footer extends BaseView
                 </footer>
                 </div>
                 </div>
+                <!-- Sweet Alert  -->
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
                 <script src="<?= APP_URL ?>/public/assets/admin/libs/jquery/dist/jquery.min.js"></script>
                 <!-- Bootstrap tether Core JavaScript -->
                 <script src="<?=APP_URL?>/public/assets/admin/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
