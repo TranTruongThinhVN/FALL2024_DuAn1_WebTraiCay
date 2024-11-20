@@ -43,6 +43,7 @@ class ProductController
         Index::render($products);
         Footer::render();
     }
+
     public static function detail()
     {
         Header::render();

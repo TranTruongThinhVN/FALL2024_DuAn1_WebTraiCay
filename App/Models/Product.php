@@ -113,6 +113,7 @@ class Product extends BaseModel
             return $result;
         }
     }
+
     public function getProductsWithCommentCount()
     {
         $result = [];
@@ -132,36 +133,37 @@ class Product extends BaseModel
             return $result;
         }
     }
+
     public function getCommentsByProductId($productId)
-{
-    $result = [];
-    $sql = "SELECT comments.*, products.name AS product_name
+    {
+        $result = [];
+        $sql = "SELECT comments.*, products.name AS product_name
             FROM comments
             INNER JOIN products ON comments.product_id = products.id
             WHERE comments.product_id = $productId";
 
-    $query = $this->_conn->MySQLi()->query($sql);
-    if ($query) {
-        $result = $query->fetch_all(MYSQLI_ASSOC);
-        foreach ($result as &$comment) {
-            // Format các ngày
-            if (isset($comment['created_at'])) {
-                $comment['created_at'] = $this->formatDate($comment['created_at']);
-            }
-            if (isset($comment['update_at'])) {
-                $comment['update_at'] = $this->formatDate($comment['update_at']);
-            }
+        $query = $this->_conn->MySQLi()->query($sql);
+        if ($query) {
+            $result = $query->fetch_all(MYSQLI_ASSOC);
+            foreach ($result as &$comment) {
+                // Format các ngày
+                if (isset($comment['created_at'])) {
+                    $comment['created_at'] = $this->formatDate($comment['created_at']);
+                }
+                if (isset($comment['update_at'])) {
+                    $comment['update_at'] = $this->formatDate($comment['update_at']);
+                }
 
-            // Lấy danh sách ảnh cho từng bình luận
-            $commentId = $comment['id'];
-            $comment['images'] = $this->getCommentImages($commentId); // Gọi hàm lấy ảnh
+                // Lấy danh sách ảnh cho từng bình luận
+                $commentId = $comment['id'];
+                $comment['images'] = $this->getCommentImages($commentId); // Gọi hàm lấy ảnh
+            }
+        } else {
+            error_log("Lỗi khi thực hiện truy vấn: " . $this->_conn->MySQLi()->error);
         }
-    } else {
-        error_log("Lỗi khi thực hiện truy vấn: " . $this->_conn->MySQLi()->error);
-    }
 
-    return $result;
-}
+        return $result;
+    }
 
     public function getCommentImages($commentId)
     {
@@ -179,5 +181,45 @@ class Product extends BaseModel
         }
 
         return $images; // Trả về mảng chứa danh sách ảnh
+    }
+
+    public function searchProducts($keyword)
+    {
+        // Truy vấn cơ sở dữ liệu để tìm sản phẩm theo tên hoặc mô tả
+        $result = [];
+        try {
+            $sql = "SELECT * FROM " . $this->table . " WHERE name LIKE ? OR description LIKE ?";
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+
+            // Thêm ký tự '%' vào trước và sau từ khóa để tìm kiếm
+            $searchTerm = '%' . $keyword . '%';
+            $stmt->bind_param('ss', $searchTerm, $searchTerm); // 'ss' cho 2 tham số kiểu string
+
+            $stmt->execute();
+            $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi tìm kiếm sản phẩm: ' . $th->getMessage());
+        }
+
+        return $result;
+    }
+
+    public function filterProductsByPrice($minPrice = 0, $maxPrice = PHP_INT_MAX)
+    {
+        $result = [];
+        try {
+            $conn = $this->_conn->MySQLi();
+            $sql = "SELECT * FROM " . $this->table . " WHERE price BETWEEN ? AND ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param('ii', $minPrice, $maxPrice);
+
+            $stmt->execute();
+            $result = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi lọc sản phẩm theo giá: ' . $th->getMessage());
+        }
+
+        return $result;
     }
 }
