@@ -8,13 +8,9 @@ class Create extends BaseView
 {
     public static function render($data = null)
     {
-        // var_dump($_SESSION);
 ?>
 
         <div class="page-wrapper">
-            <!-- ============================================================== -->
-            <!-- Bread crumb and right sidebar toggle -->
-            <!-- ============================================================== -->
             <div class="page-breadcrumb">
                 <div class="row">
                     <div class="col-12 d-flex no-block align-items-center">
@@ -32,20 +28,11 @@ class Create extends BaseView
                     </div>
                 </div>
             </div>
-            <!-- ============================================================== -->
-            <!-- End Bread crumb and right sidebar toggle -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- Container fluid  -->
-            <!-- ============================================================== -->
             <div class="container-fluid">
-                <!-- ============================================================== -->
-                <!-- Start Page Content -->
-                <!-- ============================================================== -->
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card">
-                            <form class="form-horizontal" action="/admin/add-category" method="POST" id="" >
+                            <form class="form-horizontal" action="/admin/add-category" method="POST">
                                 <div class="card-body">
                                     <h4 class="card-title">Thêm sản phẩm</h4>
                                     <input type="hidden" name="method" value="POST">
@@ -72,28 +59,29 @@ class Create extends BaseView
                                 </div>
                                 <div class="border-top">
                                     <div class="card-body">
-                                        <button type="submit" id="success-btn" class="btn btn-success" fdprocessedid="z06sel">
+                                        <button type="submit" id="success-btn" class="btn btn-success">
                                             Thêm
                                         </button>
-                                        <button type="button" class="btn btn-danger" fdprocessedid="z06sel">
+                                        <button type="button" class="btn btn-danger">
                                             Làm lại
                                         </button>
                                     </div>
                                 </div>
                         </div>
                         </form>
-                        
                     </div>
                 </div>
             </div>
         </div>
 
-        </div>
-        
+        <!-- Thêm CKEditor và SweetAlert -->
         <script src="<?= APP_URL ?>/public/assets/admin/js/categoryValidation.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-        
+        <script src="https://cdn.ckeditor.com/4.20.0/standard/ckeditor.js"></script>
+        <script>
+            // Kích hoạt CKEditor
+            CKEDITOR.replace('description');
+        </script>
 
 <?php
     }

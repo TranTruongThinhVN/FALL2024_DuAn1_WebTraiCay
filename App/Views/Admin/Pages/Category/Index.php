@@ -99,16 +99,34 @@ class Index extends BaseView
                         <td></td>
                         <td><?= $item['id'] ?></td>
                         <td><?= $item['name'] ?></td>
-                        <td><?= $item['description'] ?></td>
+                        <td>
+                          <?php
+                          $description = $item['description'];
+                          $maxLength = 100; // Số ký tự tối đa của mô tả ngắn
+                          if (strlen($description) > $maxLength) {
+                            $shortDesc = substr($description, 0, $maxLength) . '...';
+                            $cleanDescription = strip_tags($description); // Loại bỏ các thẻ HTML
+                            $cleanDescription = str_replace(["\r\n", "\r", "\n"], "\\n", $cleanDescription); // Chuyển xuống dòng thành \n
+                          ?>
+                            <span class="short-desc"><?= $shortDesc ?></span>
+                            <a href="javascript:void(0);"
+                              onclick="alert('<?= addslashes($cleanDescription) ?>')"
+                              class="btn btn-link">Xem thêm</a>
+                          <?php
+                          } else {
+                            echo nl2br($description); 
+                          ?>
+                        </td>
+
                         <td>
                           <p class="badge bg-success"><?= ($item['status'] == 1) ? 'Hiện' : 'Ẩn' ?></p>
                         </td>
                         <td>
                           <a href="/admin/category/<?= $item['id'] ?>">
-                          
+
                             <label class="badge bg-success">Chỉnh sửa</label>
                           </a>
-                          <form action="/admin/category/<?= $item['id'] ?>" method="post" style="display: inline-block;"onsubmit="return confirm('Chắc chưa?')" >
+                          <form action="/admin/category/<?= $item['id'] ?>" method="post" style="display: inline-block;" onsubmit="return confirm('Chắc chưa?')">
                             <input type="hidden" name="method" value="DELETE" id="">
                             <button style="margin: 0; padding: 3.5px ; border: 0;" type="submit" class="badge bg-danger">Xoá
                             </button>
@@ -134,12 +152,13 @@ class Index extends BaseView
           </div>
         </div>
       </div>
+
+
     </div>
-    
-                <script src="<?= APP_URL ?>/public/assets/admin/dist/js/categoryValidation.js"></script>
+
+    <script src="<?= APP_URL ?>/public/assets/admin/dist/js/categoryValidation.js"></script>
 
 <?php
 
   }
 }
-

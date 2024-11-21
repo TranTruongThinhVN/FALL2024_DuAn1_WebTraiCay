@@ -181,4 +181,82 @@ class CategoryController
             exit;
         }
     }
+
+    public function uploadImage()
+    {
+        // Kiểm tra nếu có file được tải lên
+        if (!isset($_FILES['uploads']) || $_FILES['uploads']['error'] !== UPLOAD_ERR_OK) {
+            $response = [
+                'uploaded' => 0,
+                'error' => [
+                    'message' => 'No file uploaded or an error occurred during the upload.'
+                ]
+            ];
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            exit;
+        }
+
+        // Lấy thông tin file
+        $file = $_FILES['upload'];
+        $fileName = uniqid() . '_' . basename($file['name']); // Đặt tên file duy nhất
+        $targetDir = 'public/uploads/'; // Thư mục lưu trữ file
+        $targetFile = $targetDir . $fileName;
+
+        // Kiểm tra thư mục lưu trữ
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true); // Tạo thư mục nếu chưa tồn tại
+        }
+
+        // Kiểm tra định dạng file
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        if (!in_array($fileExtension, $allowedExtensions)) {
+            $response = [
+                'uploaded' => 0,
+                'error' => [
+                    'message' => 'Invalid file type. Only JPG, JPEG, PNG, and GIF are allowed.'
+                ]
+            ];
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            exit;
+        }
+
+        // Kiểm tra kích thước file (giới hạn 2MB)
+        if ($file['size'] > 2 * 1024 * 1024) { // 2MB = 2 * 1024 * 1024 bytes
+            $response = [
+                'uploaded' => 0,
+                'error' => [
+                    'message' => 'File size exceeds 2MB limit.'
+                ]
+            ];
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            exit;
+        }
+
+        // Di chuyển file từ thư mục tạm sang thư mục đích
+        if (!move_uploaded_file($file['tmp_name'], $targetFile)) {
+            $response = [
+                'uploaded' => 0,
+                'error' => [
+                    'message' => 'Failed to save uploaded file.'
+                ]
+            ];
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            exit;
+        }
+
+        // Trả về phản hồi thành công
+        $response = [
+            'uploaded' => 1,
+            'fileName' => $fileName,
+            'url' => '/' . $targetFile // Đường dẫn URL file
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit;
+    }
 }

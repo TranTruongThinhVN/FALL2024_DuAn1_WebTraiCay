@@ -10,9 +10,6 @@ class Edit extends BaseView
     {
 ?>
     <div class="page-wrapper">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
         <div class="page-breadcrumb">
             <div class="row">
                 <div class="col-12 d-flex no-block align-items-center">
@@ -30,16 +27,7 @@ class Edit extends BaseView
                 </div>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- End Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Container fluid  -->
-        <!-- ============================================================== -->
         <div class="container-fluid">
-            <!-- ============================================================== -->
-            <!-- Start Page Content -->
-            <!-- ============================================================== -->
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
@@ -82,7 +70,12 @@ class Edit extends BaseView
                     </div>
                     <!-- Include the external JavaScript file -->
                     <script src="<?= APP_URL ?>/public/assets/admin/js/categoryValidation.js"></script>
-
+                    <!-- CKEditor Integration -->
+                    <script src="https://cdn.ckeditor.com/4.20.0/standard/ckeditor.js"></script>
+                    <script>
+                        // Kích hoạt CKEditor cho textarea có id là 'description'
+                        CKEDITOR.replace('description');
+                    </script>
                 </div>
             </div>
         </div>
