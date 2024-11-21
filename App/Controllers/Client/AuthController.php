@@ -11,6 +11,7 @@ use App\Views\Client\Layouts\Header;
 use App\Views\Client\Pages\Auth\Edit_profile;
 use App\Views\Client\Pages\Auth\Forgot_password;
 use App\Views\Client\Pages\Auth\Login;
+use App\Views\Client\Pages\Auth\Phone_verify_otp;
 use App\Views\Client\Pages\Auth\Purchase_history;
 use App\Views\Client\Pages\Auth\register;
 use App\Views\Client\Pages\Auth\Reset_password;
@@ -109,8 +110,7 @@ class AuthController
 
         $result = AuthHelper::login($data);
         if ($result) {
-            // If login is successful, redirect to home or dashboard, not login page
-            header('location: /'); // Replace /home with the appropriate URL for your logged-in page
+            header('location: /');
             exit();
         } else {
             $_SESSION['errors']['general'] = 'Email hoặc mật khẩu không đúng.';
@@ -138,6 +138,28 @@ class AuthController
         header("Location: /");
         exit();
     }
+    // public static function edit($id)
+    // {
+    //     $result = AuthHelper::edit($id);
+    //     if (!$result) {
+    //         if (isset($_SESSION['error']['login'])) {
+    //             header('location: /login');
+    //             exit;
+    //         }
+    //         if (isset($_SESSION['error']['user_id'])) {
+    //             $data = $_SESSION['user'];
+    //             $user_id = $data['id'];
+    //             header('location: /users/edit/$user_id');
+    //             exit;
+    //         }
+    //     }
+    //     $data = $_SESSION['user'];
+    //     Header::render();
+    //     Notification::render();
+    //     NotificationHelper::unset();
+    //     Edit_profile::render($data);
+    //     Footer::render();
+    // }
     public static function edit($id)
     {
         $result = AuthHelper::edit($id);
@@ -158,13 +180,20 @@ class AuthController
         Edit_profile::render($data);
         Footer::render();
     }
+
     public static function update($id)
     {
+
+        if (!AuthValidation::edit()) {
+            header("location: /users/$id");
+            exit();
+        }
         // Lấy dữ liệu người dùng (chỉ lấy các trường có giá trị)
         $data = array_filter([
             'name' => $_POST['name'] ?? null,
             'phone' => $_POST['phone'] ?? null,
             'gender' => $_POST['gender'] ?? null,
+            'dob' => $_SESSION['data']['dob'] ?? null,
         ]);
 
         // Kiểm tra nếu có file avatar được upload
@@ -184,7 +213,7 @@ class AuthController
         // Cập nhật thông tin người dùng
         $result = AuthHelper::update($id, $data);
         if ($result) {
-            $_SESSION['success'] = 'Cập nhật thông tin thành công.';
+            NotificationHelper::success('edit_auth', 'Cập nhật thông tin thành công');
         } else {
             $_SESSION['errors']['update'] = 'Cập nhật thông tin thất bại.';
         }
@@ -314,51 +343,104 @@ class AuthController
         exit();
     }
     // google
-    public function googleLogin(): void
-    {
-        $client = new \Google\Client();
-        $client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
-        $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
-        $client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URI']);
-        $client->addScope('email');
-        $client->addScope('profile');
+    // public function googleLogin(): void
+    // {
+    //     $client = new \Google\Client();
+    //     $client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
+    //     $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
+    //     $client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URI']);
+    //     $client->addScope('email');
+    //     $client->addScope('profile');
 
-        $authUrl = $client->createAuthUrl();
-        header('Location: ' . $authUrl);
-        exit();
+    //     $authUrl = $client->createAuthUrl();
+    //     header('Location: ' . $authUrl);
+    //     exit();
+    // }
+
+
+
+    // public function googleCallback()
+    // {
+    //     $client = new Google_Client();
+    //     $client->setHttpClient(new \GuzzleHttp\Client(['verify' => false]));
+
+    //     $client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
+    //     $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
+    //     $client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URI']);
+
+    //     if (isset($_GET['code'])) {
+    //         $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+    //         $client->setAccessToken($token['access_token']);
+
+    //         $oAuth = new \Google\Service\Oauth2($client);
+    //         $userInfo = $oAuth->userinfo->get();
+
+    //         // Lưu thông tin user vào session
+    //         $_SESSION['user'] = [
+    //             'google_id' => $userInfo->id,
+    //             'name' => $userInfo->name,
+    //             'email' => $userInfo->email,
+    //         ];
+
+    //         // Redirect về trang chính
+    //         header('Location: /');
+    //         exit();
+    //     } else {
+    //         echo "Lỗi: Không nhận được mã xác thực từ Google.";
+    //         exit();
+    //     }
+    // }
+    public static function addPhoneAction()
+    {
+        $phone = $_POST['new_phone'] ?? '';
+
+        // Gọi hàm kiểm tra số điện thoại từ AuthValidation
+        if (!AuthValidation::isValidPhoneNumber($phone)) {
+            $_SESSION['error'] = 'Số điện thoại không hợp lệ!';
+            // header('Location: /profile');
+            echo 'cc';
+            exit;
+        }
+
+        // Tạo OTP và lưu vào session
+        $otp = AuthHelper::generateOtp();
+        $_SESSION['otp'] = $otp;
+        $_SESSION['new_phone'] = $phone;
+        AuthHelper::sendOtpToPhone($_SESSION['new_phone'], $otp);
+        // Chuyển hướng tới trang nhập OTP
+        header('Location: /phone-verify-otp');
+        exit;
+    }
+    public static function phoneVerifyOtp()
+    {
+        Phone_verify_otp::render();
     }
 
-
-
-    public function googleCallback()
+    public static function phoneVerifyOtpAction()
     {
-        $client = new Google_Client();
-        $client->setHttpClient(new \GuzzleHttp\Client(['verify' => false]));
+        $enteredOtp = $_POST['otp'] ?? '';
+        $sessionOtp = $_SESSION['otp'] ?? null;
 
-        $client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
-        $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
-        $client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URI']);
-
-        if (isset($_GET['code'])) {
-            $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-            $client->setAccessToken($token['access_token']);
-
-            $oAuth = new \Google\Service\Oauth2($client);
-            $userInfo = $oAuth->userinfo->get();
-
-            // Lưu thông tin user vào session
-            $_SESSION['user'] = [
-                'google_id' => $userInfo->id,
-                'name' => $userInfo->name,
-                'email' => $userInfo->email,
-            ];
-
-            // Redirect về trang chính
-            header('Location: /');
-            exit();
-        } else {
-            echo "Lỗi: Không nhận được mã xác thực từ Google.";
-            exit();
+        if ($enteredOtp !== $sessionOtp) {
+            $_SESSION['error'] = 'Mã OTP không hợp lệ!';
+            header('Location: /verify-otp');
+            exit;
         }
+
+        // Nếu OTP đúng, lưu số điện thoại vào DB
+        $phone = $_SESSION['new_phone'];
+        $userId = $_SESSION['user']['id'];
+
+        $result = AuthHelper::updatePhoneNumber($userId, $phone);
+
+        if ($result) {
+            $_SESSION['success'] = 'Số điện thoại đã được cập nhật!';
+        } else {
+            $_SESSION['error'] = 'Cập nhật thất bại, vui lòng thử lại!';
+        }
+
+        unset($_SESSION['otp'], $_SESSION['new_phone']);
+        header('Location: /profile');
+        exit;
     }
 }

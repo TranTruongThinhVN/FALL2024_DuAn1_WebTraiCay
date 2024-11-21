@@ -4,6 +4,7 @@ namespace App\Validations;
 
 use App\Helpers\NotificationHelper;
 use App\Models\User;
+use DateTime;
 
 class AuthValidation
 {
@@ -128,6 +129,43 @@ class AuthValidation
             }
         }
 
+        if (
+            empty($_POST['dob_day']) &&
+            empty($_POST['dob_month']) &&
+            empty($_POST['dob_year'])
+        ) {
+            // Người dùng không nhập ngày sinh, bỏ qua kiểm tra
+            $_SESSION['data']['dob'] = null;
+        } elseif (
+            !empty($_POST['dob_day']) &&
+            !empty($_POST['dob_month']) &&
+            !empty($_POST['dob_year']) &&
+            checkdate((int)$_POST['dob_month'], (int)$_POST['dob_day'], (int)$_POST['dob_year'])
+        ) {
+            // Người dùng nhập ngày sinh hợp lệ
+            $_SESSION['data']['dob'] = sprintf(
+                '%04d-%02d-%02d',
+                (int)$_POST['dob_year'],
+                (int)$_POST['dob_month'],
+                (int)$_POST['dob_day']
+            );
+        } else {
+            // Người dùng nhập ngày sinh không hợp lệ
+            $_SESSION['errors']['dob'] = 'Ngày sinh không hợp lệ.';
+            $is_valid = false;
+        }
+
+
+        // Kiểm tra giới tính (nếu có)
+        if (!empty($_POST['gender'])) {
+            $valid_genders = ['male', 'female', 'other'];
+            if (!in_array($_POST['gender'], $valid_genders)) {
+                $_SESSION['errors']['gender'] = 'Giới tính không hợp lệ.';
+                $is_valid = false;
+            }
+        }
+
+
         return $is_valid;
     }
 
@@ -155,5 +193,9 @@ class AuthValidation
         }
 
         return $nameImage;
+    }
+    public static function isValidPhoneNumber($phone)
+    {
+        return preg_match('/^(\+84|0)[3|5|7|8|9]\d{8}$/', $phone);
     }
 }

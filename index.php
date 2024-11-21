@@ -62,10 +62,14 @@ Route::put('/users/{id}', 'App\Controllers\Client\AuthController@update');
 // Route::get('/purchase-history',  'App\Controllers\Client\OrderController@showPurchaseHistory');
 Route::get('/verify-otp',  'App\Controllers\Client\AuthController@verifyOtp');
 Route::post('/verify-otp',  'App\Controllers\Client\AuthController@verifyOtpAction');
+Route::post('/add-phone',  'App\Controllers\Client\AuthController@addPhoneAction');
+Route::get('/phone-verify-otp',  'App\Controllers\Client\AuthController@phoneVerifyOtp');
+Route::post('/phone-verify-otp',  'App\Controllers\Client\AuthController@phoneVerifyOtpAction');
 // Thêm vào file routes của bạn
 Route::get('/google-login', 'App\Controllers\Client\AuthController@googleLogin');
 Route::get('/google-callback', 'App\Controllers\Client\AuthController@googleCallback');
 
+Route::get('/profile', 'App\Controllers\Client\AuthController@edit');
 
 // *** Admin
 Route::get('/admin', 'App\Controllers\Admin\DashboardController@index');
@@ -97,7 +101,7 @@ Route::get('/admin/comments', 'App\Controllers\Admin\CommentController@index');
 //category
 Route::get('/admin/category', 'App\Controllers\Admin\CategoryController@index');
 Route::get('/admin/add-category', 'App\Controllers\Admin\CategoryController@create');
-Route::post('/admin/add-category', 'App\Controllers\Admin\CategoryController@store'); 
+Route::post('/admin/add-category', 'App\Controllers\Admin\CategoryController@store');
 Route::get('/admin/category/{id}', controllerMethod: 'App\Controllers\Admin\CategoryController@edit');
 Route::delete('/admin/category/{id}', 'App\Controllers\Admin\CategoryController@delete');
 Route::put('/admin/category/{id}', 'App\Controllers\Admin\CategoryController@update');

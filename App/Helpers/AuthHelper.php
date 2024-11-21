@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use Twilio\Rest\Client;
 use App\Models\Client\User;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -62,11 +63,13 @@ class AuthHelper
 
         if ($userRecord) {
             $userData = json_encode($userRecord);
-            setcookie('user', json_encode($userRecord), time() + (3600 * 24 * 30), '/');
+            setcookie('user', $userData, time() + (3600 * 24 * 30), '/'); // Cookie lưu trong 30 ngày
 
-            $_SESSION['user'] = $userRecord; // Also set session for immediate use
+
+            $_SESSION['user'] = $userRecord; // Thiết lập session để sử dụng ngay lập tức
         }
     }
+
 
     // Update Session
     public static function updateSession($id)
@@ -82,17 +85,18 @@ class AuthHelper
     // Check if user is logged in, either via session or cookie
     public static function checkLogin()
     {
-        if (isset($_SESSION['user'])) {
+        if (isset($_SESSION['user']) && !empty($_SESSION['user'])) {
             return true;
         }
 
-        if (isset($_COOKIE['user'])) {
-            $_SESSION['user'] = json_decode($_COOKIE['user'], true); // Decode and set to session
+        if (isset($_COOKIE['user']) && !empty($_COOKIE['user'])) {
+            $_SESSION['user'] = json_decode($_COOKIE['user'], true);
             return true;
         }
 
         return false;
     }
+
 
     public static function generateResetToken($email)
     {
@@ -190,21 +194,19 @@ class AuthHelper
         $user = new User();
         $result = $user->updateUser($id, $data);
         if (!$result) {
-            // NotificationHelper::error('update_user', 'Cập nhật thông tin tài khoản thất bại');
+            NotificationHelper::error('update_user', 'Cập nhật thông tin tài khoản thất bại');
             return false;
         }
-        if ($_SESSION['user']) {
+        if (isset($_SESSION['user']) && $_SESSION['user']) {
             self::updateSession($id);
         }
+
         if (isset($_COOKIE['user']) && !empty($_COOKIE['user'])) {
-            $user = json_decode($_COOKIE['user'], true);
-        } else {
-            error_log("Cookie 'user' is not set or empty.");
+            self::updateCookie($id);
         }
 
 
-
-        // NotificationHelper::success('update_user', 'Cập nhật thông tin tài khoản thành công');
+        NotificationHelper::success('update_user', 'Cập nhật thông tin tài khoản thành công');
         return true;
     }
     public static function middleware()
@@ -223,7 +225,7 @@ class AuthHelper
                 NotificationHelper::error('admin', 'Vui lòng đăng nhập');
                 header('location: /login');
                 // exit;
-                var_dump($_SESSION['user']); // Thêm dòng này để kiểm tra
+                // var_dump($_SESSION['user']); // Thêm dòng này để kiểm tra
                 exit;
             }
 
@@ -233,5 +235,50 @@ class AuthHelper
                 exit;
             }
         }
+    }
+    // use Twilio\Rest\Client;
+
+    public static function sendOtpToPhone($phone, $otp)
+    {
+        $accountSid = getenv('TWILIO_ACCOUNT_SID');
+        $authToken = getenv('TWILIO_AUTH_TOKEN');
+
+        $twilioPhone = '+16514193050'; // Twilio active number
+
+        $client = new \Twilio\Rest\Client($accountSid, $authToken);
+        try {
+            $message = $client->messages->create(
+                $phone, // Recipient number
+                [
+                    'from' => $twilioPhone, // Twilio number
+                    'body' => "Mã OTP của bạn là: $otp"
+                ]
+            );
+            echo "Message sent! SID: " . $message->sid;
+        } catch (\Exception $e) {
+            echo "Lỗi Twilio: " . $e->getMessage();
+        }
+    }
+
+
+
+
+
+
+    public static function phoneGenerateOtp($length = 6)
+    {
+        $characters = '0123456789';
+        $otp = '';
+        for ($i = 0; $i < $length; $i++) {
+            $otp .= $characters[rand(0, strlen($characters) - 1)];
+        }
+
+        return $otp;
+    }
+
+    public static function updatePhoneNumber($userId, $phone)
+    {
+        $user = new User();
+        return $user->updateUser($userId, ['phone' => $phone]);
     }
 }
