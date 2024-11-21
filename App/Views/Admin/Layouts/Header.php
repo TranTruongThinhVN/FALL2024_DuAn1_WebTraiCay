@@ -9,8 +9,8 @@ class Header extends BaseView
     public static function render($data = null)
     {
 
-?> 
-    <!DOCTYPE html>
+?>
+        <!DOCTYPE html>
         <html dir="ltr" lang="en">
 
         <head>
@@ -65,7 +65,7 @@ class Header extends BaseView
                                 <!--End Logo icon -->
                                 <!-- Logo text -->
                                 <span class="logo-text">
-                                    <!-- dark Logo text --> 
+                                    <!-- dark Logo text -->
 
                                 </span>
                                 <!-- Logo icon -->
@@ -76,7 +76,7 @@ class Header extends BaseView
 
                                 <!-- </b> -->
                                 <!--End Logo icon -->
-                            </a> 
+                            </a>
                             <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)"><i class="ti-menu ti-close"></i></a>
                         </div>
                         <!-- ============================================================== -->
@@ -93,7 +93,7 @@ class Header extends BaseView
                             <!-- ============================================================== -->
                             <!-- Right side toggle and nav items -->
                             <!-- ============================================================== -->
-                            <ul class="navbar-nav float-end">                
+                            <ul class="navbar-nav float-end">
                                 <!-- ============================================================== -->
                                 <!-- User profile and search -->
                                 <!-- ============================================================== -->
@@ -112,7 +112,7 @@ class Header extends BaseView
                             </ul>
                         </div>
                     </nav>
-                </header> 
+                </header>
                 <!-- ============================================================== -->
                 <aside class="left-sidebar" data-sidebarbg="skin5">
                     <!-- Sidebar scroll-->
@@ -185,9 +185,9 @@ class Header extends BaseView
                                         <li class="sidebar-item">
                                             <a href="/admin/user-create" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Thêm mới </span></a>
                                         </li>
-                                        <li class="sidebar-item">
+                                        <!-- <li class="sidebar-item">
                                             <a href="/admin/user-details" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Chi tiết </span></a>
-                                        </li>
+                                        </li> -->
                                     </ul>
                                 </li>
                                 <li class="sidebar-item p-3">
@@ -203,9 +203,9 @@ class Header extends BaseView
                 <!-- End Left Sidebar - style you can find in sidebar.scss  -->
                 <!-- ============================================================== -->
 
-    <?php
+        <?php
 
     }
 }
 
-    ?>
+        ?>

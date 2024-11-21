@@ -4,11 +4,9 @@ namespace App\Controllers\Admin;
 
 use App\Helpers\NotificationHelper;
 use App\Models\Admin\User;
+use App\Validations\UserValidation;
 use App\Views\Admin\Layouts\Footer;
 use App\Views\Admin\Layouts\Header;
-use App\Views\Admin\Layouts\Navbar;
-use App\Views\Admin\Layouts\Settings_panel;
-use App\Views\Admin\Layouts\Sidebar;
 use App\Views\Admin\Pages\User\Create;
 use App\Views\Admin\Pages\User\Details;
 use App\Views\Admin\Pages\User\Edit;
@@ -42,53 +40,58 @@ class UserController
     // Xử lý thêm người dùng
     public static function store()
     {
-        session_start(); // Khởi tạo session nếu chưa có
-
-        $email = trim($_POST['email'] ?? '');
-        $password = trim($_POST['password'] ?? '');
-        $role = intval($_POST['role'] ?? 1);
-        $gender = $_POST['gender'] ?? 'other';
-        $status = intval($_POST['status'] ?? 1);
-        $name = trim($_POST['name'] ?? '');
-        $phone = trim($_POST['phone'] ?? '');
-        $avatar = null;
-
-        // Kiểm tra dữ liệu bắt buộc
-        if (empty($email) || empty($password) || empty($name)) {
-            NotificationHelper::error('user_create', 'Vui lòng nhập đầy đủ thông tin!');
-            header('Location: /admin/user-create'); // Quay lại form thêm
+        // Kiểm tra dữ liệu đầu vào
+        if (!UserValidation::register()) {
+            // Thêm thông báo lỗi và chuyển về form
+            NotificationHelper::error('user_create', 'Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.');
+            header('Location: /admin/user-create');
             exit;
         }
 
-        // Xử lý upload ảnh đại diện (nếu có)
+        // Lấy dữ liệu từ form
+        $email = trim($_POST['email']);
+        $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+        $name = trim($_POST['name'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
+        $dob = trim($_POST['dob'] ?? null);
+        $gender = trim($_POST['gender'] ?? 'other');
+        $status = intval($_POST['status'] ?? 1);
+        $avatar = null;
+
+        // Xử lý upload avatar (nếu có)
         if (!empty($_FILES['avatar']['name'])) {
             $avatar = self::uploadAvatar($_FILES['avatar']);
+            if (!$avatar) {
+                // Nếu upload thất bại
+                NotificationHelper::error('user_create', 'Không thể tải lên ảnh đại diện. Định dạng phải là jpg, jpeg hoặc png.');
+                header('Location: /admin/user-create');
+                exit;
+            }
         }
-
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
         $data = [
             'email' => $email,
-            'password' => $hashedPassword,
-            'role' => $role,
-            'gender' => $gender,
-            'status' => $status,
+            'password' => $password,
             'name' => $name,
             'phone' => $phone,
+            'dob' => $dob,
+            'gender' => $gender,
+            'status' => $status,
             'avatar' => $avatar,
         ];
 
+        // Lưu dữ liệu vào database
         $userModel = new User();
         $isCreated = $userModel->createUser($data);
 
+        // Kiểm tra kết quả lưu
         if ($isCreated) {
             NotificationHelper::success('user_create', 'Thêm người dùng thành công!');
+            header('Location: /admin/users');
         } else {
-            NotificationHelper::error('user_create', 'Có lỗi xảy ra khi thêm người dùng!');
+            NotificationHelper::error('user_create', 'Có lỗi xảy ra khi thêm người dùng. Vui lòng thử lại.');
+            header('Location: /admin/user-create');
         }
-
-        // Chuyển hướng sang danh sách người dùng
-        header('Location: /admin/users');
         exit;
     }
 
@@ -144,12 +147,14 @@ class UserController
             }
         }
 
+        $dob = trim($_POST['dob'] ?? $currentUser['dob']);
         // Cập nhật dữ liệu
         $data = [
             'name' => $name,
             'email' => $email,
             'role' => $role,
-            'avatar' => $avatar, // Sử dụng avatar cũ nếu không có avatar mới
+            'avatar' => $avatar,
+            'dob' => $dob, // Sử dụng avatar cũ nếu không có avatar mới
         ];
 
         $isUpdated = $userModel->updateUser($id, $data);
@@ -183,7 +188,7 @@ class UserController
     // Xử lý upload avatar
     private static function uploadAvatar($file)
     {
-        $targetDir = 'uploads/avatars/';
+        $targetDir = 'public/uploads/users/';
         $fileName = time() . '_' . basename($file['name']);
         $targetFile = $targetDir . $fileName;
 
