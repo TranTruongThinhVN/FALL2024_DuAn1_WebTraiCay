@@ -20,6 +20,7 @@ require_once 'config.php';
 AuthHelper::middleware();
 
 // *** Client
+Route::get('/product-detail/{id}', 'App\Controllers\Client\ProductController@detail');
 Route::get('/', 'App\Controllers\Client\HomeController@index');
 Route::get('/contact', 'App\Controllers\Client\ContactController@index');
 Route::get('/checkout', 'App\Controllers\Client\CheckoutController@index');
@@ -83,9 +84,9 @@ Route::get('/admin/user-details', 'App\Controllers\Admin\UserController@details'
 
 
 // Route::get('/comments/details', 'App\Controllers\Admin\CommentController@details');
-Route::get('/admin/comments', 'App\Controllers\Admin\CommentController@CommentWithProduct');
+Route::get('/admin/comments', 'App\Controllers\Admin\CommentController@index');
 Route::get('/admin/comments/{id}', 'App\Controllers\Admin\CommentController@edit');
-Route::get('/comments/details', 'App\Controllers\Admin\CommentController@getCommentsByProductId');
+Route::get('/comments/details', 'App\Controllers\Admin\CommentController@details');
 Route::delete('/comments/delete/{id}', 'App\Controllers\Admin\CommentController@delete');
 Route::get('/comments/edit/{id}', 'App\Controllers\Admin\CommentController@edit');
 Route::put('/comments/update/{id}', 'App\Controllers\Admin\CommentController@update');

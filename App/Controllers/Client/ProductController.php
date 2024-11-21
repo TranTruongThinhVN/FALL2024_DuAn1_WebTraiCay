@@ -3,6 +3,7 @@
 namespace App\Controllers\Client;
 
 use App\Models\Product;
+use App\Views\Admin\Pages\Product\Details;
 use App\Views\Client\Layouts\Footer;
 use App\Views\Client\Home;
 use App\Views\Client\Layouts\Header;
@@ -44,10 +45,17 @@ class ProductController
         Footer::render();
     }
 
-    public static function detail()
-    {
-        Header::render();
-        Detail::render();
-        Footer::render();
-    }
+    public static function detail($id)
+{ 
+    // Lấy thông tin sản phẩm từ model
+    $productModel = new Product();
+    $data = $productModel->getOneProduct($id);  
+    $comments = $productModel->getCommentsByid($id);  
+    var_dump($comments);
+    Header::render(); 
+    Detail::render($data, $comments);
+    Footer::render();
+}
+
+
 }

@@ -10,7 +10,7 @@ class Login extends BaseView
     public static function render($data = null)
     {
 ?>
-        <link rel="stylesheet" href="public/styles/main.css">
+        <link rel="stylesheet" href="<?=APP_URL?>/public/styles/main.css">
         <div class="content-wrapper">
             <div class="top-section">
                 <div class="top-left">

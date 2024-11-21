@@ -34,7 +34,7 @@ class Details extends BaseView
                     <div class="col-12">
 
                         <div class="card">
-                            <div class="card-body ">
+                            <div class="card-body">
                                 <!-- <h5 class="card-title mb-0">Static Table With Checkboxes</h5> -->
                                 <div class="card-filter d-flex" style="gap: 16px;">
                                     <div class="btn-group ">
@@ -66,183 +66,77 @@ class Details extends BaseView
                                     </form>
                                 </div>
                             </div>
-                            <!-- car -->
-                            <div class="row">
-                                <div class="col-6 d-flex align-items-center " style="position:sticky;  height: 100vh;">
-                                    <div class="card"><img src="https://originmarket.vn/wp-content/uploads/2022/06/cam-vang-My-768x768.png" width="200px"></div>
-                                    <div class="items ps-3">
-                                        <p>Name: Cam vàng</p>
-                                        <p>Giá</p>
-                                        <p>Đánh Giá</p>
-                                    </div>
-                                </div>
-                                <div class="col-6 " style="overflow-y: scroll;height: 100vh;scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE 10+ */">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Latest Posts</h4>
-                                        </div>
-                                        <div class="comment-widgets scrollable ps-container ps-theme-default" data-ps-id="5bc9c16c-f3ac-5e93-9200-26249bfeaecb" >
-                                            <!-- Comment Row -->
-                                            <div class="d-flex flex-row comment-row mt-0">
-                                                <div class="p-2">
-                                                    <img src="../assets/images/users/1.jpg" alt="user" width="50" class="rounded-circle">
-                                                </div>
-                                                <div class="comment-text w-100">
-                                                    <h6 class="font-medium">James Anderson</h6>
-                                                    <span class="mb-3 d-block">Lorem Ipsum is simply dummy text of the printing and
-                                                        type setting industry.
-                                                    </span>
-                                                    <div class="comment-footer">
-                                                        <span class="text-muted float-end">April 14, 2021</span>
-                                                        <button type="button" class="btn btn-cyan btn-sm text-white">
-                                                            Edit
-                                                        </button>
-                                                        <button type="button" class="btn btn-success btn-sm text-white">
-                                                            Publish
-                                                        </button>
-                                                        <button type="button" class="btn btn-danger btn-sm text-white">
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Comment Row -->
-                                            <div class="d-flex flex-row comment-row">
-                                                <div class="p-2">
-                                                    <img src="../assets/images/users/4.jpg" alt="user" width="50" class="rounded-circle">
-                                                </div>
-                                                <div class="comment-text active w-100">
-                                                    <h6 class="font-medium">Michael Jorden</h6>
-                                                    <span class="mb-3 d-block">Lorem Ipsum is simply dummy text of the printing and
-                                                        type setting industry.
-                                                    </span>
-                                                    <div class="comment-footer">
-                                                        <span class="text-muted float-end">May 10, 2021</span>
-                                                        <button type="button" class="btn btn-cyan btn-sm text-white">
-                                                            Edit
-                                                        </button>
-                                                        <button type="button" class="btn btn-success btn-sm text-white">
-                                                            Publish
-                                                        </button>
-                                                        <button type="button" class="btn btn-danger btn-sm text-white">
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Comment Row -->
-                                            <div class="d-flex flex-row comment-row">
-                                                <div class="p-2">
-                                                    <img src="../assets/images/users/5.jpg" alt="user" width="50" class="rounded-circle">
-                                                </div>
-                                                <div class="comment-text w-100">
-                                                    <h6 class="font-medium">Johnathan Doeting</h6>
-                                                    <span class="mb-3 d-block">Lorem Ipsum is simply dummy text of the printing and
-                                                        type setting industry.
-                                                    </span>
-                                                    <div class="comment-footer">
-                                                        <span class="text-muted float-end">August 1, 2021</span>
-                                                        <button type="button" class="btn btn-cyan btn-sm text-white">
-                                                            Edit
-                                                        </button>
-                                                        <button type="button" class="btn btn-success btn-sm text-white">
-                                                            Publish
-                                                        </button>
-                                                        <button type="button" class="btn btn-danger btn-sm text-white">
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
-                                                <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
-                                            </div>
-                                            <div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px;">
-                                                <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div>
-                                            </div>
-                                            <div class="d-flex flex-row comment-row mt-0">
-                                                <div class="p-2">
-                                                    <img src="../assets/images/users/1.jpg" alt="user" width="50" class="rounded-circle">
-                                                </div>
-                                                <div class="comment-text w-100">
-                                                    <h6 class="font-medium">James Anderson</h6>
-                                                    <span class="mb-3 d-block">Lorem Ipsum is simply dummy text of the printing and
-                                                        type setting industry.
-                                                    </span>
-                                                    <div class="comment-footer">
-                                                        <span class="text-muted float-end">April 14, 2021</span>
-                                                        <button type="button" class="btn btn-cyan btn-sm text-white">
-                                                            Edit
-                                                        </button>
-                                                        <button type="button" class="btn btn-success btn-sm text-white">
-                                                            Publish
-                                                        </button>
-                                                        <button type="button" class="btn btn-danger btn-sm text-white">
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Comment Row -->
-                                            <div class="d-flex flex-row comment-row">
-                                                <div class="p-2">
-                                                    <img src="../assets/images/users/4.jpg" alt="user" width="50" class="rounded-circle">
-                                                </div>
-                                                <div class="comment-text active w-100">
-                                                    <h6 class="font-medium">Michael Jorden</h6>
-                                                    <span class="mb-3 d-block">Lorem Ipsum is simply dummy text of the printing and
-                                                        type setting industry.
-                                                    </span>
-                                                    <div class="comment-footer">
-                                                        <span class="text-muted float-end">May 10, 2021</span>
-                                                        <button type="button" class="btn btn-cyan btn-sm text-white">
-                                                            Edit
-                                                        </button>
-                                                        <button type="button" class="btn btn-success btn-sm text-white">
-                                                            Publish
-                                                        </button>
-                                                        <button type="button" class="btn btn-danger btn-sm text-white">
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Comment Row -->
-                                            <div class="d-flex flex-row comment-row">
-                                                <div class="p-2">
-                                                    <img src="../assets/images/users/5.jpg" alt="user" width="50" class="rounded-circle">
-                                                </div>
-                                                <div class="comment-text w-100">
-                                                    <h6 class="font-medium">Johnathan Doeting</h6>
-                                                    <span class="mb-3 d-block">Lorem Ipsum is simply dummy text of the printing and
-                                                        type setting industry.
-                                                    </span>
-                                                    <div class="comment-footer">
-                                                        <span class="text-muted float-end">August 1, 2021</span>
-                                                        <button type="button" class="btn btn-cyan btn-sm text-white">
-                                                            Edit
-                                                        </button>
-                                                        <button type="button" class="btn btn-success btn-sm text-white">
-                                                            Publish
-                                                        </button>
-                                                        <button type="button" class="btn btn-danger btn-sm text-white">
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
-                                                <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
-                                            </div>
-                                            <div class="ps-scrollbar-y-rail" style="top: 0px; right: 3px;">
-                                                <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 0px;"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php if (!empty($data)): ?>
 
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">ID bình luận</th>
+                                                <th scope="col">Tên sản phẩm</th>
+                                                <th scope="col">Bình luận</th>
+                                                <th scope="col">Đánh giá</th>
+                                                <th scope="col">Hình ảnh</th>
+                                                <th scope="col">Tuỳ chỉnh</th>
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody class="customtable">
+                                            <?php $count = 1;
+                                            foreach ($data as $row): ?>
+                                                <?php if ($row['status'] == 1): ?>
+                                                    <tr>
+                                                        <td><?= $count ?></td>
+                                                        <td><?= $row['id'] ?></td>
+                                                        <td><?= $row['product_name'] ?></td>
+                                                        <td>
+                                                            <div class="comment-container">
+                                                                <p class="content mb-1"><?= $row['content'] ?></p> <!-- Không có margin dưới phần nội dung -->
+                                                                <p class="created-at text-muted mb-0 " style="font-size: 10px;"><?= $row['created_at'] ?></p> <!-- Không có margin dưới phần ngày tạo -->
+                                                            </div>
+                                                        </td>
+                                                        <td><?php if ( $row['rating'] > 0): ?>
+                                                                <div class="rating"> 
+                                                                <p><?=$row['rating']?><i class="fa-solid fa-star" style="color: #FFD43B;"></i></p>
+                                                                </div>
+                                                            <?php else: ?>
+                                                                <p>Chưa có đánh giá.</p>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if (!empty($row['images'])): ?>
+                                                                <div class="comment-images row">
+                                                                    <?php foreach ($row['images'] as $image): ?>
+                                                                        <div class="col-4 p-0" style="display: block; width: 50px; height: 50px;  margin: 2px; padding: 0; border: none; max-width: 100%; max-height: 100%;">
+                                                                            <img src="<?= $image['image_url'] ?>" alt="Ảnh bình luận" style="display: block; width: 50px; height: 50px; object-fit: cover; margin: 0; padding: 0; border: none; max-width: 100%; max-height: 100%;">
+                                                                        </div>
+                                                                    <?php endforeach; ?>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex justify-content-center align-items-center" style="gap: 10px;">
+                                                                <a href="/comments/edit/<?= $row['id'] ?>" class="badge bg-success">Chỉnh sửa</a>
+                                                                <form action="/comments/delete/<?= $row['id'] ?>" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bình luận này không?');">
+                                                                    <input type="hidden" name="method" value="DELETE">
+                                                                    <input type="hidden" name="product_id" value="<?= $row['product_id'] ?>"> <!-- Thêm product_id -->
+                                                                    <input type="hidden" name="id" value="<?= $row['id'] ?>"> <!-- Chắc chắn bạn đã truyền id bình luận -->
+                                                                    <button type="submit" class="badge bg-danger" style="border: none">Xóa</button>
+                                                                </form>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                        </tbody>
+                                    <?php
+                                                $count++;
+                                            endforeach;
+                                    ?>
+                                    </table>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

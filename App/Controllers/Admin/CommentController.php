@@ -9,8 +9,7 @@ use App\Views\Admin\Layouts\Footer;
 use App\Views\Admin\Layouts\Header;
 use App\Views\Admin\Pages\Comments\Details;
 use App\Views\Admin\Pages\Comments\Edit;
-use App\Views\Admin\Pages\Comments\ListComments;
-use App\Views\Admin\Pages\Comments\ListItem; 
+use App\Views\Admin\Pages\Comments\ListComments; 
 
 class CommentController
 {
@@ -19,12 +18,14 @@ class CommentController
     // hiển thị danh sách
     public static function index()
     { 
-        $comment = new Comment();
-        $data = $comment->getAllCommentJoinProductAndUser();
-        var_dump($data);
+        
+        $product = new Product();
+        
+        // Lấy danh sách sản phẩm và tổng bình luận
+        $data = $product->getProductsWithCommentCount(); 
         Header::render();
-        ListItem::render($data);
-        Footer::render(); 
+        ListComments::render($data);
+        Footer::render();
     }
 
 
@@ -88,8 +89,7 @@ class CommentController
     {
         
         $Comment = new Comment();
-        $data = $Comment->getOneCommentJoinProductAndUser($id);
-        var_dump($data);
+        $data = $Comment->getOneCommentJoinProductAndUser($id); 
         // if(!$data){
         //     NotificationHelper::error('edit', 'Không thể xem bình luận này');
         //     header('Location : /admin/categories');
@@ -153,13 +153,11 @@ class CommentController
     // Nếu có ảnh, thêm vào dữ liệu
     if (!empty($imageUrls)) {
         $data['images'] = implode(',', $imageUrls); // Lưu đường dẫn ảnh vào cơ sở dữ liệu, nối bằng dấu phẩy
-    }
-
-    var_dump($data);
+    } 
 
     // Cập nhật bình luận
     $data = $Comment->updateComment($id, $data); 
-    var_dump($data); // Kiểm tra giá trị của $result;
+     // Kiểm tra giá trị của $result;
 
     if ($data) {
         header("Location: /comments/details?product_id=" . $productId);
@@ -198,21 +196,8 @@ class CommentController
         } else { 
             echo "Phương thức không hợp lệ.";
         }
-    }
-    
-    
-    
-    
-    public static function CommentWithProduct() {
-        $product = new Product();
-        
-        // Lấy danh sách sản phẩm và tổng bình luận
-        $data = $product->getProductsWithCommentCount(); 
-        Header::render();
-        ListComments::render($data);
-        Footer::render();
-    }
-    public static function getCommentsByProductId() {
+    } 
+    public static function details() {
         // Lấy product_id từ URL
         $productId = $_GET['product_id'] ?? null;
     
@@ -226,7 +211,7 @@ class CommentController
         // Tạo đối tượng Comment và lấy bình luận cho sản phẩm
         $comment = new Product();
         $comments = $comment->getCommentsByProductId($productId); 
-        var_dump($comments);
+        
         if (empty($comments)) {
             echo "Không có bình luận nào cho sản phẩm này.";
         } else {

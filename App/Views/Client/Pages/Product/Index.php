@@ -93,13 +93,14 @@ class Index extends BaseView
             </div>
           </div>
 
-          <div class="product-section__grid" onclick="location.href='/product-detail'">
+          <div class="product-section__grid">
             <?php if ($products): ?>
               <?php foreach ($products as $product): ?>
-                <div class="product-card" onclick="location.href='/product-detail/<?= $product['id'] ?>'">
-                  <img src="<?= APP_URL ?>public/assets/client/images/product/<?= $product['image'] ?>" alt="<?= $product['name'] ?>" class="product-card__image" />
+                <div class="product-card">
                   <div class="product-card__info">
-                    <h3 class="product-card__name"><?= $product['name'] ?></h3>
+                    <h3 class="product-card__name">
+                      <a href="/product-detail/<?= $product['id'] ?>"> <?= $product['name'] ?> </a>
+                    </h3>
                     <h4 class="product-card__price"><?= number_format($product['price']) ?> VNĐ</h4>
                     <button class="product-card__button">
                       <i class="product-card__icon fas fa-shopping-bag"></i> Chọn Mua
@@ -111,6 +112,7 @@ class Index extends BaseView
               <p>Không có sản phẩm nào phù hợp với tìm kiếm của bạn.</p>
             <?php endif; ?>
           </div>
+
 
           <button class="product-section__show-more" data-category="vietnam-fruits" onclick="showMoreProducts('vietnam-fruits')">Xem Thêm</button>
 
