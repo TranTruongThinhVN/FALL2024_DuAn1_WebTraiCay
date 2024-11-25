@@ -1,48 +1,48 @@
-<?php 
+<?php
+
 namespace App\Validations;
 
-use App\Helpers\NotificationHelper;
+use App\Models\Admin\Category;
 
-class CategoryValidation {
-    public static function create(): bool {
+class CategoryValidation
+{
+    public static function create(): bool
+    {
         $is_valid = true;
 
-        // Kiểm tra tên loại sản phẩm
-        if (!isset($_POST['name']) || $_POST['name'] === '') {
-            NotificationHelper::error('name', 'Không để trống tên loại sản phẩm');
-            $is_valid = false;
-        }
+        // Reset lỗi mỗi lần validate
+        $_SESSION['errors'] = $_SESSION['errors'] ?? [];
 
-        // Kiểm tra mô tả
-        if (!isset($_POST['description']) || $_POST['description'] === '') {
-            NotificationHelper::error('description', 'Không để trống mô tả');
+        // Gọi model
+        $categoryModel = new Category();
+
+        // Kiểm tra tên danh mục
+        if (empty($_POST['name']) || strlen($_POST['name']) < 3) {
+            $_SESSION['errors']['name'] = 'Tên danh mục phải có ít nhất 3 ký tự.';
             $is_valid = false;
+        } elseif (!empty($_POST['name'])) {
+            // Debug kiểm tra tên danh mục
+            error_log('Tên danh mục đang kiểm tra: ' . $_POST['name']);
+
+            // Kiểm tra tên danh mục đã tồn tại
+            $category = $categoryModel->getOneCategoryByName($_POST['name']);
+            if ($category) {
+                error_log('Tên danh mục đã tồn tại: ' . $_POST['name']);
+                $_SESSION['errors']['name'] = 'Tên danh mục đã tồn tại.';
+                $is_valid = false;
+            } else {
+                unset($_SESSION['errors']['name']); // Xóa lỗi nếu hợp lệ
+            }
         }
 
         // Kiểm tra trạng thái
-        if (!isset($_POST['status']) || $_POST['status'] === '') {
-            NotificationHelper::error('status', 'Không để trống trạng thái');
+        if (!isset($_POST['status']) || !in_array($_POST['status'], ['0', '1'])) {
+            $_SESSION['errors']['status'] = 'Vui lòng chọn trạng thái hợp lệ.';
             $is_valid = false;
+        } else {
+            unset($_SESSION['errors']['status']); // Xóa lỗi nếu hợp lệ
         }
 
-        return $is_valid;   
-    }
-
-    public static function edit(): bool {
-        $is_valid = true;
-
-        // Kiểm tra tên loại sản phẩm
-        if (!isset($_POST['name']) || $_POST['name'] === '') {
-            NotificationHelper::error('name', 'Không để trống tên loại sản phẩm');
-            $is_valid = false;
-        }
-
-        // Kiểm tra trạng thái
-        if (!isset($_POST['status']) || $_POST['status'] === '') {
-            NotificationHelper::error('status', 'Không để trống trạng thái');
-            $is_valid = false;
-        }
-
-        return $is_valid;   
+        return $is_valid;
     }
 }

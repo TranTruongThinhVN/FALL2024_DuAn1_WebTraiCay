@@ -35,7 +35,7 @@ class Category extends BaseModel
     {
         return $this->getAllByStatus();
     }
-    
+
     public function getOneCategoryByName($name)
     {
         $result = [];
@@ -43,7 +43,7 @@ class Category extends BaseModel
             $sql = "SELECT * FROM $this->table WHERE name=?";
             $conn = $this->_conn->MySQLi();
             $stmt = $conn->prepare($sql);
-    
+
             // Sửa 'i' thành 's' vì $name là chuỗi
             $stmt->bind_param('s', $name);
             $stmt->execute();
@@ -53,6 +53,20 @@ class Category extends BaseModel
             return $result;
         }
     }
-    
 
+    public function searchCategories($keyword)
+    {
+        try {
+            $sql = "SELECT * FROM $this->table WHERE name LIKE ?";
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+            $searchTerm = '%' . $keyword . '%';
+            $stmt->bind_param('s', $searchTerm);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            error_log('Error searching categories: ' . $th->getMessage());
+            return [];
+        }
+    }
 }
