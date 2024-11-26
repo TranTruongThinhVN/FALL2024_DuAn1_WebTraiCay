@@ -46,16 +46,15 @@ class ProductController
     }
 
     public static function detail($id)
-{ 
-    // Lấy thông tin sản phẩm từ model
-    $productModel = new Product();
-    $data = $productModel->getOneProduct($id);  
-    $comments = $productModel->getCommentsByid($id);  
-    var_dump($comments);
-    Header::render(); 
-    Detail::render($data, $comments);
-    Footer::render();
-}
+    { 
+        // Lấy thông tin sản phẩm từ model
+        $productModel = new Product();
+        $data = $productModel->getProductDetails($id);  
+        // $comments = $productModel->getCommentsByid($id); 
+        Header::render(); 
+        Detail::render($data);
+        Footer::render();
+    }
 
 
 }

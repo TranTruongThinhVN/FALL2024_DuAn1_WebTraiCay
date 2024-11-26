@@ -24,6 +24,10 @@ Route::get('/product-detail/{id}', 'App\Controllers\Client\ProductController@det
 Route::get('/', 'App\Controllers\Client\HomeController@index');
 Route::get('/contact', 'App\Controllers\Client\ContactController@index');
 Route::get('/checkout', 'App\Controllers\Client\CheckoutController@index');
+ 
+//cment 
+Route::post('/create-comment', 'App\Controllers\Client\CommentsController@create'); 
+
 
 Route::get('/introduce', 'App\Controllers\Client\IntroduceController@index');
 Route::get('/products', 'App\Controllers\Client\ProductController@index');
@@ -94,7 +98,7 @@ Route::get('/comments/details', 'App\Controllers\Admin\CommentController@details
 Route::delete('/comments/delete/{id}', 'App\Controllers\Admin\CommentController@delete');
 Route::get('/comments/edit/{id}', 'App\Controllers\Admin\CommentController@edit');
 Route::put('/comments/update/{id}', 'App\Controllers\Admin\CommentController@update');
-Route::get('/comments/details', 'App\Controllers\Admin\CommentController@details');
+// Route::get('/comments/details', 'App\Controllers\Admin\CommentController@details');
 Route::get('/admin/comments', 'App\Controllers\Admin\CommentController@index');
 
 

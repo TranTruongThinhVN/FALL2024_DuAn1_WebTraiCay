@@ -9,7 +9,7 @@ use App\Views\Admin\Layouts\Footer;
 use App\Views\Admin\Layouts\Header;
 use App\Views\Admin\Pages\Comments\Details;
 use App\Views\Admin\Pages\Comments\Edit;
-use App\Views\Admin\Pages\Comments\ListComments; 
+use App\Views\Admin\Pages\Comments\Index; 
 
 class CommentController
 {
@@ -19,12 +19,12 @@ class CommentController
     public static function index()
     { 
         
-        $product = new Product();
+        $comment = new Comment();
         
         // Lấy danh sách sản phẩm và tổng bình luận
-        $data = $product->getProductsWithCommentCount(); 
+        $data = $comment->getAllComment(); 
         Header::render();
-        ListComments::render($data);
+        Index::render($data);
         Footer::render();
     }
 
@@ -83,19 +83,15 @@ class CommentController
     {
     }
 
+    
 
     // hiển thị giao diện form sửa
     public static function edit(int $id)
     {
         
         $Comment = new Comment();
-        $data = $Comment->getOneCommentJoinProductAndUser($id); 
-        // if(!$data){
-        //     NotificationHelper::error('edit', 'Không thể xem bình luận này');
-        //     header('Location : /admin/categories');
-        //     exit;
-        // }
-
+        $data = $Comment->getOneComment($id);
+        // var_dump($data);
         Header::render(); 
         Edit::render($data);
         Footer::render(); 
@@ -209,8 +205,8 @@ class CommentController
         }
     
         // Tạo đối tượng Comment và lấy bình luận cho sản phẩm
-        $comment = new Product();
-        $comments = $comment->getCommentsByProductId($productId); 
+        $comment = new Comment();
+        $comments = $comment->getComments($productId); 
         
         if (empty($comments)) {
             echo "Không có bình luận nào cho sản phẩm này.";

@@ -269,7 +269,7 @@
   .review-summary {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    // justify-content: space-between;
     padding: 10px 20px;
     background-color: #fefaf5;
     border-radius: 5px;
@@ -308,7 +308,7 @@
     .filter-options {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      // gap: 10px;
 
       .extra-options {
         display: flex;
@@ -351,6 +351,11 @@
     border-bottom: 1px solid #e0e0e0;
     padding: 20px 0;
 
+    .full-content, .short-content {
+      max-width: 600px; /* Giới hạn chiều rộng tối đa */
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
     .review-header {
       display: flex;
       align-items: center;
@@ -710,3 +715,205 @@
     font-size: 1.6rem;
   }
 }
+.modal {
+  display: none; 
+  position: fixed;
+  z-index: 1;
+  left: 50%;   // Đặt từ trái 50% để modal bắt đầu từ giữa
+  top: 60%;    // Đặt từ trên 50% để modal bắt đầu từ giữa
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  
+  // Dịch chuyển modal về giữa
+  transform: translate(-50%, -50%);  // Dịch chuyển modal về phía trái và phía trên để chính giữa
+
+  .modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    height: auto ;
+    max-width: 500px;
+    position: relative; // Để dễ dàng căn chỉnh nút đóng
+    
+    .product-info {
+      display: flex;
+      align-items: center;
+    }
+    
+    .product-details img {
+      border-radius: 5px;
+      margin: 10px ;
+    } 
+    .review-form {
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 10px; 
+      max-width: 500px;
+      width: 100%;
+      font-family: 'Arial', sans-serif;
+      
+      .rating-container {
+        display: flex;
+        font-size: 30px;
+        justify-content: center;
+        margin-bottom: 10px;
+        span {
+          padding: 0px 10px;
+        }
+      }
+      
+      .rating-container .bi {
+        cursor: pointer;
+        transition: color 0.2s ease;
+        color: #d3d3d3; /* Mặc định màu xám nhạt */
+      }
+      
+       .selected {
+        color: #f39c12; /* Màu vàng cho sao được chọn */
+      }
+      
+       .unselected {
+        color: #d3d3d3; /* Màu xám nhạt cho sao chưa chọn */
+      }
+      
+    } 
+    .form-group {
+      background-color: #fff; 
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+      margin: 20px auto;
+      font-family: 'Arial', sans-serif;
+    }
+    
+    /* Labels */
+    label {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #333;
+      display: block;
+    }
+    
+    /* File input */
+    #images-upload {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #f8f8f8;
+      border: 2px solid #ccc;
+      border-radius: 5px; 
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    
+    #images-upload:focus {
+      border-color: #5cb85c;
+      background-color: #e6ffe6;
+      outline: none;
+    }
+    
+    /* Textarea */
+    #application {
+      width: 100%;
+      padding: 15px;
+      font-size: 14px;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      height: 150px;
+      resize: none;
+      font-family: 'Arial', sans-serif;
+    }
+    
+    #application:focus {
+      border-color: #5cb85c;
+      background-color: #e6ffe6;
+      outline: none;
+    }
+    
+    /* Submit button */
+    .submit-btn {
+      background-color: #5cb85c;
+      color: #fff;
+      font-size: 16px;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      transition: all 0.3s ease;
+      font-family: 'Arial', sans-serif;
+    }
+    
+    .submit-btn:hover {
+      background-color: #4cae4c;
+    }
+    
+    .submit-btn:active {
+      background-color: #3d8e3d;
+    }
+    
+    .submit-btn:focus {
+      outline: none;
+    }
+    
+    /* For mobile responsiveness */
+    @media (max-width: 600px) {
+      .form-group {
+        padding: 15px;
+        width: 90%;
+      }
+    
+      #application {
+        height: 120px;
+      }
+    }
+    
+}
+
+
+
+  
+  
+}
+
+// Nút đóng
+.close-btn {
+  color: #aaa;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute; // Đặt nút đóng ở vị trí tuyệt đối
+  top: 10px; // Cách trên một khoảng
+  right: 10px; // Cách phải một khoảng
+  cursor: pointer;
+  
+  &:hover,
+  &:focus {
+    color: black;
+    text-decoration: none;
+  }
+}
+
+// Nút submit
+.submit-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  
+  &:hover {
+    background-color: #45a049;
+  }
+} 

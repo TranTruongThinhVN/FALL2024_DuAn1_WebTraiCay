@@ -15,7 +15,20 @@ class Category extends BaseModel
     {
         return $this->getOne($id);
     }
-
+    public function countCategory()
+{
+    $result = [];
+    try {
+        $sql = "SELECT COUNT(*) AS total_category FROM categories";
+        $conn = $this->_conn->MySQLi();
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+    } catch (\Throwable $th) {
+        error_log('Lỗi khi đếm số sản phẩm: ' . $th->getMessage());
+    }
+    return $result['total_category'] ?? 0;
+}
     public function createCategory($data)
     {
         return $this->create($data);

@@ -34,10 +34,7 @@ class Route
 
     public static function dispatch($uri)
     {
-        // echo "<pre>";
-
-        // var_dump($uri);
-
+      
         if ($uri != '/') {
             // tách thành mảng nếu có ? trên URL
             $uri = explode('?', $uri);
@@ -107,6 +104,8 @@ class Route
         }
         // không khớp với route đã định nghĩa
         else {
+              
+       
             echo 'not found';
         }
     }
