@@ -106,4 +106,40 @@ class User extends BaseModel
     {
         return $this->getAllByStatus();
     }
+
+    public function getUsersByPage($limit, $offset)
+    {
+        try {
+            $sql = "SELECT * FROM $this->table LIMIT ? OFFSET ?";
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+
+            // Gắn giá trị tham số vào truy vấn
+            $stmt->bind_param('ii', $limit, $offset);
+            $stmt->execute();
+
+            // Trả về kết quả dưới dạng mảng
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi truy vấn danh sách người dùng theo trang: ' . $th->getMessage());
+            return [];
+        }
+    }
+
+    public function getTotalUsers()
+    {
+        try {
+            $sql = "SELECT COUNT(*) as total FROM $this->table";
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+
+            $stmt->execute();
+            $result = $stmt->get_result()->fetch_assoc();
+
+            return $result['total'] ?? 0;
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi đếm tổng số người dùng: ' . $th->getMessage());
+            return 0;
+        }
+    }
 }

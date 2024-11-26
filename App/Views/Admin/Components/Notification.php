@@ -60,7 +60,9 @@ class Notification extends BaseView
                             cancelButtonText: '<?= addslashes($confirm['cancelText']) ?>'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                Swal.fire('Đã xóa!', 'Hành động của bạn đã hoàn thành.', 'success');
+                                // Tự động gửi form xóa
+                                const form = document.getElementById('deleteForm<?= $key ?>');
+                                if (form) form.submit();
                             }
                         });
                     });
@@ -69,6 +71,7 @@ class Notification extends BaseView
             endforeach;
             unset($_SESSION['confirm']);
         endif;
+
         if (isset($_SESSION['triple_option']) && is_array($_SESSION['triple_option'])) :
             foreach ($_SESSION['triple_option'] as $key => $option) :
             ?>

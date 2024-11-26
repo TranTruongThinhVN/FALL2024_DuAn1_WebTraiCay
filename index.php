@@ -19,8 +19,7 @@ require_once 'config.php';
 
 AuthHelper::middleware();
 
-// *** Client //// *** Client //// *** Client //// *** Client //// *** Client //// *** Client //// *** Client //// *** Client //
-Route::get('/product-detail/{id}', 'App\Controllers\Client\ProductController@detail');
+// *** Client
 Route::get('/', 'App\Controllers\Client\HomeController@index');
 Route::get('/contact', 'App\Controllers\Client\ContactController@index');
 Route::get('/checkout', 'App\Controllers\Client\CheckoutController@index');
@@ -58,13 +57,7 @@ Route::get('/users/{id}', 'App\Controllers\Client\AuthController@edit');
 Route::put('/users/{id}', 'App\Controllers\Client\AuthController@update');
 Route::get('/verify-otp',  'App\Controllers\Client\AuthController@verifyOtp');
 Route::post('/verify-otp',  'App\Controllers\Client\AuthController@verifyOtpAction');
-Route::post('/resend-otp',  'App\Controllers\Client\AuthController@resendOtpAction');
-Route::post('/add-phone',  'App\Controllers\Client\AuthController@addPhoneAction');
-Route::get('/phone-verify-otp',  'App\Controllers\Client\AuthController@phoneVerifyOtp');
-Route::post('/phone-verify-otp',  'App\Controllers\Client\AuthController@phoneVerifyOtpAction');
-Route::get('/phone-send-otp', 'App\Controllers\Client\AuthController@sendOtpForPhoneChange');
-Route::put('/update-otp-phone', 'App\Controllers\Client\AuthController@updatePhoneNumber');
-// Google
+// Thêm vào file routes của bạn
 Route::get('/google-login', 'App\Controllers\Client\AuthController@googleLogin');
 Route::get('/google-callback', 'App\Controllers\Client\AuthController@googleCallback');
 
@@ -76,50 +69,21 @@ Route::get('/admin', 'App\Controllers\Admin\DashboardController@index');
 Route::get('/admin/product', 'App\Controllers\Admin\ProductController@index');
 Route::get('/admin/product-details', 'App\Controllers\Admin\ProductController@details');
 Route::get('/admin/add-product', 'App\Controllers\Admin\ProductController@create');
-Route::post('/admin/add-product', 'App\Controllers\Admin\ProductController@store');
-Route::post('/admin/add-product', 'App\Controllers\Admin\ProductController@store');
-Route::get('/admin/edit-product/{id}', 'App\Controllers\Admin\ProductController@edit');
-Route::put('/admin/edit-product/{id}', 'App\Controllers\Admin\ProductController@update');
-Route::get('/admin/detail-product/{id}', 'App\Controllers\Admin\ProductController@show');
-Route::delete('/admin/delete-product/{id}', 'App\Controllers\Admin\ProductController@delete');
-Route::delete('/admin/products/delete-thumbnail', 'App\Controllers\Admin\ProductController@deleteThumbnail');
-// Route::post('/admin/products', 'App\Controllers\Admin\ProductController@index');
-// 
-Route::post('/admin/products/upload-image', 'App\Controllers\Admin\ProductController@uploadImageCkeditor');
-// Discount
-Route::get('/admin/discount', 'App\Controllers\Admin\DiscountController@index');
-Route::get('/admin/add-discount', 'App\Controllers\Admin\DiscountController@create');
-Route::post('/admin/add-discount', 'App\Controllers\Admin\DiscountController@store');
-Route::get('/admin/edit-discount/{id}', 'App\Controllers\Admin\DiscountController@edit');
-Route::put('/admin/edit-discount/{id}', 'App\Controllers\Admin\DiscountController@update');
-Route::delete('/admin/delete-discount/{id}', 'App\Controllers\Admin\DiscountController@delete');
-// ProductVariant
-// Route::get('/admin/products', 'App\Controllers\Admin\ProductController@index'); 
-// Route::post('/admin/products/search', 'App\Controllers\Admin\ProductController@index');/
-
-Route::get('/admin/product-variants', 'App\Controllers\Admin\ProductVariantController@index');
-
-Route::get('/admin/create-variants', 'App\Controllers\Admin\ProductVariantController@create');
-Route::post('/admin/store-variants', 'App\Controllers\Admin\ProductVariantController@store');
-Route::get('/admin/edit-variants/{id}', 'App\Controllers\Admin\ProductVariantController@edit');
-Route::post('/admin/update-variants/{id}', 'App\Controllers\Admin\ProductVariantController@update');
-Route::delete('/admin/delete-variants/{id}', 'App\Controllers\Admin\ProductVariantController@delete');
-// variantOption
-Route::get('/admin/variant-options/{id}', 'App\Controllers\Admin\ProductVariantOptionController@index');
-
-
-
-
-
 Route::get('/admin/order', 'App\Controllers\Admin\OrderController@index');
 Route::get('/admin/checkout', 'App\Controllers\Admin\CheckoutController@index');
 Route::get('/admin/users', 'App\Controllers\Admin\UserController@index');
+
 Route::get('/admin/user-create', 'App\Controllers\Admin\UserController@create');
 Route::post('/admin/user-create', 'App\Controllers\Admin\UserController@store');
 Route::get('/admin/users-edit/{id}', 'App\Controllers\Admin\UserController@edit');
 Route::put('/admin/user-update/{id}', 'App\Controllers\Admin\UserController@update');
 Route::delete('/admin/users-delete/{id}', 'App\Controllers\Admin\UserController@delete');
 Route::get('/admin/user-details', 'App\Controllers\Admin\UserController@details');
+
+Route::get('/admin/order', 'App\Controllers\Admin\OrderController@index');
+Route::get('/admin/orders/edit/{id}', 'App\Controllers\Admin\OrderController@edit');
+Route::put('/admin/orders/update/{id}', 'App\Controllers\Admin\OrderController@update');
+Route::delete('/admin/orders/delete/{id}', 'App\Controllers\Admin\OrderController@delete');
 
 
 // Route::get('/comments/details', 'App\Controllers\Admin\CommentController@details');

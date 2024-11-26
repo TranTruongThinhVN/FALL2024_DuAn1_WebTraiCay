@@ -8,6 +8,9 @@ class ListUser extends BaseView
 {
   public static function render($data = null)
   {
+    $users = $data['users'] ?? []; // Danh sách người dùng
+    $currentPage = $data['currentPage'] ?? 1; // Trang hiện tại
+    $totalPages = $data['totalPages'] ?? 1; // Tổng số trang
 ?>
     <div class="page-wrapper">
       <div class="page-breadcrumb">
@@ -29,9 +32,6 @@ class ListUser extends BaseView
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-body">
-                <h5 class="card-title mb-0">Danh sách người dùng</h5>
-              </div>
               <div class="table-responsive">
                 <table class="table">
                   <thead class="thead-light">
@@ -40,17 +40,15 @@ class ListUser extends BaseView
                       <th>Tên người dùng</th>
                       <th>Ảnh</th>
                       <th>Email</th>
-                      <!-- <th>Số điện thoại</th> -->
                       <th>Vai trò</th>
-                      <!-- <th>Trạng thái</th> -->
                       <th>Tuỳ chỉnh</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <?php if ($data): ?>
-                      <?php foreach ($data as $index => $user): ?>
+                    <?php if ($users): ?>
+                      <?php foreach ($users as $index => $user): ?>
                         <tr>
-                          <td><?php echo $index + 1; ?></td>
+                          <td><?php echo ($currentPage - 1) * 10 + $index + 1; ?></td>
                           <td><?php echo $user['name'] ?? 'N/A'; ?></td>
                           <td>
                             <?php if (!empty($user['avatar'])): ?>
@@ -60,19 +58,11 @@ class ListUser extends BaseView
                             <?php endif; ?>
                           </td>
                           <td><?php echo $user['email']; ?></td>
-                          <!-- <td><?php echo $user['phone'] ?? 'N/A'; ?></td> -->
-                          <td><?php echo $user['role'] == 1 ? 'Người dùng' : 'Quản trị viên'; ?></td>
-                          <!-- <td>
-                            <?php if ($user['status'] == 1): ?>
-                              <span class="badge bg-success">Hoạt động</span>
-                            <?php else: ?>
-                              <span class="badge bg-danger">Bị khóa</span>
-                            <?php endif; ?>
-                          </td> -->
+                          <td><?php echo $user['role'] == 0 ? 'Người dùng' : 'Quản trị viên'; ?></td>
                           <td>
-                            <a href="/admin/users-edit/<?= $user['id'] ?>" class="btn btn-primary">Sửa</a>
-                            <form action="/admin/users-delete/<?= $user['id'] ?>" method="post" style="display: inline-block;">
-                              <input type="hidden" name="method" value="DELETE" id="">
+                            <a href="/admin/users-edit/<?php echo $user['id']; ?>?page=<?php echo $currentPage; ?>" class="btn btn-primary">Sửa</a>
+                            <form action="/admin/users-delete/<?php echo $user['id']; ?>" method="post" style="display: inline-block;">
+                              <input type="hidden" name="method" value="DELETE">
                               <button type="submit" class="btn btn-danger text-white">Xoá</button>
                             </form>
                           </td>
@@ -80,18 +70,41 @@ class ListUser extends BaseView
                       <?php endforeach; ?>
                     <?php else: ?>
                       <tr>
-                        <td colspan="8" class="text-center">Không có người dùng nào!</td>
+                        <td colspan="6" class="text-center">Không có người dùng nào!</td>
                       </tr>
                     <?php endif; ?>
                   </tbody>
                 </table>
               </div>
+
+              <!-- Bắt đầu phân trang -->
+              <div class="pagination-wrapper">
+                <nav aria-label="Page navigation">
+                  <ul class="pagination justify-content-center">
+                    <?php if ($currentPage > 1): ?>
+                      <li class="page-item">
+                        <a class="page-link" href="?page=<?php echo $currentPage - 1; ?>">Trước</a>
+                      </li>
+                    <?php endif; ?>
+                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                      <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
+                        <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                      </li>
+                    <?php endfor; ?>
+                    <?php if ($currentPage < $totalPages): ?>
+                      <li class="page-item">
+                        <a class="page-link" href="?page=<?php echo $currentPage + 1; ?>">Sau</a>
+                      </li>
+                    <?php endif; ?>
+                  </ul>
+                </nav>
+              </div>
+              <!-- Kết thúc phân trang -->
             </div>
           </div>
         </div>
       </div>
     </div>
-
 <?php
   }
 }

@@ -26,6 +26,54 @@ class Product extends BaseModel
             return $result;
         }
     }
+    public function getComments($id) {
+        $result = [];
+        try {
+            // Câu lệnh SQL để lấy bình luận của sản phẩm
+            $sql = "SELECT * FROM comments WHERE product_id = ? ORDER BY created_at DESC";
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql); 
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $resultSet = $stmt->get_result();
+            while ($row = $resultSet->fetch_assoc()) { 
+                $commentId = $row['id']; 
+                $row['images'] = $this->getCommentImages($commentId); 
+                $result[] = $row;
+            } 
+            $stmt->close();
+        } catch (\Throwable $th) { 
+            error_log('Lỗi khi lấy bình luận: ' . $th->getMessage());
+        } 
+        return $result;
+    }
+    public function getProductDetails($id) {
+        $result = [];
+        try { 
+            // $product = $this->getOneProduct($id); 
+            $comments = $this->getComments($id); 
+            // $result['product'] = $product;
+            $result['comments'] = $comments;
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi lấy chi tiết sản phẩm: ' . $th->getMessage());
+        } 
+        return $result; 
+    }
+    
+    
+    
+    
+    
+    
+
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_assoc();
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi hiển thị chi tiết dữ liệu: ' . $th->getMessage());
+            return $result;
+        }
+    }
     
     public function getProductDetails($id) {
         $result = [];
@@ -155,6 +203,82 @@ class Product extends BaseModel
             return $result;
         }
     } 
+    }
+
+    public function getProductsWithCommentCount()
+    {
+        $result = [];
+        try {
+            $sql = "SELECT 
+                        products.id AS product_id,
+                        products.name AS product_name,
+                        COUNT(comments.id) AS total_comments
+                    FROM products
+                    LEFT JOIN comments ON products.id = comments.product_id
+                    GROUP BY products.id, products.name
+                    ORDER BY total_comments DESC;";
+            $result = $this->_conn->MySQLi()->query($sql);
+            return $result->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            error_log('Error fetching products with comment count: ' . $th->getMessage());
+            return $result;
+        }
+    }
+public function getCommentsByid($id)
+{
+    $result = [];
+    $sql = "SELECT comments.*, products.name AS product_name
+        FROM comments
+        INNER JOIN products ON comments.product_id = products.id
+        WHERE comments.product_id = $id";
+
+    $query = $this->_conn->MySQLi()->query($sql);
+    if ($query) {
+        $result = $query->fetch_all(MYSQLI_ASSOC);
+        foreach ($result as &$comment) {
+            // Format dates
+            if (isset($comment['created_at'])) {
+                $comment['created_at'] = $this->formatDate($comment['created_at']);
+            }
+            if (isset($comment['updated_at'])) {
+                $comment['updated_at'] = $this->formatDate($comment['updated_at']);
+            }
+
+            // Get images for each comment
+            $comment_id = $comment['id'];
+            $comment['images'] = $this->getCommentImages($comment_id); // Call function to get images
+
+        }
+        
+        // Fetch product comment count (total comments for the specific product)
+        $countComments = $this->getProductsWithCommentCount(); // Call function to get all products with their comment count
+        foreach ($countComments as $product) {
+            if ($product['product_id'] == $id) {
+                $result['total_comments'] = $product['total_comments']; // Assign the total_comments count for this specific product
+                break; // Stop loop once the relevant product is found
+            }
+        }
+
+    } else {
+        error_log("Error executing query: " . $this->_conn->MySQLi()->error);
+    }
+
+    return $result;
+}
+
+    public function getCommentImages($id)
+{
+    $images = []; 
+    $sql = "SELECT id, image_url, comment_id FROM comment_images WHERE comment_id = $id";
+    $query = $this->_conn->MySQLi()->query($sql);
+    if ($query) { 
+        $images = $query->fetch_all(MYSQLI_ASSOC);
+    } else { 
+        error_log("Lỗi khi lấy ảnh cho comment_id = $id: " . $this->_conn->MySQLi()->error);
+    }
+
+    return $images;
+}
 
     public function searchProducts($keyword)
     {

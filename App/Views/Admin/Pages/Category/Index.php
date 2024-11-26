@@ -50,29 +50,33 @@ class Index extends BaseView
                     </tr>
                   </thead>
                   <tbody class="customtable">
-                    <?php if (count($data)) : ?>
-                      <?php foreach ($data as $item) : ?>
-                        <tr>
-                          <td><?= $item['id'] ?></td>
-                          <td><?= $item['name'] ?></td>
-                          <td>
-                            <p class="badge bg-success"><?= ($item['status'] == 1) ? 'Hiện' : 'Ẩn' ?></p>
-                          </td>
-                          <td>
-                            <a href="/admin/category/<?= $item['id'] ?>">
-                              <label class="badge bg-success">Chỉnh sửa</label>
-                            </a>
-                            <form action="/admin/category/<?= $item['id'] ?>" method="post" style="display: inline-block;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa Danh mục này không?')">
-                              <input type="hidden" name="method" value="DELETE">
-                              <button style="margin: 0; padding: 3.5px; border: 0;" type="submit" class="badge bg-danger">Xoá</button>
-                            </form>
-                          </td>
-                        </tr>
-                      <?php endforeach; ?>
-                    <?php else : ?>
+                    <?php
+                      foreach ($data as $item) :
+                    ?>
                       <tr>
-                        <td colspan="4" style="text-align: center; padding: 20px; font-weight: bold; color: #888;">
-                          Không tìm thấy kết quả phù hợp.
+                        <th>
+                          <label class="customcheckbox">
+                            <input type="checkbox" class="listCheckbox">
+                            <span class="checkmark"></span>
+                          </label>
+                        </th>
+                        <td></td>
+                        <td><?= $item['id'] ?></td>
+                        <td><?= $item['name'] ?></td>
+                        <td><?= $item['description'] ?></td>
+                        <td>
+                          <p class="badge bg-success"><?= ($item['status'] == 1) ? 'Hiện' : 'Ẩn' ?></p>
+                        </td>
+                        <td>
+                          <a href="/admin/category/<?= $item['id'] ?>">
+                          
+                            <label class="badge bg-success">Chỉnh sửa</label>
+                          </a>
+                          <form action="/admin/category/<?= $item['id'] ?>" method="post" style="display: inline-block;"onsubmit="return confirm('Chắc chưa?')" >
+                            <input type="hidden" name="method" value="DELETE" id="">
+                            <button style="margin: 0; padding: 3.5px ; border: 0;" type="submit" class="badge bg-danger">Xoá
+                            </button>
+                          </form>
                         </td>
                       </tr>
                     <?php endif; ?>
@@ -86,8 +90,8 @@ class Index extends BaseView
         </div>
       </div>
     </div>
-
-    <script src="<?= APP_URL ?>/public/assets/admin/dist/js/categoryValidation.js"></script>
+    
+                <script src="<?= APP_URL ?>/public/assets/admin/dist/js/categoryValidation.js"></script>
 
 <?php
   }

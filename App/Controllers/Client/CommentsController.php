@@ -67,7 +67,13 @@ class CommentsController
                 'debug' => $data
             ]);
         }
+        // Render giao diện
+        Header::render(); 
+        Detail::render();
+        Footer::render();
     }
+
+    
 }
 
     

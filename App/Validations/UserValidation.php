@@ -89,15 +89,9 @@ class UserValidation
             $is_valid = false;
         }
 
-        // Phone validation (nếu có chỉnh sửa)
-        if (!empty($_POST['phone']) && !preg_match('/^0[0-9]{9}$/', $_POST['phone'])) {
-            $_SESSION['errors']['phone'] = 'Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0';
-            $is_valid = false;
-        }
-
-        // Date of Birth (dob) validation (nếu có chỉnh sửa)
-        if (!empty($_POST['dob']) && strtotime($_POST['dob']) > strtotime('now')) {
-            $_SESSION['errors']['dob'] = 'Ngày sinh không được lớn hơn ngày hiện tại';
+        // Password validation
+        if (!empty($_POST['password']) && strlen($_POST['password']) < 8) {
+            $_SESSION['errors']['password'] = 'Mật khẩu phải có ít nhất 8 ký tự';
             $is_valid = false;
         }
 

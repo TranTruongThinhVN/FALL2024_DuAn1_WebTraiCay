@@ -15,16 +15,26 @@ use App\Views\Client\Components\Notification;
 
 class UserController
 {
-    // hiển thị danh sách
     public static function index()
     {
         $user = new User();
-        $data = $user->getAllUser();
+
+        $perPage = 10; // Số người dùng trên mỗi trang
+        $currentPage = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1; // Trang hiện tại
+        $offset = ($currentPage - 1) * $perPage;
+
+        $data = $user->getUsersByPage($perPage, $offset); // Lấy danh sách người dùng
+        $totalUsers = $user->getTotalUsers(); // Tổng số người dùng
+        $totalPages = ceil($totalUsers / $perPage); // Tính tổng số trang
 
         Header::render();
         Notification::render();
         NotificationHelper::unset();
-        ListUser::render($data);
+        ListUser::render([
+            'users' => $data,
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages,
+        ]);
         Footer::render();
     }
 
@@ -99,31 +109,36 @@ class UserController
     {
         $user = new User();
         $data = $user->getOneUser($id);
+
         if (!$data) {
             NotificationHelper::error('edit', 'Không thể xem người dùng này');
             header('location: /admin/users');
             exit;
         }
+        // Lấy tham số page từ URL (nếu có)
+        $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
         Header::render();
         Notification::render();
         NotificationHelper::unset();
-        Edit::render(['user' => $data]); // Truyền thông tin người dùng vào view
+
+        // Truyền tham số `page` vào View để giữ thông tin
+        Edit::render(['user' => $data, 'page' => $page]);
         Footer::render();
     }
 
-    // Xử lý cập nhật thông tin người dùng
     public static function update($id)
     {
-        session_start();
-
         $name = trim($_POST['name'] ?? '');
         $email = trim($_POST['email'] ?? '');
-        $role = intval($_POST['role'] ?? 1);
+        $password = trim($_POST['password'] ?? '');
+        $role = intval($_POST['role'] ?? 1); // Lấy vai trò từ form
 
-        // Lấy thông tin hiện tại của người dùng từ DB
         $userModel = new User();
-        $currentUser = $userModel->getOneUser($id); // Lấy dữ liệu hiện tại của user
+        $currentUser = $userModel->getOneUser($id);
+
+        // var_dump($_POST);
+        // exit;
 
         if (!$currentUser) {
             NotificationHelper::error('user_edit', 'Người dùng không tồn tại!');
@@ -131,23 +146,20 @@ class UserController
             exit;
         }
 
-        // Kiểm tra dữ liệu bắt buộc
         if (empty($name) || empty($email)) {
             NotificationHelper::error('user_edit', 'Vui lòng nhập đầy đủ thông tin!');
             header("Location: /admin/user-edit/$id");
             exit;
         }
 
-        // Xử lý upload ảnh đại diện 
-        $avatar = $currentUser['avatar']; // Giữ nguyên avatar cũ mặc định
+        $avatar = $currentUser['avatar'];
         if (!empty($_FILES['avatar']['name'])) {
             $uploadedAvatar = self::uploadAvatar($_FILES['avatar']);
             if ($uploadedAvatar) {
-                $avatar = $uploadedAvatar; // Thay thế avatar nếu có hình ảnh mới
+                $avatar = $uploadedAvatar;
             }
         }
 
-        $dob = trim($_POST['dob'] ?? $currentUser['dob']);
         // Cập nhật dữ liệu
         $data = [
             'name' => $name,
@@ -166,7 +178,8 @@ class UserController
             NotificationHelper::error('user_edit', 'Có lỗi xảy ra khi cập nhật thông tin!');
         }
 
-        header('Location: /admin/users');
+        $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
+        header("Location: /admin/users?page=$page");
         exit;
     }
 
