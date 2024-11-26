@@ -2,7 +2,8 @@
 
 namespace App\Controllers\Client;
 
-use App\Models\Product;
+use App\Helpers\NotificationHelper;
+use App\Models\Client\Product;
 use App\Views\Admin\Pages\Product\Details;
 use App\Views\Client\Layouts\Footer;
 use App\Views\Client\Home;
@@ -21,12 +22,6 @@ class ProductController
         // Kiểm tra nếu có từ khoá tìm kiếm từ query string
         $keyword = isset($_GET['keyword']) && !empty(trim($_GET['keyword'])) ? $_GET['keyword'] : false;
 
-        // Lấy danh sách sản phẩm, nếu có tìm kiếm thì gọi phương thức tìm kiếm
-        // if ($keyword) {
-        //     $products = $productModel->searchProducts($keyword); // Gọi phương thức tìm kiếm
-        // } else {
-        //     $products = $productModel->getAllProduct(); // Lấy tất cả sản phẩm nếu không có tìm kiếm
-        // }
 
         // Kiểm tra nếu người dùng chọn một khoảng giá
         if (isset($_GET['price_range']) && !empty($_GET['price_range'])) {
@@ -40,21 +35,26 @@ class ProductController
             $products = $productModel->getAllProduct();
         }
 
+
         Header::render();
         Index::render($products);
         Footer::render();
     }
 
     public static function detail($id)
-    { 
-        // Lấy thông tin sản phẩm từ model
-        $productModel = new Product();
-        $data = $productModel->getProductDetails($id);  
-        // $comments = $productModel->getCommentsByid($id); 
-        Header::render(); 
-        Detail::render($data);
+    {
+        $product = new Product();
+        $product_detail = $product->getOneProductByStatus($id);
+        if (!$product_detail) {
+            NotificationHelper::error('product_detail', 'Không thể xem sản phẩm này');
+            header('location: /products');
+            exit;
+        }
+        $data = [
+            'product' => $product_detail,
+        ];
+        Header::render();
+        Detail::render($data,);
         Footer::render();
     }
-
-
 }

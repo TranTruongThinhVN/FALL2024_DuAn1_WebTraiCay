@@ -97,6 +97,7 @@ class Index extends BaseView
             <?php if ($products): ?>
               <?php foreach ($products as $product): ?>
                 <div class="product-card">
+                  <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($product['image']) ?>" alt="Dừa xiêm gọt trọc" class="product-card__image" />
                   <div class="product-card__info">
                     <h3 class="product-card__name">
                       <a href="/product-detail/<?= $product['id'] ?>"> <?= $product['name'] ?> </a>

@@ -68,170 +68,26 @@ class Home extends BaseView
       <div class="main-container">
         <div class="featured-products">
           <h1 class="title-featured-products">TRÁI NGON HÔM NAY</h1>
+
           <div class="product-grid">
-            <!-- Product Card 1 -->
-            <div class="product-card">
-              <img src=" <?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Dừa xiêm gọt trọc</h3>
-                <p class="product-price">15,500₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-
-            <!-- Product Card 2 -->
-            <div class="product-card">
-              <img src=" <?= APP_URL ?>public/assets/client/images/home/buoi_da_xanh.webp" alt="Bưởi da xanh" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Bưởi da xanh</h3>
-                <p class="product-price">85,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-
-            <!-- Product Card 3 -->
-            <div class="product-card">
-              <img src="<?= APP_URL ?>/public/assets/client/images/home/xoai_tu_quy_da_vang.webp" alt="Xoài tứ quý da vàng" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Xoài tứ quý da vàng</h3>
-                <p class="product-price">55,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-
-            <!-- Product Card 4 -->
-            <div class="product-card">
-              <img src="<?= APP_URL ?>/public/assets/client/images/home/dua_luoi_hoang_kim.webp" alt="Dưa lưới Hoàng Kim" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Dưa lưới Hoàng Kim</h3>
-                <p class="product-price">105,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-
-            <!-- Product Card 5 -->
-            <div class="product-card">
-              <img src=" <?= APP_URL ?>public/assets/client/images/home/chomchom_giong_thai.webp" alt="Chôm chôm giống Thái" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Chôm chôm giống Thái</h3>
-                <p class="product-price">95,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-
-            <!-- Product Card 6 -->
-            <div class="product-card">
-              <img src=" <?= APP_URL ?>public/assets/client/images/home/xoai_cat_hoa_loc.webp" alt="Xoài cát Hoà Lộc" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Xoài cát Hoà Lộc</h3>
-                <p class="product-price">195,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card">
-              <img src=" <?= APP_URL ?>public/assets/client/images/home/hong_gion_da_lat.webp" alt="Hồng giòn Fuji Đà Lạt" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Hồng giòn Fuji Đà Lạt</h3>
-                <p class="product-price">125,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-
-            <!-- Product Card 2 -->
-            <div class="product-card">
-              <img src=" <?= APP_URL ?>public/assets/client/images/home/sapoche.webp" alt="Sapoche" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Sapoche</h3>
-                <p class="product-price">75,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-
-            <!-- Product Card 3 -->
-            <div class="product-card">
-              <img src=" <?= APP_URL ?>public/assets/client/images/home/nho_den_my.webp" alt="Nho đen Mỹ" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Nho đen Mỹ</h3>
-                <p class="product-price">285,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-
-            <!-- Product Card 4 -->
-            <div class="product-card">
-              <img src=" <?= APP_URL ?>public/assets/client/images/home/luu_tu_xuyen.webp" alt="Lựu Tứ Xuyên" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Lựu Tứ Xuyên</h3>
-                <p class="product-price">105,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-
-            <!-- Product Card 5 -->
-            <div class="product-card">
-              <img src=" <?= APP_URL ?>public/assets/client/images/home/quyt_duong_lao.webp" alt="Quýt Đường Lão" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Quýt Đường Lão</h3>
-                <p class="product-price">80,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-
-            <!-- Product Card 6 -->
-            <div class="product-card">
-              <img src=" <?= APP_URL ?>public/assets/client/images/home/dao_tien_uc.webp" alt="Đào tiên Úc" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Đào tiên Úc</h3>
-                <p class="product-price">195,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-            <div class="product-card">
-              <img src=" <?= APP_URL ?>public/assets/client/images/home/vu_sua_lo_ren.webp" alt="Vú sữa Lò Rèn" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Vú sữa Lò Rèn</h3>
-                <p class="product-price">120,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
-
-            <!-- Product Card 6 -->
-            <div class="product-card">
-              <img src=" <?= APP_URL ?>public/assets/client/images/home/bo_booth.webp" alt="Bơ Booth" class="product-image">
-              <div class="product-info">
-                <h3 class="product-name">Bơ Booth</h3>
-                <p class="product-price">195,000₫</p>
-                <button class="buy-button">
-                  <i class="fas fa-shopping-bag"></i> Chọn Mua
-                </button>
-              </div>
-            </div>
+            <?php if (!empty($data['featuredProducts'])): ?>
+              <?php foreach ($data['featuredProducts'] as $product): ?>
+                <div class="product-card">
+                  <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($product['image']) ?>"
+                    alt="<?= htmlspecialchars($product['name']) ?>"
+                    class="product-image">
+                  <div class="product-info">
+                    <h3 class="product-name"><?= htmlspecialchars($product['name']) ?></h3>
+                    <p class="product-price"><?= number_format($product['price'], 0, ',', '.') ?>₫</p>
+                    <button class="buy-button">
+                      <i class="fas fa-shopping-bag"></i> Chọn Mua
+                    </button>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <p class="no-products text-center">Hiện tại không có sản phẩm nổi bật nào.</p>
+            <?php endif; ?>
           </div>
 
           <!-- Nút "Xem Thêm" -->
