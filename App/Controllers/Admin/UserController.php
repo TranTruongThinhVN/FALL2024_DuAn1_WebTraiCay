@@ -155,6 +155,7 @@ class UserController
             'role' => $role,
             'avatar' => $avatar,
             'dob' => $dob, // Sử dụng avatar cũ nếu không có avatar mới
+            'avatar' => $avatar, // Sử dụng avatar cũ nếu không có avatar mới
         ];
 
         $isUpdated = $userModel->updateUser($id, $data);
