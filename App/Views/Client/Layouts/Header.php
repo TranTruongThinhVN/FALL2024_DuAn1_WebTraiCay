@@ -13,7 +13,7 @@ class Header extends BaseView
 
 
 ?>
-    <script src="<?= APP_URL ?>public/assets/client/js/overlay.js"></script>
+
 
     <!DOCTYPE html>
     <html lang="en">
@@ -254,6 +254,38 @@ class Header extends BaseView
         <!-- End tìm kiếm -->
 
       </header>
+      <style>
+        .overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.5);
+          opacity: 0;
+          visibility: hidden;
+          z-index: 999;
+          animation: breathe 2s ease-in-out infinite;
+          animation: slideInFromLeft 0.5s ease-in-out;
+        }
+
+        .overlay.show {
+          opacity: 1;
+          visibility: visible;
+
+        }
+
+        @keyframes slideInFromLeft {
+          from {
+            transform: translateX(-100%);
+          }
+
+          to {
+            transform: translateX(0);
+          }
+        }
+      </style>
+      <script src="<?= APP_URL ?>/public/assets/client/js/overlay.js"></script>
   <?php
 
   }

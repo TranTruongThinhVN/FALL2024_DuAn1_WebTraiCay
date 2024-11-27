@@ -44,19 +44,29 @@ function switchToLogin() {
 
 function toggleOffcanvasCart() {
   const cart = document.getElementById("offcanvasCart");
-  const cartOverlay = document.getElementById("cartOverlay");
+  const overlay = document.getElementById("cartOverlay");
 
-  // Kiểm tra nếu các phần tử tồn tại
-  if (!cart || !cartOverlay) {
-    console.error("cart hoặc cartOverlay không tồn tại.");
-    return;
-  }
-
-  const isCartOpen = cart.classList.toggle("open");
-  cartOverlay.classList.toggle("active", isCartOpen);
-
-  document.body.classList.toggle("modal-open", isCartOpen);
+  // Bật/tắt class để hiển thị hoặc ẩn overlay và giỏ hàng
+  cart.classList.toggle("open");
+  overlay.classList.toggle("show");
 }
+
+// Đóng giỏ hàng khi nhấn ra ngoài
+document.addEventListener("click", function (event) {
+  const cart = document.getElementById("offcanvasCart");
+  const overlay = document.getElementById("cartOverlay");
+  const cartIcon = document.querySelector(".cart-icon");
+
+  if (
+    cart.classList.contains("open") && // Nếu giỏ hàng đang mở
+    !cart.contains(event.target) && // Không nhấn vào giỏ hàng
+    !cartIcon.contains(event.target) && // Không nhấn vào icon giỏ hàng
+    !overlay.contains(event.target) // Không nhấn vào overlay
+  ) {
+    cart.classList.remove("open");
+    overlay.classList.remove("show");
+  }
+});
 
 function switchToSignup() {
   const loginModal = document.getElementById("loginModal");

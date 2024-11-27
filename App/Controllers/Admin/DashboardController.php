@@ -9,9 +9,7 @@ use App\Models\Product;
 use App\Views\Admin\Index;
 use App\Views\Admin\Layouts\Footer;
 use App\Views\Admin\Layouts\Header;
-use App\Views\Admin\Layouts\Navbar;
-use App\Views\Admin\Layouts\Settings_panel;
-use App\Views\Admin\Layouts\Sidebar;
+
 
 class DashboardController
 {
@@ -22,22 +20,22 @@ class DashboardController
         $userData = $users->getAllUser();
         $userNew = $users->getUserNew();
 
-        $products = new Product();
-        $countProducts = $products->countProduct();
+        // $products = new Product();
+        // $countProducts = $products->countProduct();
 
         $category = new Category();
         $countCategory = $category->countCategory();
 
-        $comments = new Comment();
-        $commentNew = $comments->getLatestComment();
+        // $comments = new Comment();
+        // $commentNew = $comments->getLatestComment();
         $data = [
             'users' => $userData,
             'user_new' => $userNew,
-            'countProducts' => $countProducts,
-            'countCategory' => $countCategory,
-            'comment_new' => $commentNew,
             // 'countProducts' => $countProducts,
-        ]; 
+            // 'countCategory' => $countCategory,
+            // 'comment_new' => $commentNew,
+            // 'countProducts' => $countProducts,
+        ];
         Header::render();
         Index::render($data);
         Footer::render();

@@ -23,9 +23,9 @@ AuthHelper::middleware();
 Route::get('/', 'App\Controllers\Client\HomeController@index');
 Route::get('/contact', 'App\Controllers\Client\ContactController@index');
 Route::get('/checkout', 'App\Controllers\Client\CheckoutController@index');
- 
+
 //cment 
-Route::post('/create-comment', 'App\Controllers\Client\CommentsController@create'); 
+Route::post('/create-comment', 'App\Controllers\Client\CommentsController@create');
 
 
 Route::get('/introduce', 'App\Controllers\Client\IntroduceController@index');
@@ -67,6 +67,27 @@ Route::get('/profile', 'App\Controllers\Client\AuthController@edit');
 Route::get('/admin', 'App\Controllers\Admin\DashboardController@index');
 // Product
 Route::get('/admin/product', 'App\Controllers\Admin\ProductController@index');
+Route::get('/admin/product-details', 'App\Controllers\Admin\ProductController@details');
+Route::get('/admin/add-product', 'App\Controllers\Admin\ProductController@create');
+Route::post('/admin/add-product', 'App\Controllers\Admin\ProductController@store');
+Route::post('/admin/add-product', 'App\Controllers\Admin\ProductController@store');
+Route::get('/admin/edit-product/{id}', 'App\Controllers\Admin\ProductController@edit');
+Route::put('/admin/edit-product/{id}', 'App\Controllers\Admin\ProductController@update');
+Route::get('/admin/detail-product/{id}', 'App\Controllers\Admin\ProductController@show');
+Route::delete('/admin/delete-product/{id}', 'App\Controllers\Admin\ProductController@delete');
+Route::delete('/admin/products/delete-thumbnail', 'App\Controllers\Admin\ProductController@deleteThumbnail');
+// Route::post('/admin/products', 'App\Controllers\Admin\ProductController@index');
+// 
+Route::post('/admin/products/upload-image', 'App\Controllers\Admin\ProductController@uploadImageCkeditor');
+// Discount
+Route::get('/admin/discount', 'App\Controllers\Admin\DiscountController@index');
+Route::get('/admin/add-discount', 'App\Controllers\Admin\DiscountController@create');
+Route::post('/admin/add-discount', 'App\Controllers\Admin\DiscountController@store');
+Route::get('/admin/edit-discount/{id}', 'App\Controllers\Admin\DiscountController@edit');
+Route::put('/admin/edit-discount/{id}', 'App\Controllers\Admin\DiscountController@update');
+Route::delete('/admin/delete-discount/{id}', 'App\Controllers\Admin\DiscountController@delete');
+
+
 Route::get('/admin/product-details', 'App\Controllers\Admin\ProductController@details');
 Route::get('/admin/add-product', 'App\Controllers\Admin\ProductController@create');
 Route::get('/admin/order', 'App\Controllers\Admin\OrderController@index');

@@ -123,8 +123,8 @@ class AuthHelper
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            $mail->Username = 'nguyenquockhai2305@gmail.com';
-            $mail->Password = 'bili buhr anik pdtk';
+            // $mail->Username = 'nguyenquockhai2305@gmail.com';
+            // $mail->Password = 'bili buhr anik pdtk';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 

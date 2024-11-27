@@ -11,86 +11,116 @@ class Detail extends BaseView
 ?>
 
     <section>
-      <?php if (!empty($data['product'])): ?>
-        <div class="main-container">
-          <div class="product">
-            <div class="product__image-section">
-              <div class="product__main-image">
-                <img id="mainImage" src="<?= APP_URL ?>/public/assets/client/images/product/<?= $data['product']["thumbnail"] ?>"
-                  alt="Main Product Image">
-              </div>
-              <div class="product__thumbnails">
-                <img class="product__thumbnail" src="<?= APP_URL ?>/public/assets/client/images/product/<?= $data['product']["thumbnail"] ?>" alt="Thumbnail 1" onclick="changeImage(this)">
-                <img class="product__thumbnail" src="<?= APP_URL ?>/public/assets/client/images/product/<?= $data['product']["thumbnail"] ?>" alt="Thumbnail 1" onclick="changeImage(this)">
-                <img class="product__thumbnail" src="<?= APP_URL ?>/public/assets/client/images/product/<?= $data['product']["thumbnail"] ?>" alt="Thumbnail 1" onclick="changeImage(this)">
-                <img class="product__thumbnail" src="<?= APP_URL ?>/public/assets/client/images/product/<?= $data['product']["thumbnail"] ?>" alt="Thumbnail 1" onclick="changeImage(this)">
-              </div>
-              <div class="product__share-like">
-                <div class="share-buttons">
-                  <span>Chia sẻ:</span>
 
-                  <a href="#"><i class="fab fa-facebook-messenger"></i></a>
-                  <a href="#"><i class="fab fa-facebook"></i></a>
-                  <a href="#"><i class="fab fa-pinterest"></i></a>
-                  <a href="#"><i class="fab fa-twitter"></i></a>
-                </div>|
-                <div class="like-count">
-                  <i class="fas fa-heart"></i> Đã thích (87)
-                </div>
-              </div>
+
+      <div class="main-container">
+        <div class="product">
+          <div class="product__image-section">
+            <div class="product__main-image">
+              <img id="mainImage" src="<?= APP_URL ?>/public/uploads/products/<?= $data['product']['image'] ?>"
+                alt="Main Product Image">
             </div>
-            <div class="product__details">
-              <h1 class="product__name"><?= $data['product']['name'] ?></h1>
-              <div class="product__info">
-                <span class="product__code">Mã sản phẩm: CP12345</span>|
-                <span class="product__brand">Thương hiệu: Nestle</span>
-              </div>
-              <div class="product__price"><?= number_format($data['product']['price']) ?> VNĐ</div>
-              <div class="product__weight">
-                <label>Khối lượng</label>
-                <div class="product__weight-options">
-                  <button type="button" class="product__weight-option" onclick="selectWeight(this, '100g')">100g</button>
-                  <button type="button" class="product__weight-option" onclick="selectWeight(this, '250g')">250g</button>
-                  <button type="button" class="product__weight-option" onclick="selectWeight(this, '500g')">500g</button>
-                  <button type="button" class="product__weight-option" onclick="selectWeight(this, '1kg')">1kg</button>
-                </div>
-              </div>
-              <div class="shipping-info">
-                <h3>Vận Chuyển</h3>
-                <div class="shipping-details">
-                  <div class="shipping-item">
-                    <img src="public/assets/client/images/product/d9e992985b18d96aab90.png" alt="Free Ship Icon" />
-                    <span>Miễn phí vận chuyển</span>
-                  </div>
-                  <div class="shipping-item">
-                    <i class="fa fa-truck"></i>
-                    <span>Vận Chuyển Tới <strong>Phường Thường Thạnh, Quận Cái Răng</strong></span>
-                  </div>
-                  <div class="shipping-item">
-                    <span>Phí Vận Chuyển</span>
-                    <strong>₫0</strong>
-                  </div>
-                </div>
-              </div>
+            <div class="product__thumbnails">
 
-              <div class="product__quantity">
-                <label for="productQuantity">Số lượng</label>
-                <div class="product__quantity-controls">
-                  <button type="button" class="product__quantity-btn" onclick="decrementQuantity()">-</button>
-                  <input type="text" value="1" min="1" id="productQuantity" class="product__quantity-input">
-                  <button type="button" class="product__quantity-btn" onclick="incrementQuantity()">+</button>
-                </div>
-              </div>
+              <img class="product__thumbnail" src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 1" onclick="changeImage(this)">
+              <img class="product__thumbnail" src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 2" onclick="changeImage(this)">
+              <img class="product__thumbnail" src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 3" onclick="changeImage(this)">
+              <img class="product__thumbnail" src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 4" onclick="changeImage(this)">
+              <img class="product__thumbnail" src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 5" onclick="changeImage(this)">
+            </div>
+            <div class="product__share-like">
+              <div class="share-buttons">
+                <span>Chia sẻ:</span>
 
-
-              <div class="product__actions">
-                <button class="cta-button product__buy-now">Mua ngay</button>
-                <button class="cta-button product__add-to-cart"><i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ hàng</button>
+                <a href="#"><i class="fab fa-facebook-messenger"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-pinterest"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+              </div>|
+              <div class="like-count">
+                <i class="fas fa-heart"></i> Đã thích (87)
               </div>
             </div>
           </div>
+          <div class="product__details">
+            <h1 class="product__name"><?= $data['product']['name'] ?></h1>
+            <div class="product__info">
+              <span class="product__code">Mã sản phẩm: CP12345</span>|
+              <span class="product__brand">Thương hiệu: Nestle</span>
+            </div>
+            <div class="product__price"><?= number_format($data['product']['price']) ?> VNĐ</div>
+            <div class="product__weight">
+              <label>Khối lượng</label>
+              <div class="product__weight-options">
+                <button type="button" class="product__weight-option" onclick="selectWeight(this, '100g')">100g</button>
+                <button type="button" class="product__weight-option" onclick="selectWeight(this, '250g')">250g</button>
+                <button type="button" class="product__weight-option" onclick="selectWeight(this, '500g')">500g</button>
+                <button type="button" class="product__weight-option" onclick="selectWeight(this, '1kg')">1kg</button>
+              </div>
+            </div>
+            <div class="shipping-info">
+              <h3>Vận Chuyển</h3>
+              <div class="shipping-details">
+                <div class="shipping-item">
+                  <img src="public/assets/client/images/product/d9e992985b18d96aab90.png" alt="Free Ship Icon" />
+                  <span>Miễn phí vận chuyển</span>
+                </div>
+                <div class="shipping-item">
+                  <i class="fa fa-truck"></i>
+                  <span>Vận Chuyển Tới <strong>Phường Thường Thạnh, Quận Cái Răng</strong></span>
+                </div>
+                <div class="shipping-item">
+                  <span>Phí Vận Chuyển</span>
+                  <strong>₫0</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="product__quantity">
+              <label for="productQuantity">Số lượng</label>
+              <div class="product__quantity-controls">
+                <button type="button" class="product__quantity-btn" onclick="decrementQuantity()">-</button>
+                <input type="text" value="1" min="1" id="productQuantity" class="product__quantity-input">
+                <button type="button" class="product__quantity-btn" onclick="incrementQuantity()">+</button>
+              </div>
+            </div>
+
+
+            <div class="product__actions">
+              <button class="cta-button product__buy-now">Mua ngay</button>
+              <form id="addToCartForm" action="/cart/add">
+                <input type="hidden" name="method" value="POST">
+                <input type="hidden" name="sku_id" value="<?= htmlspecialchars($product['sku_id'] ?? '') ?>">
+
+                <input type="number" name="quantity" value="1" min="1">
+                <button type="submit">Thêm vào giỏ hàng</button>
+              </form>
+            </div>
+          </div>
         </div>
-      <?php endif; ?>
+      </div>
+      <script>
+        document.getElementById('addToCartForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+
+          fetch('/cart-add', {
+              method: 'POST',
+              body: formData
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(err => console.error(err))
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                alert(data.message);
+              } else {
+                alert(data.message);
+              }
+            });
+        });
+      </script>
     </section>
     <section class="product-description-section">
       <div class="main-container">

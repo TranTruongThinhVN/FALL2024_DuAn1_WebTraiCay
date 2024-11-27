@@ -19,20 +19,20 @@ class CategoryController
     {
         $category = new Category();
         $search = $_GET['search'] ?? null; // Lấy từ khóa tìm kiếm từ URL
-        
+
         if ($search) {
             $data = $category->searchCategories($search);
         } else {
             $data = $category->getAllCategory();
         }
-        
+
         Header::render();
         Notification::render();
         NotificationHelper::unset();
         Index::render($data);
         Footer::render();
     }
-    
+
 
     //hiển thi ra form thêm
     public static function create()
