@@ -186,73 +186,73 @@
   color: #fff;
 }
 
-/* Purchase History Section */
-.purchase-history__title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 15px;
-}
+// /* Purchase History Section */
+// .purchase-history__title {
+//   font-size: 1.5rem;
+//   font-weight: bold;
+//   color: #333;
+//   margin-bottom: 15px;
+// }
 
-.purchase-history__item {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  padding: 15px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-}
+// .purchase-history__item {
+//   display: flex;
+//   justify-content: space-between;
+//   margin-bottom: 20px;
+//   padding: 15px;
+//   background-color: #f9f9f9;
+//   border-radius: 8px;
+//   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+// }
 
-.purchase-history__item-details {
-  display: flex;
-  gap: 15px;
-}
+// .purchase-history__item-details {
+//   display: flex;
+//   gap: 15px;
+// }
 
-.purchase-history__item-image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 5px;
-}
+// .purchase-history__item-image {
+//   width: 100px;
+//   height: 100px;
+//   object-fit: cover;
+//   border-radius: 5px;
+// }
 
-.purchase-history__item-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+// .purchase-history__item-info {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+// }
 
-.purchase-history__item-name {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 5px;
-}
+// .purchase-history__item-name {
+//   font-size: 1.2rem;
+//   font-weight: bold;
+//   color: #333;
+//   margin-bottom: 5px;
+// }
 
-.purchase-history__item-description {
-  color: #666;
-  margin-bottom: 5px;
-}
+// .purchase-history__item-description {
+//   color: #666;
+//   margin-bottom: 5px;
+// }
 
-.purchase-history__item-quantity {
-  color: #999;
-  font-size: 0.9rem;
-}
+// .purchase-history__item-quantity {
+//   color: #999;
+//   font-size: 0.9rem;
+// }
 
-.purchase-history__item-reorder {
-  background-color: abstracts.$color-primary;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s;
-}
+// .purchase-history__item-reorder {
+//   background-color: abstracts.$color-primary;
+//   color: #fff;
+//   padding: 10px 20px;
+//   border-radius: 5px;
+//   border: none;
+//   cursor: pointer;
+//   font-weight: bold;
+//   transition: background-color 0.3s;
+// }
 
-.purchase-history__item-reorder:hover {
-  background-color: abstracts.$color-primary;
-}
+// .purchase-history__item-reorder:hover {
+//   background-color: abstracts.$color-primary;
+// }
 
 /* DOB Container */
 .dob-container {
@@ -293,4 +293,180 @@
   font-size: 36px;
   line-height: 100px;
   text-align: center;
+}
+//
+
+/* Tabs */
+.purchase-history__tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  background-color: #f8f8f8;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.purchase-history__tab {
+  font-size: 1.2rem;
+  color: #555;
+  padding: 10px 15px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: color 0.3s, border-bottom 0.3s;
+}
+
+.purchase-history__tab.active {
+  color: abstracts.$color-primary;
+  border-bottom: 3px solid abstracts.$color-primary;
+}
+
+.purchase-history__tab:hover {
+  color: abstracts.$color-primary;
+}
+
+/* Item card */
+/* Tổng quan */
+.purchase-history__item {
+  background-color: #fff;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+}
+
+/* Nội dung chi tiết */
+.purchase-history__item-details {
+  display: flex;
+  align-items: flex-start;
+  /* Căn trạng thái ngang với nội dung */
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.purchase-history__item-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.purchase-history__item-info {
+  flex: 1;
+}
+a:hover {
+  text-decoration: none;
+}
+.purchase-history__item-name {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.purchase-history__item-description {
+  color: #666;
+  font-size: 0.7em;
+  margin-bottom: 5px;
+}
+
+.purchase-history__item-quantity,
+.purchase-history__item-price-single {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+/* Trạng thái */
+.purchase-history__item-status {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: abstracts.$color-primary;
+  margin-left: auto;
+  /* Đẩy trạng thái sang bên phải */
+}
+
+/* Footer */
+.purchase-history__item-footer {
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  /* Xếp dọc Thành tiền và các nút */
+  gap: 10px;
+}
+
+.purchase-history__item-total {
+  font-size: 1rem;
+  color: #333;
+  text-align: right;
+}
+
+.purchase-history__item-total-price {
+  font-weight: bold;
+  color: abstracts.$color-primary;
+  font-size: 14px;
+  padding: 0 7px;
+}
+
+/* Nút hành động */
+.purchase-history__item-actions {
+  display: flex;
+  justify-content: flex-end;
+  /* Đẩy nút sang phải */
+  gap: 10px;
+}
+
+.purchase-history__item-reorder,
+.purchase-history__item-detail {
+  background-color: abstracts.$color-primary;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.purchase-history__item-reorder:hover,
+.purchase-history__item-detail:hover {
+  background-color: abstracts.$color-primary;
+}
+
+/* Search bar */
+.purchase-history__search input {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Side navigation */
+.purchase-history__side-nav {
+  margin-right: 20px;
+}
+
+.purchase-history__side-nav button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  font-size: 1rem;
+  background-color: abstracts.$color-primary;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.purchase-history__side-nav button:hover {
+  background-color: #005a2c;
 }

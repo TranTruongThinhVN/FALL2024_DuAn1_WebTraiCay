@@ -11,6 +11,7 @@ class Notification extends BaseView
         if (isset($_SESSION['success']) && is_array($_SESSION['success'])) :
             foreach ($_SESSION['success'] as $key => $value) :
 ?>
+
                 <script>
                     document.addEventListener("DOMContentLoaded", function() {
                         Swal.fire({
@@ -60,7 +61,6 @@ class Notification extends BaseView
                             cancelButtonText: '<?= addslashes($confirm['cancelText']) ?>'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // Tự động gửi form xóa
                                 const form = document.getElementById('deleteForm<?= $key ?>');
                                 if (form) form.submit();
                             }
@@ -69,8 +69,9 @@ class Notification extends BaseView
                 </script>
             <?php
             endforeach;
-            unset($_SESSION['confirm']);
+            unset($_SESSION['confirm']); // Xóa session sau khi hiển thị
         endif;
+
 
         if (isset($_SESSION['triple_option']) && is_array($_SESSION['triple_option'])) :
             foreach ($_SESSION['triple_option'] as $key => $option) :
@@ -102,5 +103,24 @@ class Notification extends BaseView
             endforeach;
             unset($_SESSION['triple_option']);
         endif;
+        if (isset($_SESSION['redirect'])) {
+            echo "<script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        title: 'Thêm sản phẩm thành công!',
+                        text: 'Bạn có muốn quản lý biến thể cho sản phẩm này không?',
+                        icon: 'success',
+                        showCancelButton: true,
+                        confirmButtonText: 'Quản lý biến thể',
+                        cancelButtonText: 'Quay lại'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '{$_SESSION['redirect']}'; // Chuyển đến trang quản lý biến thể
+                        }
+                    });
+                });
+            </script>";
+            unset($_SESSION['redirect']); // Xóa session sau khi hiển thị
+        }
     }
 }

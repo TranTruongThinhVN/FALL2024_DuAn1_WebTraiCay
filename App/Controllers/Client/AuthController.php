@@ -392,25 +392,28 @@ class AuthController
     // }
     public static function addPhoneAction()
     {
+        header('Content-Type: application/json');
+
         $phone = $_POST['new_phone'] ?? '';
 
-        // Gọi hàm kiểm tra số điện thoại từ AuthValidation
-        if (!AuthValidation::isValidPhoneNumber($phone)) {
-            $_SESSION['error'] = 'Số điện thoại không hợp lệ!';
-            // header('Location: /profile');
-            echo 'cc';
+        if (empty($phone)) {
+            echo json_encode(['success' => false, 'message' => 'Số điện thoại không được để trống!']);
             exit;
         }
 
-        // Tạo OTP và lưu vào session
-        $otp = AuthHelper::generateOtp();
+        if (!preg_match('/^\+?[0-9]{10,15}$/', $phone)) {
+            echo json_encode(['success' => false, 'message' => 'Số điện thoại không hợp lệ!']);
+            exit;
+        }
+
+        $otp = rand(100000, 999999); // Tạo OTP giả lập
         $_SESSION['otp'] = $otp;
-        $_SESSION['new_phone'] = $phone;
-        AuthHelper::sendOtpToPhone($_SESSION['new_phone'], $otp);
-        // Chuyển hướng tới trang nhập OTP
-        header('Location: /phone-verify-otp');
+
+        echo json_encode(['success' => true, 'message' => 'OTP đã được gửi!', 'otp' => $otp]);
         exit;
     }
+
+
     public static function phoneVerifyOtp()
     {
         Phone_verify_otp::render();
@@ -421,15 +424,21 @@ class AuthController
         $enteredOtp = $_POST['otp'] ?? '';
         $sessionOtp = $_SESSION['otp'] ?? null;
 
-        if ($enteredOtp !== $sessionOtp) {
+        if (!$sessionOtp || $enteredOtp !== $sessionOtp) {
             $_SESSION['error'] = 'Mã OTP không hợp lệ!';
             header('Location: /verify-otp');
             exit;
         }
 
         // Nếu OTP đúng, lưu số điện thoại vào DB
-        $phone = $_SESSION['new_phone'];
+        $phone = $_SESSION['new_phone'] ?? '';
         $userId = $_SESSION['user']['id'];
+
+        if (!$phone) {
+            $_SESSION['error'] = 'Không có số điện thoại hợp lệ để cập nhật!';
+            header('Location: /profile');
+            exit;
+        }
 
         $result = AuthHelper::updatePhoneNumber($userId, $phone);
 
@@ -439,6 +448,7 @@ class AuthController
             $_SESSION['error'] = 'Cập nhật thất bại, vui lòng thử lại!';
         }
 
+        // Xóa session sau khi sử dụng
         unset($_SESSION['otp'], $_SESSION['new_phone']);
         header('Location: /profile');
         exit;

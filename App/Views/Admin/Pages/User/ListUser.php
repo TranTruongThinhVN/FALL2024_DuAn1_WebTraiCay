@@ -40,6 +40,7 @@ class ListUser extends BaseView
                       <th>Tên người dùng</th>
                       <th>Ảnh</th>
                       <th>Email</th>
+                      <th>Số điện thoại</th>
                       <th>Vai trò</th>
                       <th>Tuỳ chỉnh</th>
                     </tr>
@@ -58,7 +59,8 @@ class ListUser extends BaseView
                             <?php endif; ?>
                           </td>
                           <td><?php echo $user['email']; ?></td>
-                          <td><?php echo $user['role'] == 0 ? 'Người dùng' : 'Quản trị viên'; ?></td>
+                          <td><?php echo $user['phone'] ?? 'N/A'; ?></td>
+                          <td><?php echo $user['role'] == 1 ? 'Người dùng' : 'Quản trị viên'; ?></td>
                           <td>
                             <a href="/admin/users-edit/<?php echo $user['id']; ?>?page=<?php echo $currentPage; ?>" class="btn btn-primary">Sửa</a>
                             <form action="/admin/users-delete/<?php echo $user['id']; ?>" method="post" style="display: inline-block;">

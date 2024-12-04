@@ -4,12 +4,19 @@ namespace App\Views\Client\Layouts;
 
 use App\Helpers\AuthHelper;
 use App\Helpers\NotificationHelper;
+use App\Models\Client\Category;
 use App\Views\BaseView;
 
 class Header extends BaseView
 {
   public static function render($data = null)
   {
+    // var_dump($data['categories']);
+    if (empty($data['categories'])) {
+      $categoryModel = new Category();
+      $data['categories'] = $categoryModel->getAllCategoryByStatus();
+    }
+
 
 
 ?>
@@ -85,15 +92,18 @@ class Header extends BaseView
               <ul class="menu">
                 <li><a href="/">Trang chủ</a></li>
                 <li>
-                  <a href="/products">Sản phẩm<i class="fas fa-chevron-down"></i></a>
+                  <a href="/products">Sản phẩm <i class="fas fa-chevron-down"></i></a>
                   <div class="sub-menu">
-                    <a href="./sanpham.html">Trái Ngon Hôm Nay</a>
-                    <a href="./sanpham.html">Trái Cây Việt Nam</a>
-                    <a href="./sanpham.html">Trái Cây Nhập Khẩu</a>
-                    <a href="./sanpham.html">Trái Cây Cắt Sẵn</a>
-                    <a href="">Quà Tặng Trái Cây</a>
+                    <?php if (!empty($data['categories'])): ?>
+                      <?php foreach ($data['categories'] as $category): ?>
+                        <a href="/products?category=<?= $category['id'] ?>"><?= htmlspecialchars($category['name']) ?></a>
+                      <?php endforeach; ?>
+                    <?php else: ?>
+                      <p>Không có danh mục nào.</p>
+                    <?php endif; ?>
                   </div>
                 </li>
+
                 <li>
                   <a href="#">Về Chúng Tôi<i class="fas fa-chevron-down"></i></a>
                   <div class="sub-menu">
@@ -160,6 +170,7 @@ class Header extends BaseView
                 <!--  -->
               </div>
             </div>
+            <!-- Overlay giỏ hàng -->
             <div class="offcanvas-cart" id="offcanvasCart">
               <div class="offcanvas-cart-header">
                 <h2>Giỏ hàng</h2>
@@ -168,42 +179,35 @@ class Header extends BaseView
               <div class="offcanvas-cart-body">
                 <p class="free-shipping-text">Bạn được giao hàng miễn phí!</p>
                 <hr>
-                <div class="cart-item">
-                  <img src="<?= APP_URL ?>public/assets/client/images/home/hong_gion_da_lat.webp" alt="Product 1">
-                  <div class="item-details">
-                    <h4>Hồng giòn Fuji Đà Lạt</h4>
-                    <span>125.000đ</span>
-                    <span>Xuất xứ : Cuba </span>
-                  </div>
-                  <div class="item-quantity-container">
-                    <input type="text" value="1" class="item-quantity">
-                    <a href="#" class="remove-item">Bỏ</a>
-                  </div>
-                </div>
-                <div class="cart-item">
-                  <img src="<?= APP_URL ?>public/assets/client/images/home/dao_tien_uc.webp" alt="Product 1">
-                  <div class="item-details">
-                    <h4>Đào tiên Úc</h4>
-                    <span>325.000.000đ</span>
-                    <span>Xuất xứ : Úc</span>
-                  </div>
-                  <div class="item-quantity-container">
-                    <input type="text" value="1" class="item-quantity">
-                    <a href="#" class="remove-item">Bỏ</a>
-                  </div>
-                </div>
+
+                <?php if (!empty($cartItems)): ?>
+                  <?php foreach ($cartItems as $item): ?>
+
+                    <div class="cart-item">
+                      <img src="<?= APP_URL ?>public/assets/client/images/products/<?= $item['image'] ?>" alt="<?= $item['name'] ?>">
+                      <div class="item-details">
+                        <h4><?= $item['name'] ?></h4>
+                        <span><?= number_format($item['price']) ?>đ</span>
+                        <span>Xuất xứ: <?= $item['origin'] ?></span>
+                      </div>
+                      <div class="item-quantity-container">
+                        <input type="number" value="<?= $item['quantity'] ?>" class="item-quantity" min="1" readonly>
+                        <a href="/cart/delete/<?= $item['cart_id'] ?>" class="remove-item">Bỏ</a>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                <?php else: ?>
+                  <p>Giỏ hàng của bạn hiện tại đang trống.</p>
+                <?php endif; ?>
               </div>
+
               <div class="offcanvas-cart-footer">
                 <div class="cart-total">
                   <h4>Tổng</h4>
-                  <p>4.440.000 VND</p>
+                  <p><?= !empty($cartTotal) ? number_format($cartTotal) . ' VND' : '0 VND' ?></p>
                 </div>
-                <p class="desc-offcanvas-footer">
-                  Đã bao gồm thuế
-                </p>
-                <p class="desc-offcanvas-footer">
-                  Phí ship sẽ được tính khi thanh toán
-                </p>
+                <p class="desc-offcanvas-footer">Đã bao gồm thuế</p>
+                <p class="desc-offcanvas-footer">Phí ship sẽ được tính khi thanh toán</p>
                 <div class="cta-button-offcanvas">
                   <a class="cta-button view-cart-btn" href="/cart">Xem giỏ hàng</a>
                   <a class="cta-button checkout-btn" href="/checkout">Thanh toán</a>
@@ -211,10 +215,12 @@ class Header extends BaseView
               </div>
             </div>
 
+            <div class="overlay" id="cartOverlay" onclick="toggleOffcanvasCart()"></div>
+
           </div>
         </div>
-        <div class="overlay" id="cartOverlay" onclick="toggleOffcanvasCart()"></div>
-        <!-- End  overlay -->
+
+        <!-- End overlay giỏ hàng -->
         <!-- Navbar của mobile -->
         <div class=" offcanvas-navbar" id="offcanvasNavbar"> <button class="offcanvas-close" onclick="toggleOffcanvasNavbar()">&times;</button>
           <ul class="menu">
@@ -246,14 +252,71 @@ class Header extends BaseView
         <div class="overlay" id="navbarOverlay" onclick="toggleOffcanvasNavbar()"></div>
         <div class="search-overlay" id="searchOverlay">
           <div class="row-search-overlay">
-            <input type="text" placeholder="Tìm..." />
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Tìm sản phẩm..."
+              onkeyup="performSearch(this.value)" />
             <span class="overlay-close" onclick="toggleSearchOverlay()">✕</span>
           </div>
+          <div id="searchResults" class="search-results"></div>
         </div>
-        <div class="overlay-search" onclick="toggleSearchOverlay()"></div>
-        <!-- End tìm kiếm -->
 
+        <div class="overlay-search" onclick="toggleSearchOverlay()"></div>
+
+        <!-- End tìm kiếm -->
+        <!-- Js Tìm kiếm -->
+        <script>
+          function performSearch(query) {
+            const resultsContainer = document.getElementById("searchResults");
+
+            if (query.trim() === "") {
+              resultsContainer.innerHTML = ""; // Clear results if the query is empty
+              return;
+            }
+
+            fetch(`/search?query=${encodeURIComponent(query)}`)
+              .then((response) => response.json())
+              .then((data) => {
+                resultsContainer.innerHTML = ""; // Clear previous results
+                if (data.length === 0) {
+                  resultsContainer.innerHTML = "<p>Không tìm thấy sản phẩm nào.</p>";
+                  return;
+                }
+
+                data.forEach((item) => {
+                  const resultItem = document.createElement("div");
+                  resultItem.classList.add("search-result-item");
+
+                  resultItem.innerHTML = `
+        <div class="result-item-image">
+            <img src="${item.image}" alt="${item.name}" />
+        </div>
+        <div class="result-item-info">
+            <h4>${item.name}</h4>
+            <p class="current-price">${item.price}</p>
+            ${
+                item.old_price
+                    ? `<span class="old-price"><del>${item.old_price}</del></span>`
+                    : ""
+            }
+        </div>
+    `;
+
+                  resultsContainer.appendChild(resultItem);
+                });
+
+
+              })
+              .catch((error) => {
+                console.error("Error fetching search results:", error);
+                resultsContainer.innerHTML = "<p>Lỗi khi tải kết quả tìm kiếm.</p>";
+              });
+          }
+        </script>
+        <!-- End js tìm kiếm -->
       </header>
+      <!-- Css tìm kiếm + css nội dung tìm kiếm -->
       <style>
         .overlay {
           position: fixed;
@@ -284,15 +347,68 @@ class Header extends BaseView
             transform: translateX(0);
           }
         }
+
+        .search-results {
+          margin-top: 10px;
+          background: #fff;
+          /* padding: 10px; */
+          border-radius: 4px;
+          max-height: 550px;
+          overflow-y: auto;
+        }
+
+        .search-result-item {
+          display: flex;
+          align-items: center;
+          padding: 20px 10px;
+          /* border-bottom: 1px solid #eee; */
+          transition: background 0.3s;
+        }
+
+        .search-result-item:hover {
+          background: #f9f9f9;
+        }
+
+        .result-item-image img {
+          width: 50px;
+          height: 50px;
+          object-fit: cover;
+          border-radius: 4px;
+          margin-right: 10px;
+        }
+
+        .result-item-info {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .result-item-info h4 {
+          margin: 0;
+          font-size: 14px;
+          font-weight: bold;
+        }
+
+        .result-item-info .current-price {
+          color: #e60023;
+          font-weight: bold;
+          margin: 5px 0;
+        }
+
+        .result-item-info .old-price {
+          color: #999;
+          text-decoration: line-through;
+          font-size: 12px;
+        }
       </style>
       <script src="<?= APP_URL ?>/public/assets/client/js/overlay.js"></script>
+      <!-- Css tìm kiếm + css nội dung tìm kiếm -->
   <?php
 
   }
 }
 
   ?>
-
+  <!--  Js đổi màu avatar mặc định-->
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const avatar = document.querySelector(".user-initial");

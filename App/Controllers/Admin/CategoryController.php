@@ -62,6 +62,9 @@ class CategoryController
         ];
 
         $category = new Category();
+
+
+
         $result = $category->createCategory($data);
 
         if ($result) {
@@ -73,12 +76,6 @@ class CategoryController
             exit;
         }
     }
-
-
-
-
-
-
 
     public static function delete(int $id)
     {
@@ -133,11 +130,12 @@ class CategoryController
 
         $category = new Category();
 
-        // Kiểm tra tên danh mục (bỏ qua chính danh mục đang được cập nhật)
+        // Kiểm tra tên danh mục đã tồn tại (ngoại trừ danh mục đang sửa)
         $existingCategory = $category->getOneCategoryByName($name);
 
         if ($existingCategory && $existingCategory['id'] != $id) {
-            NotificationHelper::error('update', 'Tên danh mục đã tồn tại.');
+            $_SESSION['errors']['name'] = 'Tên danh mục đã tồn tại.';
+            $_SESSION['old'] = $_POST; // Lưu dữ liệu cũ để hiển thị lại
             header("location: /admin/category/$id");
             exit;
         }
@@ -160,6 +158,7 @@ class CategoryController
             exit;
         }
     }
+
 
 
     public function uploadImage()

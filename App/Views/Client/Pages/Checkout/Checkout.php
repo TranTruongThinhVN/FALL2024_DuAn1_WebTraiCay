@@ -27,14 +27,36 @@ class Checkout extends BaseView
                         <div class="checkout-form">
                             <div class="section">
                                 <h2>Thông tin liên hệ</h2>
-                                <input type="email" placeholder="Email" class="input-field">
-                                <div class="checkbox-group">
+                                <!-- <input type="email" placeholder="Email" class="input-field"> -->
+                                <!-- <div class="checkbox-group">
                                     <input type="checkbox" id="subscribe">
                                     <label class="subscribe" for="subscribe">Gửi cho tôi tin tức và ưu đãi qua email</label>
-                                </div>
+                                </div> -->
                             </div>
                             <div class="section">
                                 <h2>Giao hàng</h2>
+                                <div class="location-fields">
+                                    <div class="select-wrapper">
+                                        <select class="input-field" id="province-list" aria-label="Tỉnh / Thành">
+                                            <option selected disabled>Tỉnh / Thành</option>
+                                        </select>
+                                    </div>
+                                    <div class="select-wrapper">
+                                        <select class="input-field" id="district-list" aria-label="Quận / Huyện">
+                                            <option selected disabled>Quận / Huyện</option>
+                                        </select>
+                                    </div>
+                                    <div class="select-wrapper">
+                                        <select class="input-field" id="ward-list" aria-label="Phường / Xã">
+                                            <option selected disabled>Phường / Xã</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <input type="text" placeholder="Địa chỉ chi tiết" class="input-field detailed-address">
+                                <div class="name-fields">
+                                    <input type="text" placeholder="Họ và Tên" class="input-field">
+                                    <input type="text" placeholder="Điện thoại" class="input-field">
+                                </div>
                                 <div class="radio-group">
                                     <label>
                                         <input type="radio" name="shipping-option" checked>
@@ -46,36 +68,6 @@ class Checkout extends BaseView
                                         Nhận hàng tại cửa hàng
                                         <span class="icon store-icon">&#127970;</span>
                                     </label>
-                                </div>
-                                <div class="location-fields">
-                                    <div class="select-wrapper">
-                                        <select class="input-field" aria-label="Tỉnh / Thành">
-                                            <option selected disabled>Tỉnh / Thành</option>
-                                            <option>Hồ Chí Minh</option>
-                                            <option>Hà Nội</option>
-                                        </select>
-                                    </div>
-                                    <div class="select-wrapper">
-                                        <select class="input-field" aria-label="Quận / Huyện">
-                                            <option selected disabled>Quận / Huyện</option>
-                                            <option>Bình Chánh</option>
-                                            <option>Quận 1</option>
-                                        </select>
-                                    </div>
-                                    <div class="select-wrapper">
-                                        <select class="input-field" aria-label="Phường / Xã">
-                                            <option selected disabled>Phường / Xã</option>
-                                            <option>Hưng Long</option>
-                                            <option>Phường 1</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <input type="text" placeholder="Địa chỉ chi tiết" class="input-field detailed-address">
-                                <div class="name-fields">
-                                    <input type="text" placeholder="Tên" class="input-field">
-                                    <input type="text" placeholder="Họ" class="input-field">
-                                    <input type="text" placeholder="Điện thoại" class="input-field">
                                 </div>
                             </div>
                             <div class="section">
@@ -100,19 +92,18 @@ class Checkout extends BaseView
                                     <label><input type="radio" name="payment-method" checked> Thanh toán khi nhận hàng (COD)</label>
                                 </div>
                                 <div class="payment-option">
-                                    <label><input type="radio" name="payment-method">Chuyển khoản</label>
+                                    <label><input type="radio" name="payment-method">VN Pay</label>
                                 </div>
                                 <div class="payment-option">
-                                    <label><input type="radio" name="payment-method"> Momo</label>
+                                    <label><input type="radio" name="payment-method" value="momo"> MoMo</label>
                                 </div>
                             </div>
-                            <button class="btn-primary">Thanh toán ngay</button>
+                            <a href="" id="btn-checkout" style="text-decoration:none;" class="btn-primary">Thanh toán ngay</a>
                         </div>
 
                         <!-- Right Side: Order Summary -->
                         <div class="order-summary">
                             <h2>Tóm tắt đơn hàng</h2>
-
                             <div class="summary-item">
                                 <img src="public/assets/client/images/home/nho_den_my.webp" alt="Product Image" class="product-image">
                                 <div class="product-details">
@@ -142,14 +133,13 @@ class Checkout extends BaseView
                                 <p class="order-summary-text-sum">Tổng</p>
                                 <p class="total-price"><span class="trantrantranokokokok">VND</span> 4,290,000 đ</p>
                             </div>
-
                             <p class="tax-info">Bao gồm 390,000 đ tiền thuế</p>
                         </div>
 
                     </div>
                 </div>
-
             </div>
+            <script src="<?= APP_URL ?>/public/assets/client/js/location.js"></script>
             <script>
                 function toggleQRCode() {
                     const paymentMethod = document.getElementById("paymentSelect").value;
@@ -161,12 +151,20 @@ class Checkout extends BaseView
                         qrCodeSection.style.display = "none";
                     }
                 }
+
+                document.querySelectorAll('input[name="payment-method"]').forEach(input => {
+                    input.addEventListener('change', function() {
+                        if (this.value === 'momo' && this.checked) {
+                            document.getElementById("btn-checkout").href = "momo/PaymentMoMo.php";
+                        } else {
+                            document.getElementById("btn-checkout").href = "";
+                        }
+                    });
+                });
             </script>
         </body>
 
         </html>
-
-
 <?php
     }
 }

@@ -8,8 +8,10 @@ class Create extends BaseView
 {
     public static function render($data = null)
     {
+
         $old = $_SESSION['old'] ?? [];
 ?>
+
 
         <div class="page-wrapper">
             <div class="container-fluid">
@@ -21,6 +23,7 @@ class Create extends BaseView
                                 <input type="hidden" name="method" value="POST">
                                 <div class="card-body">
                                     <h4 class="card-title">Thêm sản phẩm</h4>
+
 
                                     <!-- Tên sản phẩm -->
                                     <div class="form-group row">
@@ -42,46 +45,8 @@ class Create extends BaseView
                                     </div>
 
                                     <!-- Giá -->
-                                    <div class="form-group row">
-                                        <label for="price" class="col-sm-3 text-end control-label col-form-label">Giá</label>
-                                        <div class="col-sm-9">
-                                            <input
-                                                type="number"
-                                                class="form-control <?= isset($_SESSION['errors']['price']) ? 'is-invalid' : '' ?>"
-                                                id="price"
-                                                name="price"
-                                                placeholder="Nhập giá sản phẩm"
-                                                value="<?= htmlspecialchars($old['price'] ?? '', ENT_QUOTES) ?>"
-                                                step="0.01"
-                                                min="0.01">
-                                            <?php if (isset($_SESSION['errors']['price'])): ?>
-                                                <div class="invalid-feedback">
-                                                    <?= htmlspecialchars($_SESSION['errors']['price']) ?>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
 
-                                    <!-- Giá giảm -->
-                                    <div class="form-group row">
-                                        <label for="discount_price" class="col-sm-3 text-end control-label col-form-label">Giá giảm</label>
-                                        <div class="col-sm-9">
-                                            <input
-                                                type="number"
-                                                class="form-control <?= isset($_SESSION['errors']['discount_price']) ? 'is-invalid' : '' ?>"
-                                                id="discount_price"
-                                                name="discount_price"
-                                                placeholder="Nhập giá giảm (nếu có)"
-                                                value="<?= htmlspecialchars($old['discount_price'] ?? '', ENT_QUOTES) ?>"
-                                                step="0.01"
-                                                min="0">
-                                            <?php if (isset($_SESSION['errors']['discount_price'])): ?>
-                                                <div class="invalid-feedback">
-                                                    <?= htmlspecialchars($_SESSION['errors']['discount_price']) ?>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
+
 
                                     <!-- Danh mục -->
                                     <div class="form-group row">
@@ -92,13 +57,14 @@ class Create extends BaseView
                                                 id="category_id"
                                                 name="category_id">
                                                 <option value="">Chọn danh mục</option>
-                                                <?php foreach ($data as $category): ?>
+                                                <?php foreach ($data['categories'] as $category): ?>
                                                     <option
-                                                        value="<?= htmlspecialchars($category['id']) ?>"
+                                                        value="<?= htmlspecialchars((string)$category['id']) ?>"
                                                         <?= (isset($old['category_id']) && $old['category_id'] == $category['id']) ? 'selected' : '' ?>>
-                                                        <?= htmlspecialchars($category['name']) ?>
+                                                        <?= htmlspecialchars((string)$category['name']) ?>
                                                     </option>
                                                 <?php endforeach; ?>
+
                                             </select>
                                             <?php if (isset($_SESSION['errors']['category_id'])): ?>
                                                 <div class="invalid-feedback">
@@ -107,7 +73,6 @@ class Create extends BaseView
                                             <?php endif; ?>
                                         </div>
                                     </div>
-
                                     <!-- Ảnh chính -->
                                     <div class="form-group row">
                                         <label for="image" class="col-sm-3 text-end control-label col-form-label">Ảnh chính</label>
@@ -146,25 +111,6 @@ class Create extends BaseView
                                     </div>
 
                                     <!-- Số lượng -->
-                                    <div class="form-group row">
-                                        <label for="quantity" class="col-sm-3 text-end control-label col-form-label">Số lượng</label>
-                                        <div class="col-sm-9">
-                                            <input
-                                                type="number"
-                                                class="form-control <?= isset($_SESSION['errors']['quantity']) ? 'is-invalid' : '' ?>"
-                                                id="quantity"
-                                                name="quantity"
-                                                placeholder="Nhập số lượng"
-                                                value="<?= htmlspecialchars($old['quantity'] ?? '', ENT_QUOTES) ?>"
-                                                step="1"
-                                                min="0">
-                                            <?php if (isset($_SESSION['errors']['quantity'])): ?>
-                                                <div class="invalid-feedback">
-                                                    <?= htmlspecialchars($_SESSION['errors']['quantity']) ?>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
 
                                     <!-- Trạng thái -->
                                     <div class="form-group row">
@@ -221,12 +167,195 @@ class Create extends BaseView
                                             <?php endif; ?>
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <label for="product_type" class="col-sm-3 text-end control-label col-form-label">Loại sản phẩm</label>
+                                        <div class="col-sm-9">
+                                            <select id="product_type" name="product_type" class="form-control">
+                                                <option value="simple">Sản phẩm đơn giản</option>
+                                                <option value="variable">Sản phẩm có biến thể</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Giá và số lượng chỉ hiển thị nếu là sản phẩm đơn giản -->
+                                    <div id="simple_product_fields">
+                                        <div class="form-group row">
+                                            <label for="price" class="col-sm-3 text-end control-label col-form-label">Giá</label>
+                                            <div class="col-sm-9">
+                                                <input
+                                                    type="number"
+                                                    class="form-control <?= isset($_SESSION['errors']['price']) ? 'is-invalid' : '' ?>"
+                                                    id="price"
+                                                    name="price"
+                                                    placeholder="Nhập giá sản phẩm"
+                                                    value="<?= htmlspecialchars($old['price'] ?? '', ENT_QUOTES) ?>"
+                                                    step="0.01"
+                                                    min="0.01">
+                                                <?php if (isset($_SESSION['errors']['price'])): ?>
+                                                    <div class="invalid-feedback">
+                                                        <?= htmlspecialchars($_SESSION['errors']['price']) ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="discount_price" class="col-sm-3 text-end control-label col-form-label">Giá giảm</label>
+                                            <div class="col-sm-9">
+                                                <input
+                                                    type="number"
+                                                    id="discount_price"
+                                                    name="discount_price"
+                                                    class="form-control"
+                                                    value="<?= htmlspecialchars($old['discount_price'] ?? '0', ENT_QUOTES) ?>"
+                                                    step="0.01"
+                                                    min="0">
+
+
+                                                <?php if (isset($_SESSION['errors']['discount_price'])): ?>
+                                                    <div class="invalid-feedback">
+                                                        <?= htmlspecialchars($_SESSION['errors']['discount_price']) ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <!-- Trường số lượng -->
+                                        <div class="form-group row">
+                                            <label for="quantity" class="col-sm-3 text-end control-label col-form-label">Số lượng</label>
+                                            <div class="col-sm-9">
+                                                <input
+                                                    type="number"
+                                                    class="form-control <?= isset($_SESSION['errors']['quantity']) ? 'is-invalid' : '' ?>"
+                                                    id="quantity"
+                                                    name="quantity"
+                                                    placeholder="Nhập số lượng"
+                                                    value="<?= htmlspecialchars($old['quantity'] ?? '', ENT_QUOTES) ?>"
+                                                    step="1"
+                                                    min="1">
+                                                <?php if (isset($_SESSION['errors']['quantity'])): ?>
+                                                    <div class="invalid-feedback">
+                                                        <?= htmlspecialchars($_SESSION['errors']['quantity']) ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Biến thể chỉ hiển thị nếu là sản phẩm có biến thể -->
+                                    <div id="variable_product_fields" style="display: none;">
+                                        <h4>Thêm biến thể</h4>
+                                        <div class="form-group row">
+                                            <label for="variant_action" class="col-sm-3 text-end control-label col-form-label">Thao tác</label>
+                                            <div class="col-sm-9">
+                                                <select id="variant_action" name="variant_action" class="form-control">
+                                                    <option value="add_new">Thêm biến thể mới</option>
+                                                    <option value="use_existing">Sử dụng biến thể hiện có</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Nếu chọn "Thêm biến thể mới" -->
+                                        <div id="add_new_variant_fields" style="display: block;">
+                                            <div class="form-group row">
+                                                <label for="variant_name" class="col-sm-3 text-end control-label col-form-label">Tên biến thể</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" id="variant_name" name="variant_name" class="form-control" placeholder="Ví dụ: Kích thước, Màu sắc">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="variant_options" class="col-sm-3 text-end control-label col-form-label">Tùy chọn</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" id="variant_options" name="variant_options" class="form-control" placeholder="Nhập các tùy chọn, cách nhau bằng dấu phẩy">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Nếu chọn "Sử dụng biến thể hiện có" -->
+                                        <div id="use_existing_variant_fields" style="display: none;">
+                                            <div class="form-group row">
+                                                <label for="existing_variant_id" class="col-sm-3 text-end control-label col-form-label">Chọn biến thể</label>
+                                                <div class="col-sm-9">
+                                                    <select id="existing_variant_id" name="variant_id" class="form-control">
+                                                        <option value="">Chọn biến thể hiện có</option>
+                                                        <?php foreach ($data['variants'] as $variant): ?>
+                                                            <option
+                                                                value="<?= htmlspecialchars($variant['id'], ENT_QUOTES) ?>"
+                                                                <?= ($data['selected_variant'] == $variant['id']) ? 'selected' : '' ?>>
+                                                                <?= htmlspecialchars($variant['name'], ENT_QUOTES) ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <label class="col-sm-3 text-end control-label col-form-label">Giá trị biến thể</label>
+                                            <div class="col-sm-9">
+                                                <div class="form-group row">
+                                                    <ul id="variant_options_list" class="list-group">
+                                                        <!-- Các giá trị sẽ được hiển thị ở đây -->
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Bảng cấu hình SKU -->
+                                        <div id="sku_configuration" style="display: none;">
+                                            <h4>Cấu hình SKU</h4>
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tên biến thể</th>
+                                                        <th>Giá trị</th>
+                                                        <th>SKU</th>
+                                                        <th>Giá</th>
+                                                        <th>Số lượng</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="sku_table_body">
+                                                    <!-- Các dòng được thêm qua JavaScript -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <script>
+                                        // Hiển thị các trường tương ứng với hành động
+                                        document.getElementById('product_type').addEventListener('change', function() {
+                                            const type = this.value;
+                                            document.getElementById('simple_product_fields').style.display = type === 'simple' ? 'block' : 'none';
+                                            document.getElementById('variable_product_fields').style.display = type === 'variable' ? 'block' : 'none';
+                                        });
+
+                                        document.getElementById('variant_action').addEventListener('change', function() {
+                                            const action = this.value;
+                                            document.getElementById('add_new_variant_fields').style.display = action === 'add_new' ? 'block' : 'none';
+                                            document.getElementById('use_existing_variant_fields').style.display = action === 'use_existing' ? 'block' : 'none';
+                                        });
+
+                                        document.getElementById('variant_options').addEventListener('input', function() {
+                                            const options = this.value.split(',').map(option => option.trim()).filter(option => option);
+                                            const skuTableBody = document.getElementById('sku_table_body');
+
+                                            skuTableBody.innerHTML = ''; // Reset bảng SKU
+                                            options.forEach(option => {
+                                                const row = document.createElement('tr');
+                                                row.innerHTML = `
+            <td>${document.getElementById('variant_name').value}</td>
+            <td>${option}</td>
+            <td><input type="text" name="sku[${option}]" placeholder="SKU"></td>
+            <td><input type="number" name="price[${option}]" placeholder="Giá"></td>
+            <td><input type="number" name="quantity[${option}]" placeholder="Số lượng"></td>
+        `;
+                                                skuTableBody.appendChild(row);
+                                            });
+
+                                            document.getElementById('sku_configuration').style.display = options.length > 0 ? 'block' : 'none';
+                                        });
+                                    </script>
 
                                     <!-- Nút submit -->
                                     <div class="border-top">
                                         <div class="card-body">
-                                            <button type="submit" class="btn btn-success">Thêm</button>
-                                            <button type="reset" class="btn btn-danger">Làm lại</button>
+                                            <button type="submit" class="btn btn-success">Xuất bản</button>
                                         </div>
                                     </div>
                                 </div>
@@ -235,6 +364,111 @@ class Create extends BaseView
                     </div>
                 </div>
             </div>
+            <script>
+                // Khi chọn biến thể
+                document.getElementById('existing_variant_id').addEventListener('change', function() {
+                    const variantId = this.value;
+
+                    if (!variantId) return;
+
+                    // Gửi AJAX để lấy giá trị biến thể
+                    fetch(`/admin/product-variants/options?variant_id=${variantId}`)
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.success) {
+                                const tbody = document.getElementById('sku_table_body');
+                                tbody.innerHTML = ''; // Xóa dữ liệu cũ
+
+                                data.options.forEach((option) => {
+                                    const row = document.createElement('tr');
+                                    row.innerHTML = `
+                        <td>${option.name}</td>
+                        <input type="hidden" name="variant_id" value="{variant_id}">
+
+                       <td><input type="text" class="form-control sku-input" data-variant-id="1" placeholder="Nhập SKU"></td>
+    <td><input type="number" class="form-control price-input" data-variant-id="1" placeholder="Nhập giá"></td>
+    <td><input type="number" class="form-control discount-price-input" data-variant-id="1" placeholder="Nhập giá giảm"></td>
+    <td><input type="number" class="form-control quantity-input" data-variant-id="1" placeholder="Nhập số lượng"></td>
+    <td>
+        <select class="form-control status-input" data-variant-id="1">
+            <option value="1">Hoạt động</option>
+            <option value="0">Không hoạt động</option>
+        </select>
+    </td>
+    <td><input type="file" class="form-control image-input" data-variant-id="1"></td>
+         <td><button class="btn btn-primary save-sku-btn" data-variant-id="${variantId}">Lưu</button></td>
+                    `;
+                                    tbody.appendChild(row);
+                                });
+
+                                document.getElementById('sku_configuration').style.display = 'block';
+                            } else {
+                                alert(data.message);
+                            }
+                        });
+                });
+
+                // Xử lý lưu SKU
+
+                document.querySelector('#sku_table_body').addEventListener('click', function(event) {
+                    if (event.target.classList.contains('save-sku-btn')) {
+                        event.preventDefault();
+
+                        const variantId = event.target.getAttribute('data-variant-id');
+                        const skuInput = document.querySelector(`.sku-input[data-variant-id="${variantId}"]`).value;
+                        const priceInput = document.querySelector(`.price-input[data-variant-id="${variantId}"]`).value;
+                        const quantityInput = document.querySelector(`.quantity-input[data-variant-id="${variantId}"]`).value;
+                        const statusInput = document.querySelector(`.status-input[data-variant-id="${variantId}"]`).value;
+
+                        if (!skuInput || !priceInput || !quantityInput) {
+                            alert('Vui lòng nhập đầy đủ thông tin SKU!');
+                            return;
+                        }
+
+                        const formData = {
+                            product_variant_id: variantId,
+                            sku: skuInput,
+                            price: priceInput,
+                            quantity: quantityInput,
+                            status: statusInput,
+                        };
+
+                        // Gửi request AJAX để lưu SKU
+                        fetch('/admin/product/save-sku', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    product_variant_id: 1, // Dữ liệu cần thiết
+                                    sku: 'TEST123',
+                                    price: 100,
+                                    quantity: 10,
+                                    status: 1
+                                })
+                            })
+                            .then(async response => {
+                                const text = await response.text();
+                                try {
+                                    const data = JSON.parse(text); // Parse JSON
+                                    if (data.success) {
+                                        alert('Lưu SKU thành công!');
+                                    } else {
+                                        alert('Lỗi: ' + data.message);
+                                    }
+                                } catch (err) {
+                                    console.error('Phản hồi không phải JSON:', text);
+                                    alert('Phản hồi lỗi: ' + text);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Lỗi fetch:', error.message);
+                                alert('Đã xảy ra lỗi: ' + error.message);
+                            });
+
+                    }
+                });
+            </script>
             <!-- Validation Script -->
             <script>
                 document.addEventListener("DOMContentLoaded", function() {
@@ -476,7 +710,40 @@ class Create extends BaseView
                     }
                 });
             </script>
+            <!-- Thêm JavaScript để gọi API khi chọn biến thể: -->
 
+            <!-- THEM VÀ HIEN THI GIA TRI -->
+            <script>
+                // Khi chọn biến thể
+                document.getElementById('existing_variant_id').addEventListener('change', function() {
+                    const variantId = this.value;
+                    const optionsList = document.getElementById('variant_options_list');
+
+                    // Xóa danh sách giá trị cũ
+                    optionsList.innerHTML = '';
+
+                    if (variantId) {
+                        // Gửi AJAX để lấy danh sách giá trị
+                        fetch(`/admin/product-variants/options?variant_id=${variantId}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    data.options.forEach(option => {
+                                        const li = document.createElement('li');
+                                        li.textContent = option.name; // Giá trị
+                                        li.classList.add('list-group-item');
+                                        optionsList.appendChild(li);
+                                    });
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Lỗi:', error);
+                            });
+                    }
+                });
+            </script>
 
 
     <?php

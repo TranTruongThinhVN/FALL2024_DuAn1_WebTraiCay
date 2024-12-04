@@ -47,10 +47,16 @@ class Product extends BaseModel
 
 
     public $thumbnails;
+
     public function createProduct($data)
     {
         return $this->create($data);
+        // return $this->update($id, $data);
     }
+
+
+
+
     public function updateProduct($id, $data)
     {
         return $this->update($id, $data);
@@ -219,9 +225,9 @@ class Product extends BaseModel
     {
         try {
             $sql = "SELECT COUNT(*) as total
-                FROM products
-                INNER JOIN categories ON products.category_id = categories.id
-                WHERE 1=1";
+                    FROM products
+                    INNER JOIN categories ON products.category_id = categories.id
+                    WHERE 1=1";
 
             $params = [];
             $types = "";
@@ -254,7 +260,11 @@ class Product extends BaseModel
                 throw new \Exception("Prepare statement failed: " . $conn->error);
             }
 
-            $stmt->bind_param($types, ...$params);
+            // Kiểm tra xem có tham số cần bind không
+            if (!empty($params)) {
+                $stmt->bind_param($types, ...$params);
+            }
+
             $stmt->execute();
             $result = $stmt->get_result();
             $row = $result->fetch_assoc();

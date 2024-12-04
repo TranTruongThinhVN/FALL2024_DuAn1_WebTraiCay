@@ -8,10 +8,10 @@ class Comment extends BaseModel
     protected $id = 'id';
 
     public function getAllComment()
-{
-    $result = [];
-    try {
-        $sql = "SELECT 
+    {
+        $result = [];
+        try {
+            $sql = "SELECT 
         comments.*, 
         products.name AS product_name,
         users.name AS user_name,
@@ -25,31 +25,31 @@ class Comment extends BaseModel
         INNER JOIN 
             categories ON products.category_id = categories.id  -- Thực hiện JOIN với bảng categories
         ";
-        
-        // Thực thi truy vấn
-        $resultQuery = $this->_conn->MySQLi()->query($sql);
-        
-        // Kiểm tra kết quả của truy vấn
-        if ($resultQuery === false) {
-            throw new Exception("Error executing query: " . $this->_conn->MySQLi()->error);
+
+            // Thực thi truy vấn
+            $resultQuery = $this->_conn->MySQLi()->query($sql);
+
+            // Kiểm tra kết quả của truy vấn
+            if ($resultQuery === false) {
+                throw new \Exception("Error executing query: " . $this->_conn->MySQLi()->error);
+            }
+
+            // Lấy tất cả kết quả của truy vấn
+            $result = $resultQuery->fetch_all(MYSQLI_ASSOC);
+
+            // Lấy thêm hình ảnh nếu cần thiết (cần id bình luận)
+            // Gọi hàm lấy hình ảnh nếu cần (chú ý hàm getCommentImages chưa được gọi đúng)
+            foreach ($result as &$comment) {
+                // Lấy hình ảnh cho từng bình luận (nếu cần)
+                $comment['images'] = $this->getCommentImages($comment['id']);
+            }
+
+            return $result;
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi hiển thị tất cả dữ liệu: ' . $th->getMessage());
+            return $result;
         }
-
-        // Lấy tất cả kết quả của truy vấn
-        $result = $resultQuery->fetch_all(MYSQLI_ASSOC);
-
-        // Lấy thêm hình ảnh nếu cần thiết (cần id bình luận)
-        // Gọi hàm lấy hình ảnh nếu cần (chú ý hàm getCommentImages chưa được gọi đúng)
-        foreach ($result as &$comment) {
-            // Lấy hình ảnh cho từng bình luận (nếu cần)
-            $comment['images'] = $this->getCommentImages($comment['id']);
-        }
-
-        return $result;
-    } catch (\Throwable $th) {
-        error_log('Lỗi khi hiển thị tất cả dữ liệu: ' . $th->getMessage());
-        return $result;
     }
-}
 
     public function getOneComment($id)
     {
@@ -58,90 +58,172 @@ class Comment extends BaseModel
 
     public function createComment($data)
     {
-        // Kiểm tra kết nối
-        if (!$this->_conn->MySQLi()->ping()) {
-            error_log('Kết nối MySQL bị mất, thử kết nối lại');
-            $this->_conn->MySQLi()->connect(); // Tạo lại kết nối
-        }
-    
-        // Kiểm tra dữ liệu
-        if (strlen($data['content']) > 65535) {
-            error_log('Nội dung quá dài, vượt giới hạn cho phép.');
+        try {
+            // Tạo câu lệnh SQL để chèn comment vào bảng
+            $sql = "INSERT INTO $this->table (";
+            foreach ($data as $key => $value) {
+                $sql .= "$key, ";
+            }
+
+            $sql = rtrim($sql, ", ");
+            $sql .= " ) VALUES (";
+
+            foreach ($data as $key => $value) {
+                $sql .= "'$value', ";
+            }
+
+            $sql = rtrim($sql, ", ");
+            $sql .= ")";
+
+            // Kết nối và chuẩn bị câu truy vấn
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+
+            // Thực thi câu truy vấn
+            if ($stmt->execute()) {
+                // Lấy comment_id vừa được tạo ra
+                $comment_id = $conn->insert_id;
+
+                // Kiểm tra nếu có hình ảnh, thêm vào bảng comment-images
+                if (!empty($data['images'])) {
+                    foreach ($data['images'] as $image_url) {
+                        $this->addCommentImage($comment_id, $image_url); // Gọi hàm addCommentImage để thêm hình ảnh
+                    }
+                }
+
+                return $comment_id; // Trả về comment_id nếu thành công
+            } else {
+                return false;
+            }
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi thêm dữ liệu: ' . $th->getMessage());
             return false;
         }
-    
-        // Câu lệnh SQL
-        $sql = "INSERT INTO comments (content, rating, user_id, product_id, created_at, updated_at, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
-    
-        // Chuẩn bị câu lệnh
-        $stmt = $this->_conn->MySQLi()->prepare($sql);
-        if (!$stmt) {
-            error_log('Lỗi chuẩn bị statement: ' . $this->_conn->MySQLi()->error);
+    }
+    public function addCommentImage($comment_id, $image_url)
+    {
+        try {
+            // Tạo mảng dữ liệu cần thêm vào bảng comment_images
+            $data = [
+                'image_url' => $image_url,
+                'comment_id' => $comment_id
+            ];
+
+            // Kiểm tra dữ liệu trước khi tiếp tục
+            if (empty($data['image_url']) || empty($data['comment_id'])) {
+                error_log('Dữ liệu không hợp lệ: ' . var_export($data, true));
+                return false;
+            }
+
+            // Câu lệnh SQL để thêm dữ liệu vào bảng comment_images
+            $sql = "INSERT INTO comment_images (image_url, comment_id) VALUES (?, ?)"; // Sửa tên bảng là comment_images
+
+            // var_dump($sql);
+            // die;
+            // Kết nối và chuẩn bị câu truy vấn
+            $conn = $this->_conn->MySQLi();
+
+            if ($conn === false) {
+                error_log('Không thể kết nối cơ sở dữ liệu');
+                return false;
+            }
+
+            $stmt = $conn->prepare($sql);
+
+            if ($stmt === false) {
+                error_log('Failed to prepare SQL: ' . $conn->error);
+                return false;
+            }
+
+            // Liên kết tham số vào câu truy vấn
+            $stmt->bind_param('si', $data['image_url'], $data['comment_id']); // 's' cho image_url (string), 'i' cho comment_id (int)
+
+            // Thực thi câu truy vấn
+            if (!$stmt->execute()) {
+                error_log('Failed to execute SQL: ' . $stmt->error);
+                return false;
+            }
+
+            return true;
+        } catch (\Throwable $th) {
+            // Ghi lại lỗi nếu có
+            error_log('Lỗi khi thêm dữ liệu hình ảnh: ' . $th->getMessage());
             return false;
         }
-    
-        $updatedAt = date('Y-m-d H:i:s'); // Thêm thời gian cập nhật
-        $status = 1; // Giá trị mặc định cho trạng thái
-    
-        // Bind dữ liệu
-        if (!$stmt->bind_param(
-            "siisssi", 
-            $data['content'],
-            $data['rating'],
-            $data['user_id'],
-            $data['product_id'],
-            $data['created_at'],
-            $updatedAt,
-            $status
-        )) {
-            error_log('Lỗi bind_param: ' . $stmt->error);
-            return false;
-        }
-    
-        // Thực thi và kiểm tra lỗi
-        if (!$stmt->execute()) {
-            error_log('Lỗi thực thi statement: ' . $stmt->error);
-            return false;
-        }
-    
-        return true;
-    } 
+    }
     public function getLatestComment()
-{
-    // $result = [];
-    // try {
-    //     $sql = "SELECT * FROM comments ORDER BY created_at DESC LIMIT 2;";
-    //     $conn = $this->_conn->MySQLi();
-    //     $stmt = $conn->prepare($sql);
-    //     $stmt->execute();
-    //     $result = $stmt->get_result()->fetch_assoc();
-    // } catch (\Throwable $th) {
-    //     error_log('Lỗi khi lấy bình luận mới nhất: ' . $th->getMessage());
+    {
+        // $result = [];
+        // try {
+        //     $sql = "SELECT * FROM comments ORDER BY created_at DESC LIMIT 2;";
+        //     $conn = $this->_conn->MySQLi();
+        //     $stmt = $conn->prepare($sql);
+        //     $stmt->execute();
+        //     $result = $stmt->get_result()->fetch_assoc();
+        // } catch (\Throwable $th) {
+        //     error_log('Lỗi khi lấy bình luận mới nhất: ' . $th->getMessage());
+        // }
+        // return $result;
+    }
+
+    //     public function getPagedComments($productId, $offset, $limit)
+    // {
+    //     try {
+    //         // Kiểm tra và ép kiểu dữ liệu an toàn
+    //         $productId = (int)$productId;  // Chắc chắn productId là số nguyên
+    //         $offset = max(0, (int)$offset); // Đảm bảo offset >= 0
+    //         $limit = max(1, (int)$limit);  // Đảm bảo limit >= 1
+
+    //         // Truy vấn trực tiếp với tham số đã được kiểm tra
+    //         $sql = "SELECT * FROM comments 
+    //                 WHERE product_id = ? 
+    //                 ORDER BY created_at DESC 
+    //                 LIMIT ?, ?";
+
+    //         $conn = $this->_conn->MySQLi();  // Kết nối MySQLi
+    //         $stmt = $conn->prepare($sql);    // Sử dụng prepared statement
+    //         $stmt->bind_param("iii", $productId, $offset, $limit); // Bảo vệ chống SQL Injection
+
+    //         $stmt->execute();  // Thực thi truy vấn
+    //         $result = $stmt->get_result();  // Lấy kết quả
+
+    //         return $result->fetch_all(MYSQLI_ASSOC);  // Dùng fetch_all() với MySQLi
+    //     } catch (\Exception $e) {
+    //         error_log($e->getMessage()); // Log lỗi
+    //         return [];
+    //     }
     // }
-    // return $result;
-}
 
 
 
-    public function getComments($id)
+
+
+
+    public function getCommentByProductId($id, $offset, $limit)
     {
         $result = [];
         try {
-            // Câu lệnh SQL để lấy bình luận của sản phẩm
-            $sql = "SELECT comments.*, users.name AS username 
-                FROM comments 
-                INNER JOIN users ON comments.user_id = users.id 
-                WHERE comments.product_id = ? 
-                ORDER BY comments.created_at DESC";
+            // Câu lệnh SQL để lấy bình luận của sản phẩm với phân trang
+            $sql = "SELECT comments.*, 
+                       users.name AS username, 
+                       products.name AS product_name
+                FROM comments
+                INNER JOIN users ON comments.user_id = users.id
+                INNER JOIN products ON comments.product_id = products.id
+                WHERE comments.product_id = ?
+                ORDER BY comments.created_at DESC
+                LIMIT ?, ?";  // Thêm LIMIT và OFFSET vào câu truy vấn
+
             $conn = $this->_conn->MySQLi();
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param('i', $id);
+            $stmt->bind_param('iii', $id, $offset, $limit);  // Bind thêm LIMIT và OFFSET
             $stmt->execute();
             $resultSet = $stmt->get_result();
+
+            // Duyệt qua kết quả và lấy thêm hình ảnh bình luận
             while ($row = $resultSet->fetch_assoc()) {
                 $commentId = $row['id'];
-                $row['images'] = $this->getCommentImages($commentId);
+                $row['images'] = $this->getCommentImages($commentId);  // Lấy hình ảnh cho bình luận
                 $result[] = $row;
             }
             $stmt->close();
@@ -152,6 +234,7 @@ class Comment extends BaseModel
     }
     public function getCommentImages($id)
     {
+
         $images = [];
         $sql = "SELECT id, image_url, comment_id FROM comment_images WHERE comment_id = $id";
         $query = $this->_conn->MySQLi()->query($sql);
@@ -160,10 +243,32 @@ class Comment extends BaseModel
         } else {
             error_log("Lỗi khi lấy ảnh cho comment_id = $id: " . $this->_conn->MySQLi()->error);
         }
-
+        // var_dump($images);
+        // die
         return $images;
     }
 
+    public function getCountImagesByProductId($id)
+    {
+        $result = [];
+        // Câu truy vấn SQL để lấy tổng số hình ảnh cho sản phẩm
+        $sql = "SELECT COUNT(comment_images.id) AS total_images
+            FROM comment_images
+            JOIN comments ON comment_images.comment_id = comments.id
+            WHERE comments.product_id = $id";
+
+        // Thực thi câu truy vấn
+        $query = $this->_conn->MySQLi()->query($sql);
+
+        if ($query) {
+            // Lấy kết quả
+            $row = $query->fetch_assoc(); // Fetch kết quả dưới dạng mảng kết hợp
+            return $row['total_images']; // Trả về tổng số hình ảnh
+        } else {
+            error_log("Lỗi khi lấy ảnh cho product_id = $id: " . $this->_conn->MySQLi()->error);
+            return 0; // Trả về 0 nếu có lỗi
+        }
+    }
     public function getAverageRating($id)
     {
         $averageRating = 0;
@@ -201,36 +306,52 @@ class Comment extends BaseModel
             'detailedRatings' => $detailedRatings // Chi tiết từng loại đánh giá
         ];
     }
+
     public function updateComment($id, $data)
     {
-        $sql = "UPDATE comments SET content = ?, status = ?,  WHERE id = ?";
-
-        $stmt = $this->_conn->MySQLi()->prepare($sql);
-        $stmt->bind_param("ssi", $data['content'], $data['status'],  $id);
-        $stmt->execute();
-
-        if (!empty($data['images'])) {
-            // Nếu có ảnh, lưu vào bảng comment_images
-            $images = explode(',', $data['images']);
-            foreach ($images as $image) {
-                $this->saveImage($id, $image);
+        try {
+            $sql = "UPDATE $this->table SET ";
+            foreach ($data as $key => $value) {
+                $sql .= "$key = '$value', ";
             }
+            $sql = rtrim($sql, ", ");
+
+            $sql .= " WHERE $this->id=$id";
+
+            if (!empty($data['images'])) {
+                // Nếu có ảnh, lưu vào bảng comment_images
+                $images = explode(',', $data['images']);
+                foreach ($images as $image) {
+                    $this->updateImage($id, $image);
+                }
+            }
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+            return $stmt->execute();
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi cập nhật dữ liệu: ' . $th->getMessage(), 0);
+            return false;
         }
 
         return $stmt->affected_rows > 0;
     }
-
-
-
-
-
-    private function saveImage($commentId, $imageUrl)
+    public function updateImage($commentId, $imageUrl)
     {
-        $sql = "INSERT INTO comment_images (comment_id, image_url) VALUES (?, ?)";
-        $stmt = $this->_conn->MySQLi()->prepare($sql);
-        $stmt->bind_param("is", $commentId, $imageUrl);
-        $stmt->execute();
-    } 
+        // Tạo câu truy vấn SQL
+        $sql = "UPDATE comment_images SET image_url = '$imageUrl' WHERE comment_id = $commentId";
+
+        // Thực thi câu truy vấn
+        if ($this->_conn->MySQLi()->query($sql)) {
+            // Kiểm tra số bản ghi bị ảnh hưởng
+            if ($this->_conn->MySQLi()->affected_rows > 0) {
+                echo "Cập nhật thành công!";
+            } else {
+                echo "Không có bản ghi nào được cập nhật. Kiểm tra comment_id.";
+            }
+        } else {
+            echo "Lỗi thực thi truy vấn: " . $this->_conn->MySQLi()->error;
+        }
+    }
     public function deleteComment(int $id): bool
     {
         try {
@@ -253,7 +374,7 @@ class Comment extends BaseModel
     public function getAllCommentByStatus()
     {
         return $this->getAllByStatus();
-    } 
+    }
     public function getOneCommentJoinProductAndUser(int $id)
     {
         $result = [];
@@ -280,75 +401,65 @@ class Comment extends BaseModel
         }
     }
 
-    public function getProductsWithCommentCount()
+    public function getCountCommentByProductID($id)
     {
-        $result = [];
+        $result = 0;
         try {
-            $sql = "SELECT 
-                    products.id AS product_id,
-                    products.name AS product_name,
-                    COUNT(comments.id) AS total_comments
-                FROM products
-                LEFT JOIN comments ON products.id = comments.product_id
-                GROUP BY products.id, products.name
-                ORDER BY total_comments DESC;";
+            $id = (int)$id; // Đảm bảo id là số nguyên
+            $sql = "SELECT COUNT(*) AS total_comments FROM comments WHERE product_id = ?";
 
-            // Thực hiện truy vấn
-            $query = $this->_conn->MySQLi()->query($sql);
+            // Thực hiện truy vấn với prepared statement
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $id);  // Bảo vệ chống SQL Injection
 
-            if ($query) {
-                $result = $query->fetch_all(MYSQLI_ASSOC);
-                foreach ($result as &$product) {
-                    $productId = $product['product_id'];
-                    $product['average_rating'] = $this->getAverageRating($productId);
-                    // var_dump($product['average_rating']); // Sửa $id thành $productId
-                }
-            } else {
-                error_log("Lỗi khi thực hiện truy vấn: " . $this->_conn->MySQLi()->error);
-            }
+            $stmt->execute();
+            $result = $stmt->get_result()->fetch_assoc();
+
+            return $result['total_comments'] ?? 0; // Trả về tổng số bình luận
         } catch (\Throwable $th) {
-            error_log('Error fetching products with comment count: ' . $th->getMessage());
+            error_log('Error fetching comment count: ' . $th->getMessage());
+            return 0; // Nếu có lỗi, trả về 0
         }
-
-        return $result; // Trả về kết quả sau khi xử lý xong
     }
-    public function getCommentsById($id)
-    {
-        $result = [];
-        $sql = "SELECT * FROM comments WHERE product_id = $id";
-        // SELECT comments.*, products.name AS product_name FROM comments INNER JOIN products ON comments.product_id = products.id WHERE comments.product_id = 1;
-        $query = $this->_conn->MySQLi()->query($sql);
-        if ($query) {
-            $result = $query->fetch_all(MYSQLI_ASSOC);
-            foreach ($result as &$comment) {
-                // Format dates
-                if (isset($comment['created_at'])) {
-                    $comment['created_at'] = $this->formatDate($comment['created_at']);
-                }
-                if (isset($comment['updated_at'])) {
-                    $comment['updated_at'] = $this->formatDate($comment['updated_at']);
-                }
 
-                // Get images for each comment
-                $comment_id = $comment['id'];
-                $comment['images'] = $this->getCommentImages($comment_id); // Call function to get images
+    // public function getCommentsByProductId($id)
+    // {
+    //     $result = [];
+    //     $sql = "SELECT * FROM comments WHERE product_id = " .$id;
+    //     // SELECT comments.*, products.name AS product_name FROM comments INNER JOIN products ON comments.product_id = products.id WHERE comments.product_id = 1;
+    //     $query = $this->_conn->MySQLi()->query($sql);
+    //     if ($query) {
+    //         $result = $query->fetch_all(MYSQLI_ASSOC);
+    //         foreach ($result as &$comment) {
+    //             // Format dates
+    //             if (isset($comment['created_at'])) {
+    //                 $comment['created_at'] = $this->formatDate($comment['created_at']);
+    //             }
+    //             if (isset($comment['updated_at'])) {
+    //                 $comment['updated_at'] = $this->formatDate($comment['updated_at']);
+    //             }
 
-            }
+    //             // Get images for each comment
+    //             $comment_id = $comment['id'];
+    //             $comment['images'] = $this->getCommentImages($comment_id); // Call function to get images
 
-            // Fetch product comment count (total comments for the specific product)
-            $countComments = $this->getProductsWithCommentCount(); // Call function to get all products with their comment count
-            foreach ($countComments as $product) {
-                if ($product['product_id'] == $id) {
-                    $result['total_comments'] = $product['total_comments']; // Assign the total_comments count for this specific product
-                    break; // Stop loop once the relevant product is found
-                }
-            }
-        } else {
-            error_log("Error executing query: " . $this->_conn->MySQLi()->error);
-        }
+    //         }
 
-        return $result;
-    }
+    //         // Fetch product comment count (total comments for the specific product)
+    //         $countComments = $this->getProductsWithCommentCount(); // Call function to get all products with their comment count
+    //         foreach ($countComments as $product) {
+    //             if ($product['product_id'] == $id) {
+    //                 $result['total_comments'] = $product['total_comments']; // Assign the total_comments count for this specific product
+    //                 break; // Stop loop once the relevant product is found
+    //             }
+    //         }
+    //     } else {
+    //         error_log("Error executing query: " . $this->_conn->MySQLi()->error);
+    //     }
+
+    //     return $result; } 
+
     public function getOneProductWithComments($id)
     {
         $sql = "SELECT * FROM products WHERE id = ?";
@@ -360,7 +471,7 @@ class Comment extends BaseModel
 
         if ($product) {
             // Gọi CommentModel để lấy bình luận 
-            $product['comments'] = $this->getCommentsByid($id);
+            // $product['comments'] = $this->getCommentsByProductId($id);
         }
 
         return $product;

@@ -37,28 +37,27 @@ class Edit extends BaseView
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form id="editUserForm" action="/admin/user-update/<?php echo $user['id'] ?? ''; ?>?page=<?php echo $currentPage; ?>" method="POST" enctype="multipart/form-data">
+                                    <form id="editUserForm" action="/admin/user-update/<?php echo $user['id']; ?>?page=<?php echo $currentPage; ?>" method="POST" enctype="multipart/form-data">
                                         <input type="hidden" name="method" value="PUT">
 
                                         <!-- Tên người dùng -->
                                         <div class="form-group" style="margin-bottom: 20px;">
                                             <label for="name">Tên người dùng</label>
                                             <input type="text" name="name" id="name" class="form-control" placeholder="Nhập tên người dùng" value="<?php echo $user['name'] ?? ''; ?>">
-                                            <span id="nameError" style="color: #dc2626; font-size: 14px; margin-top: 5px; display: none;"></span>
                                         </div>
 
                                         <!-- Email -->
                                         <div class="form-group" style="margin-bottom: 20px;">
                                             <label for="email" style="font-weight: bold;">Email</label>
                                             <input type="email" name="email" id="email" class="form-control" placeholder="Nhập email" value="<?php echo $user['email'] ?? ''; ?>">
-                                            <span id="emailError" style="color: #dc2626; font-size: 14px; margin-top: 5px; display: none;"></span>
                                         </div>
 
                                         <!-- Mật khẩu -->
                                         <div class="form-group" style="margin-bottom: 20px;">
                                             <label for="password" style="font-weight: bold;">Đặt lại mật khẩu</label>
-                                            <input type="password" name="password" id="password" class="form-control" placeholder="Nhập mật khẩu mới">
-                                            <span id="passwordError" style="color: #dc2626; font-size: 14px; margin-top: 5px; display: none;"></span>
+                                            <input type="password" name="password" id="password" class="form-control" placeholder="Nhập mật khẩu mới (nếu muốn thay đổi)">
+                                            <!-- Hiển thị mật khẩu cũ dưới dạng ẩn nếu cần thiết -->
+                                            <small style="color: #6c757d;">Mật khẩu hiện tại đã được lưu trong hệ thống.</small>
                                         </div>
 
                                         <!-- Ảnh đại diện -->
@@ -71,14 +70,14 @@ class Edit extends BaseView
                                         </div>
 
                                         <!-- Vai trò -->
-                                        <div class="form-group" style="margin-bottom: 20px; position: relative;">
+                                        <div class="form-group" style="margin-bottom: 20px;">
                                             <label for="role" style="font-weight: bold;">Vai trò</label>
                                             <select name="role" id="role" class="form-control">
-                                                <option value="0" <?php echo isset($user['role']) && $user['role'] == 0 ? 'selected' : ''; ?>>Người dùng</option>
-                                                <option value="1" <?php echo isset($user['role']) && $user['role'] == 1 ? 'selected' : ''; ?>>Quản trị viên</option>
+                                                <option value="1" <?php echo isset($user['role']) && $user['role'] == 1 ? 'selected' : ''; ?>>Người dùng</option>
+                                                <option value="0" <?php echo isset($user['role']) && $user['role'] == 0 ? 'selected' : ''; ?>>Quản trị viên</option>
                                             </select>
-                                            <span id="roleError" style="color: #dc2626; font-size: 14px; margin-top: 5px; display: none;"></span>
                                         </div>
+
                                         <!-- Nút hành động -->
                                         <div class="form-group" style="margin-top: 10px;">
                                             <button type="submit" class="btn btn-success">Lưu thay đổi</button>
@@ -91,9 +90,9 @@ class Edit extends BaseView
                     </div>
                 </div>
             </div>
-            <script
+            <!-- <script
                 src="<?= APP_URL ?>/public/assets/admin/js/EditUserValidation.js">
-            </script>
+            </script> -->
         </body>
 <?php
     }

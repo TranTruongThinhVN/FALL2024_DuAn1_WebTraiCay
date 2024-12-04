@@ -351,10 +351,11 @@
     border-bottom: 1px solid #e0e0e0;
     padding: 20px 0;
 
-    .full-content, .short-content {
-      max-width: 600px; /* Giới hạn chiều rộng tối đa */
-      word-wrap: break-word;
-      overflow-wrap: break-word;
+    .full-content,
+    .short-content {
+      // max-width: 600px; /* Giới hạn chiều rộng tối đa */
+      // word-wrap: break-word;
+      // overflow-wrap: break-word;
     }
     .review-header {
       display: flex;
@@ -408,7 +409,12 @@
         object-fit: cover;
       }
     }
-
+    .review-bottom {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      max-width: 300px;
+      font-size: 1.4rem;
+    }
     .review-likes {
       display: flex;
       align-items: center;
@@ -421,6 +427,21 @@
         margin-right: 5px;
       }
     }
+    #edit-form-2 {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .review-update-text {
+      border: none;
+      outline: none;
+      margin-top: 10px;
+    }
+    .review-reply {
+      border: none;
+      outline: none;
+      margin-top: 10px;
+    }
   }
 }
 .pagination {
@@ -430,17 +451,20 @@
   margin-top: 20px;
 
   .page-number {
-    padding: 5px 10px;
+    padding: 10px;
     background-color: #f1f1f1;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1.4rem;
     transition: background-color 0.3s;
-
+    text-decoration: none !important;
     &:hover {
       background-color: #e0e0e0;
     }
+  }
+  .page-item {
+    max-width: 100px !important;
   }
 }
 .product__weight {
@@ -715,205 +739,107 @@
     font-size: 1.6rem;
   }
 }
-.modal {
-  display: none; 
-  position: fixed;
-  z-index: 1;
-  left: 50%;   // Đặt từ trái 50% để modal bắt đầu từ giữa
-  top: 60%;    // Đặt từ trên 50% để modal bắt đầu từ giữa
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
-  
-  // Dịch chuyển modal về giữa
-  transform: translate(-50%, -50%);  // Dịch chuyển modal về phía trái và phía trên để chính giữa
+.review-form {
+  max-width: 600px;
+  // margin: 50px auto;
+  padding: 10px;
+  background: linear-gradient(145deg, #fdfdfd, #f3f3f3);
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1),
+    inset 0 -3px 6px rgba(255, 255, 255, 0.5);
+  font-family: "Roboto", sans-serif;
+  color: #333;
 
-  .modal-content {
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    height: auto ;
-    max-width: 500px;
-    position: relative; // Để dễ dàng căn chỉnh nút đóng
-    
-    .product-info {
-      display: flex;
-      align-items: center;
-    }
-    
-    .product-details img {
-      border-radius: 5px;
-      margin: 10px ;
-    } 
-    .review-form {
-      background-color: #fff;
-      padding: 10px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin-top: 10px; 
-      max-width: 500px;
-      width: 100%;
-      font-family: 'Arial', sans-serif;
-      
-      .rating-container {
-        display: flex;
-        font-size: 30px;
-        justify-content: center;
-        margin-bottom: 10px;
-        span {
-          padding: 0px 10px;
-        }
-      }
-      
-      .rating-container .bi {
-        cursor: pointer;
-        transition: color 0.2s ease;
-        color: #d3d3d3; /* Mặc định màu xám nhạt */
-      }
-      
-       .selected {
-        color: #f39c12; /* Màu vàng cho sao được chọn */
-      }
-      
-       .unselected {
-        color: #d3d3d3; /* Màu xám nhạt cho sao chưa chọn */
-      }
-      
-    } 
-    .form-group {
-      background-color: #fff; 
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 500px;
-      margin: 20px auto;
-      font-family: 'Arial', sans-serif;
-    }
-    
-    /* Labels */
-    label {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: #333;
-      display: block;
-    }
-    
-    /* File input */
-    #images-upload {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      background-color: #f8f8f8;
-      border: 2px solid #ccc;
-      border-radius: 5px; 
-      font-size: 14px;
-      transition: all 0.3s ease;
-    }
-    
-    #images-upload:focus {
-      border-color: #5cb85c;
-      background-color: #e6ffe6;
-      outline: none;
-    }
-    
-    /* Textarea */
-    #application {
-      width: 100%;
-      padding: 15px;
-      font-size: 14px;
-      border: 2px solid #ccc;
-      border-radius: 5px;
-      margin-bottom: 20px;
-      transition: all 0.3s ease;
-      height: 150px;
-      resize: none;
-      font-family: 'Arial', sans-serif;
-    }
-    
-    #application:focus {
-      border-color: #5cb85c;
-      background-color: #e6ffe6;
-      outline: none;
-    }
-    
-    /* Submit button */
-    .submit-btn {
-      background-color: #5cb85c;
-      color: #fff;
-      font-size: 16px;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 5px;
+  .rating-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+
+    span {
+      font-size: 28px;
+      color: #ddd;
       cursor: pointer;
-      display: block;
-      width: 100%;
-      transition: all 0.3s ease;
-      font-family: 'Arial', sans-serif;
+      transition: color 0.3s ease, transform 0.2s ease;
+
+      &:hover,
+      &.active {
+        color: #ffc107;
+        transform: scale(1.3);
+      }
     }
-    
-    .submit-btn:hover {
-      background-color: #4cae4c;
+  }
+
+  #rating-value {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #777;
+    // margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 8px;
+  }
+
+  input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #f7f7f7;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+
+    &:hover {
+      border-color: #007bff;
     }
-    
-    .submit-btn:active {
-      background-color: #3d8e3d;
-    }
-    
-    .submit-btn:focus {
+  }
+
+  textarea {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: #f9f9f9;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+    font-size: 16px;
+    color: #555;
+    resize: none;
+    transition: box-shadow 0.3s ease;
+
+    &:focus {
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
       outline: none;
     }
-    
-    /* For mobile responsiveness */
-    @media (max-width: 600px) {
-      .form-group {
-        padding: 15px;
-        width: 90%;
-      }
-    
-      #application {
-        height: 120px;
-      }
+  }
+
+  .submit-btn {
+    text-align: start;
+    // display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 1.6rem;
+    background-color: rgb(20, 83, 45);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    // transition: background-color 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
     }
-    
-}
 
-
-
-  
-  
-}
-
-// Nút đóng
-.close-btn {
-  color: #aaa;
-  font-size: 28px;
-  font-weight: bold;
-  position: absolute; // Đặt nút đóng ở vị trí tuyệt đối
-  top: 10px; // Cách trên một khoảng
-  right: 10px; // Cách phải một khoảng
-  cursor: pointer;
-  
-  &:hover,
-  &:focus {
-    color: black;
-    text-decoration: none;
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    }
   }
 }
-
-// Nút submit
-.submit-btn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  margin-top: 10px;
-  
-  &:hover {
-    background-color: #45a049;
-  }
-} 

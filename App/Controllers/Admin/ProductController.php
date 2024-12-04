@@ -3,6 +3,10 @@
 namespace App\Controllers\Admin;
 
 use App\Helpers\NotificationHelper;
+use App\Models\Admin\ProductVariant;
+use App\Models\Admin\ProductVariantOption;
+use App\Models\Admin\SKU;
+use App\Models\Admin\SkuProductVariantOption;
 use App\Models\Category;
 use App\Models\Admin\Product;
 use App\Validations\ProductValidation;
@@ -11,11 +15,8 @@ use App\Views\Admin\Layouts\Header;
 use App\Views\Admin\Components\Notification;
 use App\Views\Admin\Pages\Product\Create;
 use App\Views\Admin\Pages\Product\Detail_product;
-use App\Views\Admin\Pages\Product\Edit;
 use App\Views\Admin\Pages\Product\Edit_product;
-use App\Views\Admin\Pages\Product\Index;
 use App\Views\Admin\Pages\Product\Product as ProductAdmin;
-use App\Views\Client\Pages\News\Detail;
 
 class ProductController
 {
@@ -68,7 +69,36 @@ class ProductController
     public static function create()
     {
         $category = new Category();
-        $data = $category->getAllCategory();
+        $categories = $category->getAllCategory();
+
+        $variantModel = new ProductVariant();
+        $variants = $variantModel->getAllVariants();
+
+        // Kiểm tra và xử lý variant_id
+        $variantId = $_GET['variant_id'] ?? null; // Sử dụng null nếu không có giá trị
+        if ($variantId === null) {
+            error_log("Variant ID is not provided.");
+        } else {
+            error_log("Variant ID from GET: " . $variantId);
+        }
+
+        $variantOptions = [];
+
+        if (!empty($variantId)) {
+            $optionsModel = new ProductVariantOption();
+            $variantOptions = $optionsModel->getOptionsByVariantId($variantId);
+            error_log("Fetched options: " . print_r($variantOptions, true));
+        } else {
+            error_log("Variant ID is not provided.");
+        }
+
+        $data = [
+            'categories' => $categories,
+            'variants' => $variants,
+            'variant_options' => $variantOptions,
+            'selected_variant' => $variantId,
+        ];
+
         Header::render();
         Notification::render();
         NotificationHelper::unset();
@@ -77,64 +107,182 @@ class ProductController
     }
 
 
+
+
+
     // xử lý chức năng thêm
     public static function store()
     {
+        // Validate dữ liệu sản phẩm
         $is_valid = ProductValidation::create();
-
         if (!$is_valid) {
             $_SESSION['old'] = $_POST;
-            // NotificationHelper::error('create', 'Thêm sản phẩm thất bại');
-            header('location: /admin/add-product');
+            NotificationHelper::error('create', 'Thêm sản phẩm thất bại');
+            header('Location: /admin/add-product');
             exit;
         }
 
+        // Xử lý ảnh chính
         $image = ProductValidation::uploadImage('image');
         if (!$image) {
-            echo 'Lỗi khi tải lên ảnh chính.';
+            NotificationHelper::error('create', 'Không thể tải lên ảnh chính');
+            header('Location: /admin/add-product');
             exit;
         }
 
+        // Xử lý thumbnails
         $thumbnails = ProductValidation::uploadThumbnails('thumbnails');
-
         if (empty($thumbnails)) {
             NotificationHelper::error('create', 'Không thể tải lên ảnh thumbnails');
-            header('location: /admin/add-product');
+            header('Location: /admin/add-product');
             exit;
         }
 
+        // Chuẩn bị dữ liệu sản phẩm
         $thumbnailsJson = json_encode($thumbnails);
+        $productType = $_POST['product_type'] ?? 'simple';
 
-        $product = new Product();
-        $data = [
+        $productData = [
             'name' => $_POST['name'],
-            'price' => $_POST['price'],
-            'is_featured' => $_POST['is_featured'],
-            'discount_price' => $_POST['discount_price'],
             'category_id' => $_POST['category_id'],
-            'description' => $_POST['description'], // Dữ liệu từ CKEditor
+            'description' => $_POST['description'],
             'image' => $image,
-            'quantity' => $_POST['quantity'],
+            'price' => $_POST['price'] ?? null,
+            'quantity' => $_POST['quantity'] ?? null,
+            'discount_price' => $_POST['discount_price'] ?? null,
             'thumbnails' => $thumbnailsJson,
-            'status' => 1,
+            'type' => $productType,
+            'is_featured' => $_POST['is_featured'],
+            'status' => $_POST['status'],
         ];
 
-        $productId = $product->createProduct($data);
-        if ($productId) {
-            NotificationHelper::success('create', 'Thêm sản phẩm thành công');
-            header('location: /admin/add-product');
-            exit;
-        } else {
-            NotificationHelper::error('create', 'Thêm sản phẩm thất bại');
-            header('location:/admin/add-product');
-            exit;
+        $productModel = new Product();
+        $productId = $productModel->createProduct($productData);
+
+        // Xử lý lưu sản phẩm đơn giản
+        if ($productType === 'simple') {
+            NotificationHelper::success('create', 'Sản phẩm đơn giản được thêm thành công');
+        }
+
+        // Xử lý lưu sản phẩm đơn giản
+        if ($productType === 'simple') {
+            $simpleData = [
+                'price' => $_POST['price'],
+                'discount_price' => $_POST['discount_price'],
+                'quantity' => $_POST['quantity'],
+            ];
+
+            if ($productModel->updateProduct($productId, $simpleData)) {
+                NotificationHelper::success('create', 'Sản phẩm đơn giản được thêm thành công');
+                header('location: /admin/product');
+            } else {
+                NotificationHelper::error('create', 'Không thể lưu sản phẩm đơn giản');
+                header('location: /admin/product');
+            }
+        }
+
+        // Xử lý lưu sản phẩm có biến thể
+        // Xử lý biến thể sản phẩm nếu có
+        if ($productType === 'variable') {
+            $variantAction = $_POST['variant_action'];
+            $productId = $productModel->create(['name' => $_POST['name'], 'type' => 'variable']);
+
+            if ($variantAction === 'add_new') {
+                // Thêm thuộc tính mới
+                $variantModel = new ProductVariant();
+                $variantId = $variantModel->create(['product_id' => $productId, 'name' => $_POST['variant_name']]);
+
+                $values = explode(',', $_POST['variant_values']);
+                foreach ($values as $value) {
+                    $optionModel = new ProductVariantOption();
+                    $optionModel->create(['product_variant_id' => $variantId, 'name' => trim($value)]);
+                }
+            }
+
+            if ($variantAction === 'use_existing') {
+                // Sử dụng thuộc tính sẵn có
+                $existingVariantId = $_POST['existing_variant'];
+                $values = explode(',', $_POST['new_value']);
+                foreach ($values as $value) {
+                    $optionModel = new ProductVariantOption();
+                    $optionModel->create(['product_variant_id' => $existingVariantId, 'name' => trim($value)]);
+                }
+            }
+        }
+
+        header('Location: /admin/products');
+    }
+
+
+    public function saveSku()
+    {
+        try {
+            var_dump(file_get_contents('php://input'));
+            // Lấy dữ liệu từ form (hoặc AJAX request)
+            $data = json_decode(file_get_contents('php://input'), true);
+
+            // Kiểm tra dữ liệu nhập vào
+            if (!$data || !isset($data['product_variant_id'], $data['sku'], $data['price'], $data['quantity'], $data['status'])) {
+                http_response_code(400); // Lỗi dữ liệu không hợp lệ
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Dữ liệu không hợp lệ. Vui lòng kiểm tra các trường cần thiết.'
+                ]);
+                return;
+            }
+
+            // Lưu dữ liệu vào cơ sở dữ liệu
+            $skuModel = new SKU();
+
+            // Upload ảnh (nếu có)
+            $image = null;
+            // if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            //     $image = $this->uploadImage($_FILES['image']); // Hàm upload ảnh
+            // }
+
+            // Tạo mới SKU
+            $skuId = $skuModel->create([
+                'product_variant_id' => $data['product_variant_id'],
+                'sku' => $data['sku'],
+                'price' => $data['price'],
+                'discount_price' => $data['discount_price'] ?? null,
+                'quantity' => $data['quantity'],
+                'status' => $data['status'],
+                'image' => $image,
+            ]);
+
+            // Xử lý kết quả trả về
+            if ($skuId) {
+                http_response_code(200); // Thành công
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Lưu SKU thành công!',
+                    'sku_id' => $skuId
+                ]);
+            } else {
+                http_response_code(500); // Lỗi lưu thất bại
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Không thể lưu SKU. Vui lòng thử lại.'
+                ]);
+            }
+        } catch (\Exception $e) {
+            // Xử lý lỗi ngoại lệ
+            http_response_code(500); // Lỗi máy chủ
+            echo json_encode([
+                'success' => false,
+                'message' => 'Đã xảy ra lỗi: ' . $e->getMessage()
+            ]);
         }
     }
 
 
 
 
-    // hiển thị chi tiết8
+
+
+
+
     // hiển thị chi tiết sản phẩm
     public static function show(int $id)
     {
@@ -281,7 +429,7 @@ class ProductController
 
         if ($result) {
             NotificationHelper::success('update', 'Cập nhật sản phẩm thành công');
-            header('location: /admin/products');
+            header('location: /admin/product');
             exit;
         } else {
             NotificationHelper::error('update', 'Cập nhật sản phẩm thất bại');

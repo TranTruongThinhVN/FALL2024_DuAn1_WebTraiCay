@@ -6,6 +6,8 @@ use Twilio\Rest\Client;
 use App\Models\Client\User;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use Twilio\Http\CurlClient;
+
 // use App\Models\Client\User;
 // <!-- Thực tế nếu chia quyền admin, client, hay nhân viên thì chia thành các form đăng nhập riêng thì truy vấn lặp lại các lệnh nên trung gian qa đây -->
 // <!-- sử dụng lại á -->
@@ -44,6 +46,7 @@ class AuthHelper
 
         // Set session
         $_SESSION['user'] = $userRecord;
+        $_SESSION['user_id'] = $userRecord['id']; // Lưu `id` người dùng vào session
 
         // Handle "Remember Me" functionality
         if ($data['remember']) {
@@ -123,12 +126,13 @@ class AuthHelper
             $mail->isSMTP();
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
-            // $mail->Username = 'nguyenquockhai2305@gmail.com';
-            // $mail->Password = 'bili buhr anik pdtk';
+            $mail->Username = getenv('SMTP_USERNAME');
+            $mail->Password = getenv('SMTP_PASSWORD');
+
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 
-            $mail->setFrom('your_email@gmail.com', 'FRUITIFY');
+            $mail->setFrom(getenv('SMTP_FROM'), 'FRUITIFY');
             $mail->addAddress($email, 'name');
 
             $mail->CharSet = 'UTF-8';
@@ -238,28 +242,42 @@ class AuthHelper
     }
     // use Twilio\Rest\Client;
 
-    public static function sendOtpToPhone($phone, $otp)
+    public static function sendOtpToPhone($phoneNumber, $otp)
     {
-        $accountSid = getenv('TWILIO_ACCOUNT_SID');
-        $authToken = getenv('TWILIO_AUTH_TOKEN');
+        $account_sid = getenv('TWILIO_ACCOUNT_SID');
+        $auth_token = getenv('TWILIO_AUTH_TOKEN');
+        $from_number = getenv('TWILIO_FROM_NUMBER');
 
-        $twilioPhone = '+16514193050'; // Twilio active number
+        $httpClient = new CurlClient(array(
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 2,
+        ));
 
-        $client = new \Twilio\Rest\Client($accountSid, $authToken);
+        $twilio = new Client($account_sid, $auth_token, null, null, $httpClient);
+
         try {
-            $message = $client->messages->create(
-                $phone, // Recipient number
+            $message = $twilio->messages->create(
+                $phoneNumber, // Số điện thoại nhận
                 [
-                    'from' => $twilioPhone, // Twilio number
-                    'body' => "Mã OTP của bạn là: $otp"
+                    "body" => "Mã OTP của bạn là: $otp",
+                    "from" => $from_number // Số điện thoại Twilio của bạn
                 ]
             );
-            echo "Message sent! SID: " . $message->sid;
+
+            // Ghi log trạng thái
+            error_log("Twilio status: " . $message->status);
+            error_log("Twilio SID: " . $message->sid);
+
+            if (in_array($message->status, ['queued', 'sent', 'delivered'])) {
+                return true; // Gửi thành công
+            } else {
+                throw new \Exception("Lỗi gửi tin nhắn Twilio: " . $message->errorMessage);
+            }
         } catch (\Exception $e) {
-            echo "Lỗi Twilio: " . $e->getMessage();
+            error_log("Lỗi gửi tin nhắn OTP: " . $e->getMessage());
+            return false;
         }
     }
-
 
 
 

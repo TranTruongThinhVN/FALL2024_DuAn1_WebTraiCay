@@ -188,23 +188,231 @@ class Edit_profile extends BaseView
 
             </div>
 
+            <section id="purchase-history" class="purchase-history section">
+                <!-- Top Navigation Tabs -->
+                <nav class="purchase-history__tabs">
+                    <button class="purchase-history__tab active">Tất cả</button>
+                    <button class="purchase-history__tab">Chờ xử lý</button>
+                    <button class="purchase-history__tab">Chờ giao hàng</button>
+                    <button class="purchase-history__tab">Hoàn thành</button>
+                    <button class="purchase-history__tab">Đã hủy</button>
+                    <button class="purchase-history__tab">Đã hoàn tiền</button>
+                </nav>
+
+                <!-- Search bar -->
+                <div class="purchase-history__search">
+                    <input
+                        type="text"
+                        placeholder="Bạn có thể tìm kiếm theo tên Shop, ID đơn hàng hoặc Tên sản phẩm" />
+                </div>
+
+                <!-- Purchase Item 1 -->
+                <div class="purchase-history__item">
+                    <!-- Nội dung chi tiết -->
+                    <div class="purchase-history__item-details">
+                        <img
+                            src="product-image-url.jpg"
+                            alt="Product Image"
+                            class="purchase-history__item-image" />
+                        <div class="purchase-history__item-info">
+                            <p class="purchase-history__item-name">
+                                Bộ nắp sau tay lái | ốp gãy sau Vision (2022-2023)
+                            </p>
+                            <p class="purchase-history__item-description">
+                                Màu Xám xi măng *NHC60P* (53210-K2C-VF0ZC)
+                            </p>
+                            <p class="purchase-history__item-quantity">Số lượng: x1</p>
+                            <p class="purchase-history__item-price-single">₫198,000</p>
+                        </div>
+                        <p class="purchase-history__item-status cancelled">ĐÃ HỦY</p>
+                    </div>
+
+                    <!-- Footer (Thành tiền và Nút hành động) -->
+                    <div class="purchase-history__item-footer">
+                        <p class="purchase-history__item-total">
+                            Thành tiền: <span class="purchase-history__item-total-price">₫190,952</span>
+                        </p>
+                        <div class="purchase-history__item-actions">
+                            <button class="purchase-history__item-reorder">Mua lại</button>
+                            <button class="purchase-history__item-detail">Xem chi tiết hủy đơn</button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <!-- Purchase Item 2 -->
+                <div class="purchase-history__item">
+                    <!-- Nội dung chi tiết -->
+                    <div class="purchase-history__item-details">
+                        <img
+                            src="product-image-url.jpg"
+                            alt="Product Image"
+                            class="purchase-history__item-image" />
+                        <div class="purchase-history__item-info">
+                            <p class="purchase-history__item-name">
+                                Bộ nắp sau tay lái | ốp gãy sau Vision (2022-2023)
+                            </p>
+                            <p class="purchase-history__item-description">
+                                Màu Xám xi măng *NHC60P* (53210-K2C-VF0ZC)
+                            </p>
+                            <p class="purchase-history__item-quantity">Số lượng: x1</p>
+                            <p class="purchase-history__item-price-single">₫198,000</p>
+                        </div>
+                        <p class="purchase-history__item-status cancelled">ĐÃ HỦY</p>
+                    </div>
+
+                    <!-- Footer (Thành tiền và Nút hành động) -->
+                    <div class="purchase-history__item-footer">
+                        <p class="purchase-history__item-total">
+                            Thành tiền: <span class="purchase-history__item-total-price">₫190,952</span>
+                        </p>
+                        <div class="purchase-history__item-actions">
+                            <button class="purchase-history__item-reorder">Mua lại</button>
+                            <button class="purchase-history__item-detail">Xem chi tiết hủy đơn</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </div>
-        <div id="addPhoneForm" class="hidden">
+        <div id="addPhoneForm" class="hidden add-phone-form">
             <form method="POST" action="/add-phone">
                 <input type="hidden" name="method" value="POST">
                 <label for="newPhone">Nhập số điện thoại:</label>
                 <input type="text" id="newPhone" name="new_phone" placeholder="Nhập số điện thoại" required>
-                <button type="submit">Gửi OTP</button>
-            </form>
-        </div>
+                <!-- <button type="button" id="sendOtpBtn">Gửi OTP</button> -->
+                <div style="margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+                    <div style="flex: 1; margin-right: 10px;">
+                        <label for="otp">Mã Xác Minh</label>
+                        <input
+                            type="text"
+                            id="otp"
+                            name="otp"
+                            placeholder="Mã xác minh"
+                            style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"
+                            disabled />
+                    </div>
+                    <button
+                        type="button"
+                        id="sendOtpBtn"
+                        style="padding: 10px 15px; font-size: 14px; background-color: #f5f5f5; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">
+                        Gửi Mã xác minh
+                    </button>
+                </div>
 
+                <!-- Nút xác nhận -->
+                <button
+                    type="button"
+                    id="confirmBtn"
+                    style="width: 100%; padding: 10px; font-size: 16px; background-color: #fbd4d4; color: white; border: none; border-radius: 5px; cursor: pointer;"
+                    disabled>
+                    XÁC NHẬN
+                </button>
+            </form>
+
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const sendOtpBtn = document.getElementById("sendOtpBtn");
+                const confirmBtn = document.getElementById("confirmBtn");
+                const phoneInput = document.getElementById("newPhone");
+                const otpInput = document.getElementById("otp");
+
+                // Khi nhấn "Gửi Mã xác minh"
+                document.getElementById("sendOtpBtn").addEventListener("click", function() {
+                    const phoneNumber = document.getElementById("newPhone").value.trim();
+
+                    if (!phoneNumber) {
+                        alert("Vui lòng nhập số điện thoại!");
+                        return;
+                    }
+
+                    fetch('/add-phone', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({
+                                new_phone: phoneNumber
+                            }),
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.json(); // Nếu JSON không hợp lệ, sẽ vào `.catch`
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                alert(data.message || "OTP đã được gửi!");
+                            } else {
+                                alert(data.message || "Lỗi gửi OTP!");
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert("Không thể kết nối với máy chủ hoặc phản hồi không hợp lệ.");
+                        });
+
+
+                });
+
+                // Khi nhấn "XÁC NHẬN"
+                confirmBtn.addEventListener("click", function() {
+                    const otp = otpInput.value.trim();
+                    const phoneNumber = phoneInput.value.trim();
+
+                    if (!otp) {
+                        alert("Vui lòng nhập mã OTP!");
+                        return;
+                    }
+
+                    // Gửi yêu cầu xác minh OTP
+                    fetch('/phone-verify-otp', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({
+                                otp: otp,
+                                new_phone: phoneNumber
+                            }),
+                        })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.success) {
+                                alert("Xác minh thành công!");
+                                // Reset form hoặc chuyển hướng
+                                otpInput.value = "";
+                                phoneInput.value = "";
+                                otpInput.disabled = true;
+                                confirmBtn.disabled = true;
+                                // Thực hiện hành động tiếp theo nếu cần
+                            } else {
+                                alert(data.message || "Mã OTP không hợp lệ. Vui lòng thử lại.");
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error:", error);
+                            alert("Không thể kết nối với máy chủ. Vui lòng thử lại!");
+                        });
+                });
+            });
+        </script>
+        </div>
         <!-- Hiển thị lỗi -->
         <?php if (isset($_SESSION['error'])): ?>
             <p class="error"><?= $_SESSION['error'] ?></p>
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
         </div>
+        <script>
 
+        </script>
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 const addPhoneLink = document.getElementById("addPhoneLink");
@@ -224,22 +432,16 @@ class Edit_profile extends BaseView
 
         <style>
             /* Điều chỉnh layout cho form "Thêm Số Điện Thoại" */
+            /* Form thêm số điện thoại */
             .add-phone-form {
-                margin: 20px auto;
+                margin: 20px;
                 padding: 20px;
                 border: 1px solid #ddd;
                 border-radius: 8px;
-                background-color: #f9f9f9;
-                max-width: 500px;
+                /* max-width: 500px; */
+                width: 80%;
                 /* Giới hạn chiều rộng */
-                text-align: center;
-                /* Căn giữa nội dung */
-            }
-
-            .add-phone-form h2 {
-                margin-bottom: 15px;
-                font-size: 20px;
-                color: #333;
+                /* text-align: center; */
             }
 
             .add-phone-form label {
@@ -249,15 +451,13 @@ class Edit_profile extends BaseView
             }
 
             .add-phone-form input[type="text"] {
-                width: 100%;
-                /* Đảm bảo input chiếm toàn bộ chiều rộng */
+                width: 100% !important;
                 padding: 10px;
                 margin-bottom: 15px;
                 border: 1px solid #ccc;
                 border-radius: 5px;
                 font-size: 16px;
                 box-sizing: border-box;
-                /* Đảm bảo padding không gây tràn */
             }
 
             .add-phone-form button {
@@ -268,23 +468,12 @@ class Edit_profile extends BaseView
                 border-radius: 5px;
                 font-size: 16px;
                 cursor: pointer;
-                transition: background-color 0.3s ease;
             }
 
             .add-phone-form button:hover {
                 background-color: #218838;
             }
 
-            /* Xử lý lỗi hiển thị chiều ngang */
-            .add-phone-form .form-row {
-                display: flex;
-                flex-direction: column;
-                /* Sắp xếp theo cột */
-                align-items: center;
-                /* Căn giữa các phần tử */
-            }
-
-            /* Ẩn form khi không cần */
             .hidden {
                 display: none;
             }
@@ -391,29 +580,66 @@ class Edit_profile extends BaseView
             });
         </script>
         <!-- Purchase History Section -->
-        <div id="purchase-history" class="purchase-history section">
-            <h2 class="purchase-history__title">Lịch Sử Mua Hàng</h2>
 
-            <!-- Purchase Item -->
-            <div class="purchase-history__item">
-                <div class="purchase-history__item-details">
-                    <img src="path/to/product-image.jpg" alt="Product Image" class="purchase-history__item-image">
-                    <div class="purchase-history__item-info">
-                        <h3 class="purchase-history__item-name">Bộ nắp sau tay lái | ốp gáy sau Vision</h3>
-                        <p class="purchase-history__item-description">Màu Xám xi măng *NHC60P*</p>
-                        <p class="purchase-history__item-quantity">x1</p>
-                    </div>
-                </div>
-
-                <!-- Reorder Button -->
-                <button class="purchase-history__item-reorder">Mua Lại</button>
-            </div>
-
-            <!-- Add more order history content here -->
         </div>
         </div>
-        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const addPhoneLink = document.getElementById('addPhoneLink');
+                const mainContent = document.getElementById('mainContent');
+                const addPhoneForm = document.getElementById('addPhoneForm');
+                const verifyOtpForm = document.getElementById('verifyOtpForm');
+                const sendOtpBtn = document.getElementById('sendOtpBtn');
 
+                // Ẩn form nhập OTP ban đầu
+                verifyOtpForm.style.display = 'none';
+
+                addPhoneLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mainContent.classList.add('hidden');
+                    addPhoneForm.classList.remove('hidden');
+                });
+
+                sendOtpBtn.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    const phoneNumber = document.getElementById('newPhone').value;
+
+                    // Gửi AJAX request
+                    fetch('/add-phone', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({
+                                'new_phone': phoneNumber
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Ẩn form nhập số điện thoại
+                                addPhoneForm.style.display = 'none';
+                                // Hiển thị form nhập OTP
+                                verifyOtpForm.style.display = 'block';
+                                // Tạo form nhập OTP 
+                                verifyOtpForm.innerHTML = `
+            <form method="POST" action="/phone-verify-otp">
+              <label for="otp">Nhập mã OTP:</label>
+              <input type="text" id="otp" name="otp" placeholder="Nhập mã OTP" required>
+              <button type="submit">Xác nhận</button>
+            </form>
+          `;
+                            } else {
+                                // Hiển thị thông báo lỗi
+                                alert(data.message);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error('Error:', error);
+                        });
+                });
+            });
+        </script>
 <?php
     }
 }

@@ -11,14 +11,15 @@ class Edit extends BaseView
 ?>
         <style>
             .error-border {
-                border: 2px solid red !important;
+                border: 2px solid red;
                 border-radius: 4px;
             }
 
             .text-danger {
                 color: red;
-                font-size: 1rem;
-                font-weight: bold;
+                font-size: 0.875rem;
+                /* Kích thước chữ nhỏ hơn */
+                margin-top: 4px;
             }
         </style>
         <div class="page-wrapper">
@@ -59,11 +60,16 @@ class Edit extends BaseView
                                             type="text"
                                             class="form-control <?= isset($_SESSION['errors']['name']) ? 'error-border' : '' ?>"
                                             placeholder="Tên danh mục..."
-                                            value="<?= htmlspecialchars($data['name'], ENT_QUOTES) ?>">
+                                            value="<?= htmlspecialchars($_SESSION['old']['name'] ?? $data['name'], ENT_QUOTES) ?>">
+                                        <!-- Hiển thị lỗi dưới input -->
                                         <?php if (isset($_SESSION['errors']['name'])): ?>
                                             <small class="text-danger"><?= $_SESSION['errors']['name'] ?></small>
                                         <?php endif; ?>
                                     </div>
+
+
+
+
 
                                     <div class="form-group">
                                         <label for="description">Mô tả</label>
@@ -88,6 +94,14 @@ class Edit extends BaseView
                                         </button>
                                     </div>
                                 </div>
+                                <?php
+                                if (isset($_SESSION['errors'])) {
+                                    unset($_SESSION['errors']);
+                                }
+                                if (isset($_SESSION['old'])) {
+                                    unset($_SESSION['old']);
+                                }
+                                ?>
                             </form>
                         </div>
                         <!-- Include the external JavaScript file -->

@@ -147,6 +147,44 @@ class Header extends BaseView
                                     </ul>
                                 </li>
                                 <li class="sidebar-item">
+                                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                                        <i class="mdi mdi-cube-outline"></i><span class="hide-menu"> Thuộc tính của sản phẩm </span>
+                                    </a>
+                                    <ul aria-expanded="false" class="collapse second-level">
+                                        <li class="sidebar-item">
+                                            <a href="/admin/product-variants" class="sidebar-link">
+                                                <i class="mdi mdi-note-outline"></i>
+                                                <span class="hide-menu">Danh sách</span>
+                                            </a>
+                                        </li>
+
+
+                                        <li class="sidebar-item">
+                                            <a href="/admin/create-variants" class="sidebar-link">
+                                                <i class="mdi mdi-note-plus"></i><span class="hide-menu"> Thêm mới </span>
+                                            </a>
+                                        </li>
+
+
+
+                                    </ul>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-solid fa-wine-glass"></i>
+                                        </i><span class="hide-menu">Gốc ẩm thực </span></a>
+                                    <ul aria-expanded="false" class="collapse  first-level">
+                                        <li class="sidebar-item">
+                                            <a href="/admin/recipe_category" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Danh mục công thức </span></a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a href="/admin/recipe" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Danh sách công thức</span></a>
+                                        </li>
+                                        <!-- <li class="sidebar-item">
+                                            <a href="/admin/user-details" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Chi tiết </span></a>
+                                        </li> -->
+                                    </ul>
+                                </li>
+                                <li class="sidebar-item">
                                     <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fas fa-tags"></i></i><span class="hide-menu">Mã giảm giá</span></a>
                                     <ul aria-expanded="false" class="collapse  first-level">
                                         <li class="sidebar-item">

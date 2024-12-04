@@ -9,6 +9,7 @@ class Home extends BaseView
   public static function render($data = null)
   {
 ?>
+
     <section class="main-carousel">
       <div class="carousel-wrapper">
         <div class="carousel-wrapper__slide fade-animation">
@@ -16,7 +17,7 @@ class Home extends BaseView
           <div class="carousel-text">
             <p>Trái cây tươi từ vườn đến tay bạn!</p>
             <span>Tận hưởng sự tươi mát và dinh dưỡng từ nông trại. </span>
-            <a><button class="cta-button">Xem thêm</button></a>
+            <a href="/products"><button class="cta-button">Xem thêm</button></a>
           </div>
         </div>
         <div class="carousel-wrapper__slide fade-animation" style="display: none;">
@@ -32,7 +33,7 @@ class Home extends BaseView
           <div class="carousel-text">
             <p>Trải nghiệm hương vị từ thiên nhiên</p>
             <span> Đưa những gì tinh túy nhất từ thiên nhiên đến bàn ăn của bạn</span>
-            <a><button class="cta-button">Xem thêm</button></a>
+            <a href="/products"><button class="cta-button">Xem thêm</button></a>
           </div>
         </div>
         <div class="carousel-wrapper__slide fade-animation" style="display: none;">
@@ -40,7 +41,7 @@ class Home extends BaseView
           <div class="carousel-text" style="max-width: 780px;">
             <p>Gần gũi thiên nhiên trong từng miếng trái cây</p>
             <span>Tận hưởng sự thuần khiết và tươi mát của từng sản phẩm</span>
-            <a><button class="cta-button">Xem thêm</button></a>
+            <a href="/products"><button class="cta-button">Xem thêm</button></a>
           </div>
         </div>
         <div class="carousel-wrapper__slide fade-animation" style="display: none;">
@@ -48,7 +49,7 @@ class Home extends BaseView
           <div class="carousel-text">
             <p>Chọn trái cây ngon, tận hưởng cuộc sống khỏe</p>
             <span>Sức khỏe và chất lượng bắt đầu từ những gì bạn ăn</span>
-            <a><button class="cta-button">Xem thêm</button></a>
+            <a href="/products"><button class="cta-button">Xem thêm</button></a>
           </div>
         </div>
         <a class="prev" onclick="plusSlides(-1)">❮</a>
@@ -67,10 +68,11 @@ class Home extends BaseView
     <section class="product-section">
       <div class="main-container">
         <div class="featured-products">
-          <h1 class="title-featured-products">TRÁI NGON HÔM NAY</h1>
+          <?php if (!empty($data['featuredProducts'])): ?>
+            <h1 class="title-featured-products">TRÁI NGON HÔM NAY</h1>
 
-          <div class="product-grid">
-            <?php if (!empty($data['featuredProducts'])): ?>
+            <div class="product-grid">
+
               <?php foreach ($data['featuredProducts'] as $product): ?>
                 <div class="product-card">
                   <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($product['image']) ?>"
@@ -79,19 +81,20 @@ class Home extends BaseView
                   <div class="product-info">
                     <h3 class="product-name"><?= htmlspecialchars($product['name']) ?></h3>
                     <p class="product-price"><?= number_format($product['price'], 0, ',', '.') ?>₫</p>
-                    <button class="buy-button">
+                    <a href="/product-detail/<?= $product['id'] ?>" class="buy-button">
                       <i class="fas fa-shopping-bag"></i> Chọn Mua
-                    </button>
+                    </a>
                   </div>
                 </div>
               <?php endforeach; ?>
-            <?php else: ?>
-              <p class="no-products text-center">Hiện tại không có sản phẩm nổi bật nào.</p>
-            <?php endif; ?>
-          </div>
 
+            <?php else: ?>
+              <!-- <p class="no-products text-center">Hiện tại không có sản phẩm nổi bật nào.</p> -->
+
+            </div>
+          <?php endif; ?>
           <!-- Nút "Xem Thêm" -->
-          <button class="show-more-btn" data-category="featured" onclick="showMoreProducts('featured')">Xem Thêm</button>
+          <!-- <button class="show-more-btn" data-category="featured" onclick="showMoreProducts('featured')">Xem Thêm</button> -->
         </div>
       </div>
     </section>
@@ -111,7 +114,7 @@ class Home extends BaseView
               Chúng tôi tin rằng mỗi quả trái cây đều là một món quà quý giá từ thiên nhiên, chứa đựng sự tươi mát và những giá trị dinh dưỡng thiết yếu. Từ những giống cây truyền thống cho đến những giống cây ngoại nhập đặc sắc, mỗi sản phẩm đều trải qua quy trình kiểm định chất lượng khắt khe để đảm bảo rằng chỉ những quả tươi ngon nhất mới được giao đến tay khách hàng. Với chúng tôi, trái cây không chỉ là thực phẩm mà còn là một phần của lối sống lành mạnh và cân bằng.
             </p>
 
-            <button class="cta-button">Khám phá ngay</button>
+            <a href="/products"><button class="cta-button">Khám phá ngay</button></a>
           </div>
         </div>
       </div>
@@ -127,7 +130,7 @@ class Home extends BaseView
             <p>
               Hãy đến với chúng tôi để trải nghiệm những sản phẩm trái cây sạch, được trồng trọt và bảo quản một cách khoa học. Mỗi trái cây không chỉ là thực phẩm mà còn là sự chăm sóc sức khỏe cho bạn và gia đình. Chúng tôi tin rằng sức khỏe là tài sản quý giá nhất, và chúng tôi cam kết mang đến những giá trị tốt đẹp từ thiên nhiên cho cuộc sống của bạn.
             </p>
-            <button class="cta-button">Khám phá thêm</button>
+            <a href="/products"><button class="cta-button">Khám phá thêm</button></a>
           </div>
           <div class="image-container">
             <img src="<?= APP_URL ?>public/assets/client/images/home/info_right.png" alt="Trái cây chất lượng">

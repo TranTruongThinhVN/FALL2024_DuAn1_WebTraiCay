@@ -52,15 +52,13 @@ class UserController
     {
         // Kiểm tra dữ liệu đầu vào
         if (!UserValidation::register()) {
-            // Thêm thông báo lỗi và chuyển về form
             NotificationHelper::error('user_create', 'Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.');
             header('Location: /admin/user-create');
             exit;
         }
 
-        // Lấy dữ liệu từ form
         $email = trim($_POST['email']);
-        $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+        $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Mã hóa mật khẩu
         $name = trim($_POST['name'] ?? '');
         $phone = trim($_POST['phone'] ?? '');
         $dob = trim($_POST['dob'] ?? null);
@@ -68,15 +66,15 @@ class UserController
         $status = intval($_POST['status'] ?? 1);
         $avatar = null;
 
-        // Xử lý upload avatar (nếu có)
-        if (!empty($_FILES['avatar']['name'])) {
-            $avatar = self::uploadAvatar($_FILES['avatar']);
-            if (!$avatar) {
-                // Nếu upload thất bại
-                NotificationHelper::error('user_create', 'Không thể tải lên ảnh đại diện. Định dạng phải là jpg, jpeg hoặc png.');
+        // Kiểm tra và xử lý ảnh đại diện
+        if (isset($_FILES['avatar']) && !empty($_FILES['avatar']['name'])) {
+            $uploadResult = self::uploadAvatar($_FILES['avatar']);
+            if (isset($uploadResult['error'])) {
+                NotificationHelper::error('user_create', $uploadResult['error']);
                 header('Location: /admin/user-create');
                 exit;
             }
+            $avatar = $uploadResult['path'];  // Lưu đường dẫn ảnh đã upload
         }
 
         $data = [
@@ -87,14 +85,12 @@ class UserController
             'dob' => $dob,
             'gender' => $gender,
             'status' => $status,
-            'avatar' => $avatar,
+            'avatar' => $avatar, // Lưu ảnh nếu có
         ];
 
-        // Lưu dữ liệu vào database
         $userModel = new User();
         $isCreated = $userModel->createUser($data);
 
-        // Kiểm tra kết quả lưu
         if ($isCreated) {
             NotificationHelper::success('user_create', 'Thêm người dùng thành công!');
             header('Location: /admin/users');
@@ -115,6 +111,7 @@ class UserController
             header('location: /admin/users');
             exit;
         }
+
         // Lấy tham số page từ URL (nếu có)
         $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
@@ -127,95 +124,137 @@ class UserController
         Footer::render();
     }
 
-    public static function update($id)
+    public function update($id)
     {
-        $name = trim($_POST['name'] ?? '');
-        $email = trim($_POST['email'] ?? '');
-        $password = trim($_POST['password'] ?? '');
-        $role = intval($_POST['role'] ?? 1); // Lấy vai trò từ form
+        // Lấy dữ liệu từ form gửi lên
+        $name = $_POST['name'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
+        $role = $_POST['role'] ?? 0;
+        $avatar = $_FILES['avatar'] ?? null;
 
-        $userModel = new User();
-        $currentUser = $userModel->getOneUser($id);
+        // Kiểm tra và xử lý ảnh đại diện (nếu có)
+        $avatarPath = null;
+        if ($avatar && $avatar['error'] === UPLOAD_ERR_OK) {
+            $uploadResult = self::uploadAvatar($avatar);
 
-        // var_dump($_POST);
-        // exit;
-
-        if (!$currentUser) {
-            NotificationHelper::error('user_edit', 'Người dùng không tồn tại!');
-            header("Location: /admin/users");
-            exit;
-        }
-
-        if (empty($name) || empty($email)) {
-            NotificationHelper::error('user_edit', 'Vui lòng nhập đầy đủ thông tin!');
-            header("Location: /admin/user-edit/$id");
-            exit;
-        }
-
-        $avatar = $currentUser['avatar'];
-        if (!empty($_FILES['avatar']['name'])) {
-            $uploadedAvatar = self::uploadAvatar($_FILES['avatar']);
-            if ($uploadedAvatar) {
-                $avatar = $uploadedAvatar;
+            // Kiểm tra nếu có lỗi trong việc tải ảnh
+            if (isset($uploadResult['error'])) {
+                NotificationHelper::error('user_update', $uploadResult['error']);
+                header('Location: /admin/user-edit/' . $id);
+                exit;
             }
+
+            // Lưu đường dẫn ảnh nếu upload thành công
+            $avatarPath = $uploadResult['path'];
         }
 
-        // Cập nhật dữ liệu
+        // Nếu người dùng nhập mật khẩu mới, xử lý mật khẩu
+        if (!empty($password)) {
+            $password = password_hash($password, PASSWORD_BCRYPT); // Mã hóa mật khẩu
+        } else {
+            $password = null; // Nếu không thay đổi mật khẩu, giữ nguyên giá trị cũ
+        }
+
+        // Cập nhật thông tin người dùng trong cơ sở dữ liệu
+        $userModel = new User();
+
+        // Dữ liệu cần cập nhật
         $data = [
             'name' => $name,
             'email' => $email,
             'role' => $role,
-            'avatar' => $avatar,
-            'dob' => $dob, // Sử dụng avatar cũ nếu không có avatar mới
-            'avatar' => $avatar, // Sử dụng avatar cũ nếu không có avatar mới
         ];
 
-        $isUpdated = $userModel->updateUser($id, $data);
-
-        if ($isUpdated) {
-            NotificationHelper::success('user_edit', 'Cập nhật thông tin người dùng thành công!');
-        } else {
-            NotificationHelper::error('user_edit', 'Có lỗi xảy ra khi cập nhật thông tin!');
+        // Nếu mật khẩu được thay đổi, thêm mật khẩu vào dữ liệu
+        if ($password) {
+            $data['password'] = $password;
         }
 
-        $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-        header("Location: /admin/users?page=$page");
+        // Nếu có ảnh đại diện mới, thêm vào dữ liệu
+        if ($avatarPath) {
+            $data['avatar'] = $avatarPath;
+        }
+
+        // Cập nhật người dùng
+        $updated = $userModel->updateUser($id, $data);
+
+        // Thông báo kết quả cập nhật
+        if ($updated) {
+            NotificationHelper::success('user_update', 'Cập nhật người dùng thành công!');
+            header('Location: /admin/users?page=' . ($_GET['page'] ?? 1));
+        } else {
+            NotificationHelper::error('user_update', 'Có lỗi xảy ra khi cập nhật thông tin người dùng.');
+            header('Location: /admin/users?page=' . ($_GET['page'] ?? 1));
+        }
         exit;
     }
-
-    // Xóa người dùng
     public static function delete($id)
     {
-        $userModel = new User();
-        $isDeleted = $userModel->deleteUser($id);
+        // Kiểm tra nếu form gửi lên với phương thức DELETE
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['method']) && $_POST['method'] === 'DELETE') {
+            $userModel = new User();
 
-        if ($isDeleted) {
-            NotificationHelper::success('user_delete', 'Xóa người dùng thành công');
-            header('Location: /admin/users?success=deleted');
-        } else {
-            NotificationHelper::error('user_delete', 'Xóa người dùng thất bại');
-            header('Location: /admin/users?error=delete_failed');
+            // Kiểm tra xem người dùng có tồn tại hay không
+            $user = $userModel->getOneUser($id);
+            if (!$user) {
+                NotificationHelper::error('user_delete', 'Không tìm thấy người dùng.');
+                header('Location: /admin/users');
+                exit;
+            }
+            // Thực hiện xóa người dùng
+            $isDeleted = $userModel->deleteUser($id);
+
+            if ($isDeleted) {
+                NotificationHelper::success('user_delete', 'Xóa người dùng thành công');
+                header('Location: /admin/users?success=deleted');
+            } else {
+                NotificationHelper::error('user_delete', 'Có lỗi xảy ra khi xóa người dùng. Vui lòng thử lại.');
+                header('Location: /admin/users?error=delete_failed');
+            }
+            exit;
         }
+
+        // Nếu không phải phương thức POST với method DELETE, chuyển hướng về danh sách người dùng
+        header('Location: /admin/users');
         exit;
     }
 
     // Xử lý upload avatar
     private static function uploadAvatar($file)
     {
-        $targetDir = 'public/uploads/users/';
+        // Định nghĩa thư mục upload
+        $targetDir = 'public/uploads/avatars/';
+        // Đảm bảo thư mục tồn tại
+        if (!file_exists($targetDir)) {
+            mkdir($targetDir, 0777, true); // Tạo thư mục nếu chưa tồn tại
+        }
+
+        // Tạo tên file duy nhất dựa trên thời gian
         $fileName = time() . '_' . basename($file['name']);
         $targetFile = $targetDir . $fileName;
 
-        // Tạo thư mục nếu chưa tồn tại
-        if (!file_exists($targetDir)) {
-            mkdir($targetDir, 0777, true);
+        // Kiểm tra kích thước file (tối đa 2MB)
+        if ($file['size'] > 2 * 1024 * 1024) {
+            return ['error' => 'Kích thước file quá lớn. Vui lòng chọn file nhỏ hơn 2MB.'];
         }
 
-        // Upload file
+        // Kiểm tra loại file (jpg, jpeg, png)
+        $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+        if (!in_array($imageFileType, ['jpg', 'jpeg', 'png'])) {
+            return ['error' => 'Chỉ hỗ trợ định dạng jpg, jpeg hoặc png.'];
+        }
+
+        // Kiểm tra lỗi upload file
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            return ['error' => 'Lỗi tải lên file.'];
+        }
+
+        // Di chuyển file vào thư mục mục tiêu
         if (move_uploaded_file($file['tmp_name'], $targetFile)) {
-            return '/' . $targetFile;
+            return ['path' => '/' . $targetFile]; // Trả về đường dẫn của ảnh đã upload
         }
 
-        return null;
+        return ['error' => 'Không thể di chuyển file đến thư mục.'];
     }
 }

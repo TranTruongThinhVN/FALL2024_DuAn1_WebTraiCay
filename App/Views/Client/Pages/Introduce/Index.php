@@ -31,7 +31,7 @@ class index extends BaseView
                         <p>
                             Chúng tôi tin rằng mỗi quả trái cây đều là một món quà quý giá từ thiên nhiên, chứa đựng sự tươi mát và những giá trị dinh dưỡng thiết yếu. Từ những giống cây truyền thống cho đến những giống cây ngoại nhập đặc sắc, mỗi sản phẩm đều trải qua quy trình kiểm định chất lượng khắt khe để đảm bảo rằng chỉ những quả tươi ngon nhất mới được giao đến tay khách hàng. Với chúng tôi, trái cây không chỉ là thực phẩm mà còn là một phần của lối sống lành mạnh và cân bằng.
                         </p>
-                        <button class="cta-button">Khám phá ngay</button>
+                        <a href="/products"> <button class="cta-button">Khám phá ngay</button></a>
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@ class index extends BaseView
                         <p>
                             Hãy đến với chúng tôi để trải nghiệm những sản phẩm trái cây sạch, được trồng trọt và bảo quản một cách khoa học. Mỗi trái cây không chỉ là thực phẩm mà còn là sự chăm sóc sức khỏe cho bạn và gia đình. Chúng tôi tin rằng sức khỏe là tài sản quý giá nhất, và chúng tôi cam kết mang đến những giá trị tốt đẹp từ thiên nhiên cho cuộc sống của bạn.
                         </p>
-                        <button class="cta-button">Khám phá thêm</button>
+                        <a href="/products"> <button class="cta-button">Khám phá thêm</button></a>
                     </div>
                     <div class="image-container">
                         <img src="https://images.pexels.com/photos/672101/pexels-photo-672101.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Trái cây chất lượng">

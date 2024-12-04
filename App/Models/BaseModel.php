@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use DateTime;
 use App\Helpers\NotificationHelper;
 use App\Interfaces\CrudInterface;
@@ -91,6 +92,7 @@ abstract class BaseModel implements CrudInterface
             $stmt = $conn->prepare($sql);
 
             return $stmt->execute();
+            // return $stmt->insert_id; // Trả về ID của bản ghi mới
         } catch (\Throwable $th) {
             error_log('Lỗi khi thêm dữ liệu: ' . $th->getMessage());
             return false;
@@ -138,7 +140,8 @@ abstract class BaseModel implements CrudInterface
         $result = $this->_conn->MySQLi()->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
-    public function getOneByName($name){
+    public function getOneByName($name)
+    {
         $result = [];
         try {
             $sql = "SELECT * FROM $this->table WHERE name = ?";

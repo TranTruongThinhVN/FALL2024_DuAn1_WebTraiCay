@@ -4,7 +4,7 @@ namespace App\Views\Admin;
 
 use App\Views\BaseView;
 
-class Index extends BaseView
+class index extends BaseView
 {
     public static function render($data = null)
     {
@@ -80,7 +80,7 @@ class Index extends BaseView
                                                 <div class="col-6 mt-3">
                                                     <div class="bg-dark p-10 text-white text-center">
                                                         <i class="fa fa-cart-plus mb-1 font-16"></i>
-                                                        <h5 class="mb-0 mt-1"><?= $data['countProducts'] ?></h5>
+                                                        <h5 class="mb-0 mt-1"></h5>
                                                         <small class="font-light">Tổng sản phẩm</small>
                                                     </div>
                                                 </div>
@@ -94,7 +94,7 @@ class Index extends BaseView
                                                 <div class="col-6 mt-3">
                                                     <div class="bg-dark p-10 text-white text-center">
                                                         <i class="fa fa-table mb-1 font-16"></i>
-                                                        <h5 class="mb-0 mt-1"><?= $data['countCategory'] ?></h5>
+                                                        <h5 class="mb-0 mt-1"></h5>
                                                         <small class="font-light">Danh mục</small>
                                                     </div>
                                                 </div>
@@ -133,7 +133,7 @@ class Index extends BaseView
                                 <div class="comment-widgets scrollable">
                                     <?php
                                     // Nếu là một mảng bình luận 
-                                    foreach ($data['comment_new'] as $item['comment_new'] ): ?>
+                                    foreach ($data['comment_new'] as $item['comment_new']): ?>
                                         <div class="d-flex flex-row comment-row mt-0">
                                             <div class="p-2">
                                                 <img src="<?= APP_URL ?>/public/assets/admin/images/users/1.jpg" alt="user" width="50" class="rounded-circle">

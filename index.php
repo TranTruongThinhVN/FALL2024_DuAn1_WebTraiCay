@@ -21,16 +21,20 @@ AuthHelper::middleware();
 
 // *** Client
 Route::get('/', 'App\Controllers\Client\HomeController@index');
+Route::get('/search', 'App\Controllers\Client\SearchController@search');
 Route::get('/contact', 'App\Controllers\Client\ContactController@index');
 Route::get('/checkout', 'App\Controllers\Client\CheckoutController@index');
 
 //cment 
 Route::post('/create-comment', 'App\Controllers\Client\CommentsController@create');
-
+// congthuchcebien
+Route::get('/culinary_roots', 'App\Controllers\Client\Culinary_rootsController@index');
+Route::get('/culinary_roots_detail/{id}', 'App\Controllers\Client\Culinary_rootsController@detail');
 
 Route::get('/introduce', 'App\Controllers\Client\IntroduceController@index');
 Route::get('/products', 'App\Controllers\Client\ProductController@index');
 Route::get('/product-detail/{id}', 'App\Controllers\Client\ProductController@detail');
+Route::post('/get-sku-price', 'App\Controllers\Client\CartController@getSkuPrice');
 Route::get('/product-search', 'App\Controllers\Client\ProductController@index');
 Route::get('/product-filter', 'App\Controllers\Client\ProductController@index');
 Route::get('/news', 'App\Controllers\Client\NewsController@index');
@@ -42,6 +46,7 @@ Route::get('/culinary_roots_detail', 'App\Controllers\Client\culinary_rootsContr
 Route::get('/policy', 'App\Controllers\Client\PolicyController@index');
 // cart
 Route::post('/cart-add', 'App\Controllers\Client\CartController@addToCart');
+Route::get('/cart', 'App\Controllers\Client\CartController@showCart');
 // Auth *** //// Auth *** //// Auth *** //// Auth *** //// Auth *** //// Auth *** //// Auth *** //// Auth *** //// Auth *** //// Auth *** //
 Route::get('/register', 'App\Controllers\Client\AuthController@register');
 Route::post('/register', 'App\Controllers\Client\AuthController@registerAction');
@@ -57,6 +62,12 @@ Route::get('/users/{id}', 'App\Controllers\Client\AuthController@edit');
 Route::put('/users/{id}', 'App\Controllers\Client\AuthController@update');
 Route::get('/verify-otp',  'App\Controllers\Client\AuthController@verifyOtp');
 Route::post('/verify-otp',  'App\Controllers\Client\AuthController@verifyOtpAction');
+Route::post('/resend-otp',  'App\Controllers\Client\AuthController@resendOtpAction');
+Route::post('/add-phone',  'App\Controllers\Client\AuthController@addPhoneAction');
+Route::get('/phone-verify-otp',  'App\Controllers\Client\AuthController@phoneVerifyOtp');
+Route::post('/phone-verify-otp',  'App\Controllers\Client\AuthController@phoneVerifyOtpAction');
+Route::get('/phone-send-otp', 'App\Controllers\Client\AuthController@sendOtpForPhoneChange');
+Route::put('/update-otp-phone', 'App\Controllers\Client\AuthController@updatePhoneNumber');
 // Thêm vào file routes của bạn
 Route::get('/google-login', 'App\Controllers\Client\AuthController@googleLogin');
 Route::get('/google-callback', 'App\Controllers\Client\AuthController@googleCallback');
@@ -78,6 +89,7 @@ Route::delete('/admin/delete-product/{id}', 'App\Controllers\Admin\ProductContro
 Route::delete('/admin/products/delete-thumbnail', 'App\Controllers\Admin\ProductController@deleteThumbnail');
 // Route::post('/admin/products', 'App\Controllers\Admin\ProductController@index');
 // 
+
 Route::post('/admin/products/upload-image', 'App\Controllers\Admin\ProductController@uploadImageCkeditor');
 // Discount
 Route::get('/admin/discount', 'App\Controllers\Admin\DiscountController@index');
@@ -86,6 +98,39 @@ Route::post('/admin/add-discount', 'App\Controllers\Admin\DiscountController@sto
 Route::get('/admin/edit-discount/{id}', 'App\Controllers\Admin\DiscountController@edit');
 Route::put('/admin/edit-discount/{id}', 'App\Controllers\Admin\DiscountController@update');
 Route::delete('/admin/delete-discount/{id}', 'App\Controllers\Admin\DiscountController@delete');
+// // Variant
+// Route::get('/admin/products/{id}/variants', 'App\Controllers\Admin\VariantController@index');
+
+// Route::get('/admin/products/{id}/variants/create', 'App\Controllers\Admin\VariantController@create');
+// Route::post('/admin/products/{id}/variants', 'App\Controllers\Admin\VariantController@store');
+Route::get('/admin/product-variants', 'App\Controllers\Admin\ProductVariantController@index');
+
+Route::get('/admin/create-variants', 'App\Controllers\Admin\ProductVariantController@create');
+Route::post('/admin/store-variants', 'App\Controllers\Admin\ProductVariantController@store');
+Route::get('/admin/edit-variants/{id}', 'App\Controllers\Admin\ProductVariantController@edit');
+Route::put('/admin/update-variants/{id}', 'App\Controllers\Admin\ProductVariantController@update');
+Route::delete('/admin/delete-variants/{id}', 'App\Controllers\Admin\ProductVariantController@delete');
+// variantOption
+// Route::post('/admin/add-product', 'App\Controllers\Admin\ProductController@store');
+Route::post('/admin/product/save-sku', 'App\Controllers\Admin\ProductController@saveSku');
+Route::get('/admin/variant-options/{id}', 'App\Controllers\Admin\ProductVariantOptionController@index');
+Route::post('/admin/variant-options/store-option/{id}', 'App\Controllers\Admin\ProductVariantOptionController@store');
+Route::get('/admin/variant-options/edit/{id}', 'App\Controllers\Admin\ProductVariantOptionController@edit');
+Route::put('/admin/variant-options/update/{id}', 'App\Controllers\Admin\ProductVariantOptionController@update');
+Route::delete('/admin/variant-options/delete/{id}', 'App\Controllers\Admin\ProductVariantOptionController@delete');
+Route::get('/admin/product-variants/options', 'App\Controllers\Admin\ProductVariantOptionController@getVariantOptions');
+// Route cho xóa một sản phẩm
+Route::delete('/cart-delete-single', 'App\Controllers\Client\CartController@deleteSingle');
+
+// Route cho xóa nhiều sản phẩm
+Route::delete('/cart-delete-multiple', 'App\Controllers\Client\CartController@deleteMultiple');
+
+// thay doi so luong khi + -
+Route::put('/cart-update-quantity', 'App\Controllers\Client\CartController@updateQuantity');
+
+// Luw bien the
+
+
 
 
 Route::get('/admin/product-details', 'App\Controllers\Admin\ProductController@details');
@@ -129,6 +174,21 @@ Route::put('/admin/category/{id}', 'App\Controllers\Admin\CategoryController@upd
 
 
 
+// danhmucchebien
+Route::get('/admin/recipe_category', 'App\Controllers\Admin\Recipe_categoriesController@index');
+Route::get('/admin/add-recipe_category', 'App\Controllers\Admin\Recipe_categoriesController@create');
+Route::post('/admin/add-recipe_category', 'App\Controllers\Admin\Recipe_categoriesController@store');
+Route::delete('/admin/recipe_category/{id}', 'App\Controllers\Admin\Recipe_categoriesController@delete');
+Route::get('/admin/recipe_category/{id}', controllerMethod: 'App\Controllers\Admin\Recipe_categoriesController@edit');
+Route::put('/admin/recipe_category/{id}', 'App\Controllers\Admin\Recipe_categoriesController@update');
+
+// chebien
+Route::get('/admin/recipe', 'App\Controllers\Admin\RecipeController@index');
+Route::get('/admin/add_recipe', 'App\Controllers\Admin\RecipeController@create');
+Route::post('/admin/add_recipe', 'App\Controllers\Admin\RecipeController@store');
+Route::get('/admin/update_recipe/{id}', controllerMethod: 'App\Controllers\Admin\RecipeController@edit');
+Route::put('/admin/update_recipe/{id}', 'App\Controllers\Admin\RecipeController@update');
+Route::delete('/admin/recipe/{id}', 'App\Controllers\Admin\RecipeController@delete');
 
 
 Route::dispatch($_SERVER['REQUEST_URI']);

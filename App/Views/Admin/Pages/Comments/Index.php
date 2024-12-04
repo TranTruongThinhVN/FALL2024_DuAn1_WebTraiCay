@@ -57,9 +57,9 @@ class Index extends BaseView
                                             <a class="dropdown-item" href="#">Bình luận dài</a>
                                             <a class="dropdown-item" href="#">Bình luận ngắn</a>
                                         </div>
-                                    </div>
-                                    <form class="d-flex">
-                                        <input class="form-control me-2" type="search" placeholder="Tìm mã sản phẩm" aria-label="Search">
+                                    </div> 
+                                    <form class="d-flex" method="GET" action=""> 
+                                        <input type="text" name="keyword" class="form-control me-2" type="search" placeholder="Tìm mã sản phẩm" aria-label="Search" value="<?= htmlspecialchars($data['keyword'])?>">
                                         <button class="btn btn-success text-white" type="submit">Search</button>
                                     </form>
                                 </div>
@@ -75,13 +75,13 @@ class Index extends BaseView
                                                 <th scope="col">Tên sản phẩm</th>
                                                 <th scope="col">Bình luận</th>
                                                 <th scope="col">Hình ảnh</th>
-                                                <th scope="col">Đánh giá</th> 
+                                                <th scope="col">Đánh giá</th>
                                                 <th scope="col">Tuỳ chỉnh</th>
                                             </tr>
                                         </thead>
                                         <tbody class="customtable">
                                             <?php $count = 1;
-                                            foreach ($data as $row): ?>
+                                            foreach ($data['allComment'] as $row): ?>
                                                 <?php if ($row['status'] == 1): ?>
                                                     <tr>
                                                         <td><?= $count ?></td>
@@ -89,7 +89,7 @@ class Index extends BaseView
                                                         <td>
                                                             <div class="name-product">
                                                                 <p class="my-0 "><?= $row['product_name'] ?></p>
-                                                                <span ><small style="font-weight: 700 !important;"><?= $row['category_name'] ?></small></span>
+                                                                <span><small style="font-weight: 700 !important;"><?= $row['category_name'] ?></small></span>
                                                             </div>
                                                         </td>
                                                         <td>
@@ -107,7 +107,7 @@ class Index extends BaseView
                                                                         <h6 class="text-center">Bình luận</h6>
                                                                         <?php if (!empty($row['user_name'])) : ?>
                                                                             <p>Phản hồi: <b><?= $row['user_name'] ?></b></p>
-                                                                            <?php endif ?>
+                                                                        <?php endif ?>
                                                                         <p class="content mb-1"><?= $row['content'] ?></p>
                                                                         <p class="created-at text-muted mb-0" style="font-size: 10px;">
                                                                             <?= $row['created_at'] ?>
@@ -115,7 +115,7 @@ class Index extends BaseView
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </td> 
+                                                        </td>
                                                         <td>
                                                             <?php if (!empty($row['images'])) : ?>
                                                                 <button class="btn-show-modal btn btn-success text-white" data-modal-id="modal-images-<?= $row['id'] ?>" style="cursor: pointer; border: none; outline: none;">Xem ảnh</button>
@@ -164,6 +164,12 @@ class Index extends BaseView
                                             endforeach; ?>
                                         </tbody>
                                     </table>
+                                    <ul class="pagination justify-content-center"> <?php for ($i = 1; $i <= $data['totalPages']; $i++): ?>
+                                            <li class="page-item <?= ($data['currentPage'] == $i) ? 'active' : '' ?>">
+                                                <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+                                            </li>
+                                        <?php endfor; ?>
+                                    </ul>
                                 </div>
                             <?php endif; ?>
                         </div>
