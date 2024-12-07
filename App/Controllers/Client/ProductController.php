@@ -23,18 +23,23 @@ class ProductController
         $productModel = new Product();
 
         // Pagination parameters
-        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $itemsPerPage = 12; // Số sản phẩm trên mỗi trang
+        $currentPage = isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] > 0 ? (int)$_GET['page'] : 1;
+        $itemsPerPage = 12;
         $offset = ($currentPage - 1) * $itemsPerPage;
 
-        // Filtering logic (price range, origin)
-        $priceRange = isset($_GET['price_range']) ? explode('-', $_GET['price_range']) : null;
-        $originFilter = isset($_GET['origin']) ? $_GET['origin'] : [];
+        // Filtering logic
+        $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : null;
+        $priceRange = isset($_GET['price_range']) && preg_match('/^\d+-\d+$/', $_GET['price_range'])
+            ? explode('-', $_GET['price_range'])
+            : null;
+        $originFilter = isset($_GET['origin']) ? (array)$_GET['origin'] : [];
 
         // Sorting criteria
-        $sort = isset($_GET['sort']) ? $_GET['sort'] : 'default';
-        $orderBy = '';
-        $direction = '';
+        $validSortOptions = ['default', 'price_asc', 'price_desc', 'name_asc', 'name_desc', 'newest', 'oldest'];
+        $sort = isset($_GET['sort']) && in_array($_GET['sort'], $validSortOptions) ? $_GET['sort'] : 'default';
+
+        $orderBy = 'id';
+        $direction = 'ASC';
 
         switch ($sort) {
             case 'price_asc':
@@ -61,26 +66,12 @@ class ProductController
                 $orderBy = 'created_at';
                 $direction = 'ASC';
                 break;
-            default:
-                $orderBy = 'id'; // Default sorting by ID
-                $direction = 'ASC';
-                break;
         }
 
-
-
         // Fetch filtered, sorted, and paginated products
-        $products = $productModel->getFilteredProducts($priceRange, $originFilter, $orderBy, $direction, $offset, $itemsPerPage);
+        $products = $productModel->getFilteredProducts($keyword, $priceRange, $originFilter, $orderBy, $direction, $offset, $itemsPerPage);
+        $totalProducts = $productModel->getTotalFilteredProductCount($keyword, $priceRange, $originFilter);
 
-        // Total product count (for pagination)
-        $totalProducts = $productModel->getTotalFilteredProductCount($priceRange, $originFilter);
-        $totalProducts = $productModel->getTotalFilteredProductCount($priceRange, $originFilter);
-        $totalPages = ceil($totalProducts / $itemsPerPage);
-        $products = $productModel->getProductsWithVariants($offset, $itemsPerPage);
-        // Log kiểm tra
-        error_log("Total Products: $totalProducts, Total Pages: $totalPages, Current Page: $currentPage");
-
-        // Total pages calculation
         $totalPages = ceil($totalProducts / $itemsPerPage);
 
         // Fetch categories
@@ -99,13 +90,17 @@ class ProductController
             'currentSort' => $sort,
             'productCount' => $productCount,
             'priceRange' => $priceRange,
-            'originFilter' => $originFilter,
+            'keyword' => $keyword,
         ];
 
         Header::render();
         Index::render($data);
         Footer::render();
     }
+
+
+
+
 
 
 
@@ -154,8 +149,7 @@ class ProductController
             'countRating' => $commentData['countRating'],
             'countImages' => $commentData['countImages']
         ];
-        var_dump($data);
-        die;
+
         Header::render();
         Detail::render($data);
         Footer::render();

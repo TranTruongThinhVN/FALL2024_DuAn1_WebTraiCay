@@ -1,4 +1,6 @@
-const provinceUrl = "https://open.oapi.vn/location/provinces?page=0&size=30";
+// const provinceUrl = "https://open.oapi.vn/location/provinces?page=0&size=30";
+const provinceUrl =
+  "https://web-staging.ghtklab.com/api/v1/public/address/list";
 
 // Lấy thông tin tỉnh thành
 fetch(provinceUrl)
@@ -38,7 +40,7 @@ document
     wardList.innerHTML = "<option selected disabled>Phường / Xã</option>";
 
     // Gọi API để lấy danh sách quận/huyện
-    const districtUrl = `https://open.oapi.vn/location/districts/${provinceId}?page=0&size=30`;
+    const districtUrl = `https://web-staging.ghtklab.com/api/v1/public/address/list?parentId=${provinceId}&type=3`;
     fetch(districtUrl)
       .then((response) => {
         if (!response.ok) {
@@ -94,7 +96,7 @@ document
     wardList.innerHTML = "<option selected disabled>Phường / Xã</option>";
 
     // Gọi API để lấy danh sách phường/xã
-    const wardUrl = `https://open.oapi.vn/location/wards/${districtId}?page=0&size=30`;
+    const wardUrl = `https://web-staging.ghtklab.com/api/v1/public/address/list?parentId=${districtId}&type=1`;
     fetch(wardUrl)
       .then((response) => {
         if (!response.ok) {
@@ -119,18 +121,18 @@ document
       });
 
     // Gửi yêu cầu lưu quận/huyện đã chọn vào cơ sở dữ liệu (Backend)
-    fetch("http://yourdomain.com/provinceController/fetchAndInsertWards", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ districtId: districtId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Dữ liệu quận đã được lưu:", data);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi gửi dữ liệu quận:", error);
-      });
+    // fetch("http://yourdomain.com/provinceController/fetchAndInsertWards", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ districtId: districtId }),
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log("Dữ liệu quận đã được lưu:", data);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Lỗi khi gửi dữ liệu quận:", error);
+    //   });
   });

@@ -31,19 +31,43 @@ class RecipeController
     public static function index()
     {
         $keyword = $_GET['search'] ?? ''; // Từ khóa tìm kiếm
+        $category_id = $_GET['category'] ?? ''; // Lọc theo danh mục
+        $status = Recipe::STATUS_ENABLE; // Trạng thái mặc định là hiển thị
         $recipeModel = new Recipe();
-        
-        // Lấy công thức theo từ khóa
-        $recipes = $recipeModel->searchByName($keyword);
-    
+
+        // Lấy thông tin phân trang từ URL (nếu không có, mặc định là trang 1)
+        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $recipesPerPage = 9; // Số công thức mỗi trang
+        $offset = ($currentPage - 1) * $recipesPerPage;
+
+        // Lấy tổng số công thức theo bộ lọc
+        $totalRecipes = $recipeModel->countFilteredRecipes($keyword, $category_id, $status);
+
+        // Lấy công thức cho trang hiện tại
+        $recipes = $recipeModel->getFilteredRecipes($keyword, $category_id, $status, $recipesPerPage, $offset);
+
+        // Lấy danh sách danh mục để hiển thị trong bộ lọc
+        $categories = (new Recipe_category())->getAllRecipe_category();
+
         // Gửi dữ liệu tới View
         Header::render();
         Notification::render();
         NotificationHelper::unset();
-        RecipeIndex::render(['recipes' => $recipes, 'search' => $keyword]); // Truyền dữ liệu tìm kiếm vào View
+        RecipeIndex::render([
+            'recipes' => $recipes,
+            'search' => $keyword,
+            'categories' => $categories,
+            'selected_category' => $category_id,
+            'pagination' => [
+                'total' => $totalRecipes,
+                'perPage' => $recipesPerPage,
+                'currentPage' => $currentPage,
+            ],
+        ]); // Truyền dữ liệu vào View
         Footer::render();
     }
-    
+
+
 
     // hiển thị giao diện form thêm
     public static function create()
@@ -117,7 +141,9 @@ class RecipeController
             'ingredients' => $ingredients,
             'instructions' => $instructions,
             'image_url' => $image_url,
+            'status' => 1, // Mặc định công thức hiển thị
         ]);
+
 
         if ($success) {
             NotificationHelper::success('Thành công!', 'Thêm công thức thành công.');
@@ -196,6 +222,8 @@ class RecipeController
             'ingredients' => $_POST['ingredients'],
             'instructions' => $_POST['instructions'],
             'image_url' => $existingRecipe['image_url'], // Giữ hình ảnh hiện tại làm mặc định
+            'status' => $_POST['status'], // Mặc định công thức hiển thị
+
         ];
 
         // Xử lý upload hình ảnh nếu có

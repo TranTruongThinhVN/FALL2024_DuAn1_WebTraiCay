@@ -22,7 +22,9 @@ AuthHelper::middleware();
 // *** Client
 Route::get('/', 'App\Controllers\Client\HomeController@index');
 Route::get('/search', 'App\Controllers\Client\SearchController@search');
+// Liên hệ
 Route::get('/contact', 'App\Controllers\Client\ContactController@index');
+Route::post('/contact', 'App\Controllers\Client\ContactController@sendContactAction');
 Route::get('/checkout', 'App\Controllers\Client\CheckoutController@index');
 
 //cment 
@@ -69,6 +71,7 @@ Route::post('/phone-verify-otp',  'App\Controllers\Client\AuthController@phoneVe
 Route::get('/phone-send-otp', 'App\Controllers\Client\AuthController@sendOtpForPhoneChange');
 Route::put('/update-otp-phone', 'App\Controllers\Client\AuthController@updatePhoneNumber');
 // Thêm vào file routes của bạn
+// Google
 Route::get('/google-login', 'App\Controllers\Client\AuthController@googleLogin');
 Route::get('/google-callback', 'App\Controllers\Client\AuthController@googleCallback');
 
@@ -189,6 +192,14 @@ Route::post('/admin/add_recipe', 'App\Controllers\Admin\RecipeController@store')
 Route::get('/admin/update_recipe/{id}', controllerMethod: 'App\Controllers\Admin\RecipeController@edit');
 Route::put('/admin/update_recipe/{id}', 'App\Controllers\Admin\RecipeController@update');
 Route::delete('/admin/recipe/{id}', 'App\Controllers\Admin\RecipeController@delete');
+// contact
+Route::get('/admin/contact', 'App\Controllers\Admin\ContactController@index');
+Route::delete('/admin/contact/{id}', 'App\Controllers\Admin\ContactController@delete');
 
+
+Route::put('/admin/contact/update-status/{id}', 'App\Controllers\Admin\ContactController@update');
+Route::post('/admin/contacts/reply/{id}', 'App\Controllers\Admin\ContactController@replyEmail');
+Route::post('/process-cash-on-delivery', 'App\Controllers\Client\CheckoutController@processCashOnDelivery');
+Route::post('/checkout', 'App\Controllers\Client\CheckoutController@processCheckout');
 
 Route::dispatch($_SERVER['REQUEST_URI']);

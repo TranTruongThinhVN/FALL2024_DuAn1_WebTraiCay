@@ -42,6 +42,8 @@
 
   &__sidebar {
     width: 25%;
+    position: sticky !important;
+    top: 20px !important; /* Khoảng cách từ cạnh trên của viewport */
     padding-right: 20px;
     padding-top: 38px;
     border-right: 1px solid abstracts.$store-border-light;

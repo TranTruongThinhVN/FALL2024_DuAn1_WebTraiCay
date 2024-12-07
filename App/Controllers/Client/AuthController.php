@@ -4,6 +4,8 @@ namespace App\Controllers\Client;
 
 use App\Helpers\AuthHelper;
 use App\Helpers\NotificationHelper;
+use App\Models\Client\Order;
+use App\Models\Client\User;
 use App\Validations\AuthValidation;
 use App\Views\Client\Components\Notification;
 use App\Views\Client\Layouts\Footer;
@@ -17,8 +19,9 @@ use App\Views\Client\Pages\Auth\register;
 use App\Views\Client\Pages\Auth\Reset_password;
 use App\Views\Client\Pages\Auth\verify_otp;
 use Google\Client as Google_Client;
-use Google\Service\Oauth2 as Google_Service_Oauth2;
+use Google\Service\Oauth2;
 
+use GuzzleHttp\Client;
 
 class AuthController
 {
@@ -171,15 +174,35 @@ class AuthController
             if (isset($_SESSION['error']['user_id'])) {
                 $data = $_SESSION['user'];
                 $user_id = $data['id'];
-                header('location: /users/edit/$user_id');
+                header("location: /users/edit/$user_id");
                 exit;
             }
         }
+
+        $orderModel = new Order(); // Import model Order
+        $orders = $orderModel->getOrdersByUserId($id); // Lấy danh sách đơn hàng theo user_id
+
+        // Lấy chi tiết từng đơn hàng
+        foreach ($orders as &$order) {
+            $order['details'] = $orderModel->getOrderDetails($order['id']); // Gọi hàm getOrderDetails
+        }
+
+        // Lấy thông tin user từ session
         $data = $_SESSION['user'];
+
+        // Thêm danh sách đơn hàng vào $data
+        $data['orders'] = $orders;
+
+        // Debug để kiểm tra dữ liệu được truyền vào view
+
+
+        // Đổ dữ liệu vào view
         Header::render();
         Edit_profile::render($data);
         Footer::render();
     }
+
+
 
     public static function update($id)
     {
@@ -342,54 +365,84 @@ class AuthController
         header('Location: /reset-password');
         exit();
     }
-    // google
-    // public function googleLogin(): void
-    // {
-    //     $client = new \Google\Client();
-    //     $client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
-    //     $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
-    //     $client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URI']);
-    //     $client->addScope('email');
-    //     $client->addScope('profile');
+    public static function googleLogin()
+    {
+        $client = new Google_Client();
+        $client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
+        $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
+        $client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URI']);
+        $client->addScope(['email', 'profile']);
 
-    //     $authUrl = $client->createAuthUrl();
-    //     header('Location: ' . $authUrl);
-    //     exit();
-    // }
+        // Redirect to Google login
+        $authUrl = $client->createAuthUrl();
+        header('Location: ' . $authUrl);
+        exit();
+    }
+
+    public static function googleCallback()
+    {
+        $httpClient = new \GuzzleHttp\Client(['verify' => false]); // Bỏ qua SSL nếu cần
+
+        $client = new Google_Client();
+        $client->setHttpClient($httpClient);
+        $client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
+        $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
+        $client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URI']);
+        $client->addScope(['email', 'profile', 'https://www.googleapis.com/auth/userinfo.profile']);
 
 
+        if (isset($_GET['code'])) {
+            // Lấy token từ mã trả về của Google
+            $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+            $client->setAccessToken($token);
 
-    // public function googleCallback()
-    // {
-    //     $client = new Google_Client();
-    //     $client->setHttpClient(new \GuzzleHttp\Client(['verify' => false]));
+            // Sử dụng Google\Service\Oauth2 để lấy thông tin người dùng
+            $oauth2 = new Oauth2($client);
+            $userInfo = $oauth2->userinfo->get();
 
-    //     $client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
-    //     $client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
-    //     $client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URI']);
+            // Lấy thông tin người dùng từ API
+            $googleId = $userInfo->id;
+            $email = $userInfo->email;
+            $name = $userInfo->name;
+            $avatar = $userInfo->picture; // URL ảnh đại diện từ Google
 
-    //     if (isset($_GET['code'])) {
-    //         $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
-    //         $client->setAccessToken($token['access_token']);
+            // Kiểm tra người dùng trong database
+            $userModel = new \App\Models\Client\User();
+            $user = $userModel->getUserByGoogleIdOrEmail($googleId, $email);
 
-    //         $oAuth = new \Google\Service\Oauth2($client);
-    //         $userInfo = $oAuth->userinfo->get();
+            if (!$user) {
+                // Nếu người dùng chưa tồn tại, tạo mới
+                $data = [
+                    'google_id' => $googleId,
+                    'email' => $email,
+                    'name' => $name,
+                    'avatar' => $avatar, // Lưu URL ảnh đại diện vào database
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'status' => 1, // Kích hoạt tài khoản mặc định
+                    'role' => 1, // Kích hoạt tài khoản mặc định
+                ];
+                $userModel->createUser($data);
+                $user = $userModel->getUserByGoogleIdOrEmail($googleId, $email); // Lấy lại thông tin
+            }
 
-    //         // Lưu thông tin user vào session
-    //         $_SESSION['user'] = [
-    //             'google_id' => $userInfo->id,
-    //             'name' => $userInfo->name,
-    //             'email' => $userInfo->email,
-    //         ];
+            // Lưu thông tin người dùng vào session
+            $_SESSION['user'] = [
+                'id' => $user['id'],
+                'email' => $user['email'],
+                'name' => $user['name'],
+                'avatar' => $user['avatar'], // URL ảnh từ Google
+            ];
 
-    //         // Redirect về trang chính
-    //         header('Location: /');
-    //         exit();
-    //     } else {
-    //         echo "Lỗi: Không nhận được mã xác thực từ Google.";
-    //         exit();
-    //     }
-    // }
+            // Chuyển hướng về trang chủ
+            header('Location: /');
+            exit();
+        } else {
+            echo "Không nhận được mã xác thực từ Google.";
+            exit();
+        }
+    }
+
+
     public static function addPhoneAction()
     {
         header('Content-Type: application/json');
@@ -408,10 +461,12 @@ class AuthController
 
         $otp = rand(100000, 999999); // Tạo OTP giả lập
         $_SESSION['otp'] = $otp;
+        $_SESSION['new_phone'] = $phone; // Lưu số điện thoại để xác minh sau
 
         echo json_encode(['success' => true, 'message' => 'OTP đã được gửi!', 'otp' => $otp]);
         exit;
     }
+
 
 
     public static function phoneVerifyOtp()
@@ -432,9 +487,9 @@ class AuthController
 
         // Nếu OTP đúng, lưu số điện thoại vào DB
         $phone = $_SESSION['new_phone'] ?? '';
-        $userId = $_SESSION['user']['id'];
+        $userId = $_SESSION['user']['id'] ?? null;
 
-        if (!$phone) {
+        if (!$phone || !$userId) {
             $_SESSION['error'] = 'Không có số điện thoại hợp lệ để cập nhật!';
             header('Location: /profile');
             exit;
@@ -453,4 +508,6 @@ class AuthController
         header('Location: /profile');
         exit;
     }
+
+    // 
 }

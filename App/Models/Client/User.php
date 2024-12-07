@@ -27,6 +27,20 @@ class User extends BaseModel
     {
         return $this->update($id, $data);
     }
+    public function getUserByGoogleIdOrEmail($googleId, $email)
+    {
+        $conn = $this->_conn->MySQLi(); // Corrected here
+
+        $stmt = $conn->prepare("SELECT * FROM users WHERE google_id = ? OR email = ?");
+        $stmt->bind_param('ss', $googleId, $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+
+        $stmt->close();
+        return $user;
+    }
+
 
     public function deleteUser($id)
     {

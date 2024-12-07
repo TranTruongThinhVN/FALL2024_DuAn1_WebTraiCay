@@ -104,37 +104,25 @@ class Checkout extends BaseView
             <!-- Right Side: Order Summary -->
             <div class="order-summary">
               <h2>Tóm tắt đơn hàng</h2>
-              <div class="summary-item">
-                <img src="public/assets/client/images/home/nho_den_my.webp" alt="Product Image" class="product-image">
-                <div class="product-details">
-                  <p class="product-name">Chuột không dây siêu nhẹ Pulsar X2 V2</p>
-                  <p class="product-origin">Xuất xứ: Nhật Bản</p>
-                  <p class="product-origin">Trọng lượng: 1Kg</p>
+              <?php foreach ($data['items'] as $item): ?>
+                <div class="summary-item">
+                  <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($item['sku_image']) ?>" alt="Product Image" class="product-image">
+                  <div class="product-details">
+                    <p class="product-name"><?= htmlspecialchars($item['product_name']) ?></p>
+                    <p class="product-quantity">Số lượng: <?= $item['quantity'] ?></p>
+                  </div>
+                  <p class="product-price"><?= number_format(($item['discount_price'] ?? $item['sku_price']) * $item['quantity']) ?> VNĐ</p>
                 </div>
-                <p class="product-price">3,227,162 đ</p>
-              </div>
+              <?php endforeach; ?>
 
-              <div class="voucher-section">
-                <input type="text" placeholder="Mã giảm giá hoặc thẻ quà tặng">
-                <button class="apply-btn">Áp dụng</button>
-              </div>
-
-              <div class="subtotal-section">
-                <p class="order-summary-text">Tổng phụ • 2 mặt hàng</p>
-                <p class="subtotal-price">4,290,000 đ</p>
-              </div>
-
-              <div class="shipping-section">
-                <p class="order-summary-text">Vận chuyển</p>
-                <p class="shipping-fee">MIỄN PHÍ</p>
-              </div>
 
               <div class="total-section">
                 <p class="order-summary-text-sum">Tổng</p>
-                <p class="total-price"><span class="trantrantranokokokok">VND</span> 4,290,000 đ</p>
+                <p class="total-price"><?= number_format($data['total']) ?> VNĐ</p>
               </div>
-              <p class="tax-info">Bao gồm 390,000 đ tiền thuế</p>
             </div>
+
+
 
           </div>
         </div>

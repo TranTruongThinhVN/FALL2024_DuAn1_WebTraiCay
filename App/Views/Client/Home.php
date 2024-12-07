@@ -140,69 +140,30 @@ class Home extends BaseView
     </section>
     <section class="latest-news">
       <div class="main-container">
-        <h2 class="latest-news__title">
-          <img src="https://lh3.googleusercontent.com/rLLNp8QrI68R6nXuIx5UzS_3SxdjsPCDckf08bQ9H9h5XdRVR3iZQNZxIIxcl3OrZL-Y"
-            alt="Icon Trái Cây"
-            class="latest-news__icon"> TIN TỨC MỚI NHẤT
-        </h2>
-        <div class="news-grid">
-          <!-- Tin Tức 1 -->
-          <div class="news-card">
-            <img src="<?= APP_URL ?>public/assets/client/images/home/tintuc1-1.webp" alt="Bắt gặp Sài Gòn xưa trong món uống...">
-            <div class="news-content">
-              <span class="news-date">01/11/2023</span>
-              <h3>Bắt gặp Sài Gòn xưa trong món uống...</h3>
-              <p>Đâu qua bao nhiêu lớp sống thời gian, người ta vẫn có thể tìm lại những dấu ấn thăng trầm của một Sài Gòn xưa cũ...</p>
-            </div>
-          </div>
+        <?php if (!empty($data['latestRecipes'])): ?>
+          <h2 class="latest-news__title">
+            <img src="https://lh3.googleusercontent.com/rLLNp8QrI68R6nXuIx5UzS_3SxdjsPCDckf08bQ9H9h5XdRVR3iZQNZxIIxcl3OrZL-Y"
+              alt="Icon Trái Cây"
+              class="latest-news__icon">CÔNG THỨC CHẾ BIẾN TRÁI CÂY
+          </h2>
+          <div class="news-grid">
+            <?php foreach ($data['latestRecipes'] as $recipe): ?>
+              <!-- Tin Tức 1 -->
+              <div class="news-card">
+                <img src="<?= ($recipe['image_url']); ?>" alt="Bắt gặp Sài Gòn xưa trong món uống...">
 
-          <!-- Tin Tức 2 -->
-          <div class="news-card">
-            <img src="<?= APP_URL ?>public/assets/client/images/home/tintuc2.webp" alt="Chỉ chọn cà phê mỗi sáng nhưng cũng...">
-            <div class="news-content">
-              <span class="news-date">30/10/2023</span>
-              <h3>Chỉ chọn cà phê mỗi sáng nhưng cũng...</h3>
-              <p>Thực chất, bạn không nhất thiết phải làm gì to tát để tạo nên một ngày rực rỡ...</p>
-            </div>
-          </div>
-          <div class="news-card">
-            <img src="<?= APP_URL ?>public/assets/client/images/home/tintuc3.webp" alt="Chỉ chọn cà phê mỗi sáng nhưng cũng...">
-            <div class="news-content">
-              <span class="news-date">30/10/2023</span>
-              <h3>Chỉ chọn cà phê mỗi sáng nhưng cũng...</h3>
-              <p>Thực chất, bạn không nhất thiết phải làm gì to tát để tạo nên một ngày rực rỡ...</p>
-            </div>
-          </div>
-          <div class="news-card">
-            <img src="<?= APP_URL ?>public/assets/client/images/home/tintuc4-4.webp" alt="Bắt gặp Sài Gòn xưa trong món uống...">
-            <div class="news-content">
-              <span class="news-date">01/11/2023</span>
-              <h3>Bắt gặp Sài Gòn xưa trong món uống...</h3>
-              <p>Đâu qua bao nhiêu lớp sống thời gian, người ta vẫn có thể tìm lại những dấu ấn thăng trầm của một Sài Gòn xưa cũ...</p>
-            </div>
-          </div>
+                <div class="news-content">
+                  <span class="news-date"> <?= date('d/m/Y', strtotime($recipe['created_at'])) ?></span>
+                  <h3><?= htmlspecialchars($recipe['title']) ?></h3>
+                  <p><?= htmlspecialchars(substr($recipe['description'], 0, 100)) ?></p>
+                </div>
+              </div>
+            <?php endforeach; ?>
 
-          <!-- Tin Tức 2 -->
-          <div class="news-card">
-            <img src="<?= APP_URL ?>public/assets/client/images/home/tintuc5.webp" alt="Chỉ chọn cà phê mỗi sáng nhưng cũng...">
-            <div class="news-content">
-              <span class="news-date">30/10/2023</span>
-              <h3>Chỉ chọn cà phê mỗi sáng nhưng cũng...</h3>
-              <p>Thực chất, bạn không nhất thiết phải làm gì to tát để tạo nên một ngày rực rỡ...</p>
-            </div>
           </div>
-          <div class="news-card">
-            <img src="<?= APP_URL ?>public/assets/client/images/home/tintuc6.webp" alt="Chỉ chọn cà phê mỗi sáng nhưng cũng...">
-            <div class="news-content">
-              <span class="news-date">30/10/2023</span>
-              <h3>Chỉ chọn cà phê mỗi sáng nhưng cũng...</h3>
-              <p>Thực chất, bạn không nhất thiết phải làm gì to tát để tạo nên một ngày rực rỡ...</p>
-            </div>
-          </div>
-
-          <!-- Thêm các tin tức khác ở đây -->
-          <!-- Tin Tức 3, 4, 5, 6 -->
-        </div>
+        <?php else: ?>
+          <p class="no-recipes text-center">Hiện tại không có công thức nào.</p>
+        <?php endif; ?>
       </div>
     </section>
     <script src="<?= APP_URL ?>public/assets/client/js/featured-product.js"></script>

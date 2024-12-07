@@ -48,33 +48,40 @@ class Index extends BaseView
               <?php foreach ($data['products'] as $product): ?>
                 <div class="product-card">
                   <a href="/product-detail/<?= $product['product_id'] ?>">
-                    <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($product['sku_image'] ?? $product['image']) ?>"
-                      alt="<?= htmlspecialchars($product['product_name']) ?>"
-                      class="product-card__image" />
-                    <?php
-                    // Kiểm tra type để lấy giá và giảm giá phù hợp
-                    $original_price = $product['type'] === 'simple' ? $product['product_price'] : $product['sku_price'];
-                    $discount_price = $product['type'] === 'simple' ? $product['product_discount_price'] : $product['sku_discount_price'];
-                    ?>
-                    <?php if (!empty($discount_price) && $discount_price < $original_price): ?>
+                    <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($product['sku_image'] ?? $product['image'] ?? 'default.jpg') ?>" alt="<?= htmlspecialchars($product['product_name'] ?? 'No name') ?>" class="product-card__image" />
+                    <?php if (!empty($product['final_discount_price']) && $product['final_discount_price'] < $product['final_price']): ?>
                       <span class="product-card__discount">
-                        -<?= round((($original_price - $discount_price) / $original_price) * 100) ?>%
+                        -<?= round(($product['final_price'] - $product['final_discount_price']) / $product['final_price'] * 100) ?>%
                       </span>
                     <?php endif; ?>
                   </a>
                   <div class="product-card__info">
                     <h3 class="product-card__name">
-                      <?= htmlspecialchars($product['product_name']) ?>
-                      <?php if ($product['type'] === 'variable'): ?>
-                        (<?= htmlspecialchars($product['sku_name']) ?>)
+                      <?= htmlspecialchars($product['product_name'] ?? 'No name') ?>
+                      <?php if ($product['type'] === 'variable' && !empty($product['sku_name'])): ?>
+                        <span class="product-card__variant">- <?= htmlspecialchars($product['sku_name']) ?></span>
                       <?php endif; ?>
                     </h3>
+
                     <h4 class="product-card__price">
-                      <?php if (!empty($discount_price) && $discount_price < $original_price): ?>
-                        <s><?= number_format($original_price) ?> VNĐ</s>
-                        <span><?= number_format($discount_price) ?> VNĐ</span>
+                      <?php if (isset($product['final_price'])): ?>
+                        <?php if ($product['type'] === 'variable'): ?>
+                          <?php if (isset($product['sku_discount_price']) && $product['sku_discount_price'] > 0): ?>
+                            <del><?= number_format($product['sku_price'], 0, ',', '.') ?> VNĐ</del> <br>
+                            <span style="color: red; font-weight: bold;"><?= number_format($product['final_price'], 0, ',', '.') ?> VNĐ</span>
+                          <?php else: ?>
+                            <?= number_format($product['final_price'], 0, ',', '.') ?> VNĐ
+                          <?php endif; ?>
+                        <?php else: ?>
+                          <?php if (isset($product['discount_price']) && $product['discount_price'] > 0): ?>
+                            <del><?= number_format($product['price'], 0, ',', '.') ?> VNĐ</del> <br>
+                            <span class="discount-price"><?= number_format($product['final_price'], 0, ',', '.') ?> VNĐ</span>
+                          <?php else: ?>
+                            <?= number_format($product['final_price'], 0, ',', '.') ?> VNĐ
+                          <?php endif; ?>
+                        <?php endif; ?>
                       <?php else: ?>
-                        <?= number_format($original_price) ?> VNĐ
+                        <span>Giá không khả dụng</span>
                       <?php endif; ?>
                     </h4>
                     <a href="/product-detail/<?= $product['product_id'] ?>" class="product-card__button">
@@ -83,9 +90,11 @@ class Index extends BaseView
                   </div>
                 </div>
               <?php endforeach; ?>
+
             <?php else: ?>
               <p>Không có sản phẩm nào phù hợp với tìm kiếm của bạn.</p>
             <?php endif; ?>
+
           </div>
 
 
@@ -145,6 +154,16 @@ class Index extends BaseView
               color: red;
               font-weight: bold;
               font-size: 16px;
+              display: block;
+              /* Thêm thuộc tính này */
+            }
+
+            .product-card__price .discount-price {
+              /* Tạo class mới */
+              color: red;
+              font-weight: bold;
+              font-size: 16px;
+              display: block;
             }
           </style>
           <!-- <button class="product-section__show-more" data-category="vietnam-fruits" onclick="showMoreProducts('vietnam-fruits')">Xem Thêm</button> -->

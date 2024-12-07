@@ -10,13 +10,13 @@ class Recipe_categoryValidation
     public static function create(int $id = null): bool
     {
         $is_valid = true;
-    
+
         // Reset lỗi mỗi lần validate
         $_SESSION['errors'] = $_SESSION['errors'] ?? [];
-    
+
         // Gọi model
         $RecipeModel = new Recipe_category();
-    
+
         // Kiểm tra tên danh mục
         if (empty($_POST['name']) || strlen($_POST['name']) < 3) {
             $_SESSION['errors']['name'] = 'Tên danh mục phải có ít nhất 3 ký tự.';
@@ -31,7 +31,7 @@ class Recipe_categoryValidation
                 unset($_SESSION['errors']['name']); // Xóa lỗi nếu hợp lệ
             }
         }
-    
+
         // Kiểm tra trạng thái
         if (!isset($_POST['status']) || !in_array($_POST['status'], ['0', '1'])) {
             $_SESSION['errors']['status'] = 'Vui lòng chọn trạng thái hợp lệ.';
@@ -39,8 +39,7 @@ class Recipe_categoryValidation
         } else {
             unset($_SESSION['errors']['status']); // Xóa lỗi nếu hợp lệ
         }
-    
+
         return $is_valid;
     }
-    
 }

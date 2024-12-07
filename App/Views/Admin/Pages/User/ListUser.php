@@ -40,6 +40,8 @@ class ListUser extends BaseView
                       <th>Tên người dùng</th>
                       <th>Ảnh</th>
                       <th>Email</th>
+                      <th>Ngày sinh</th>
+                      <th>Giới tính</th>
                       <th>Số điện thoại</th>
                       <th>Vai trò</th>
                       <th>Tuỳ chỉnh</th>
@@ -50,7 +52,7 @@ class ListUser extends BaseView
                       <?php foreach ($users as $index => $user): ?>
                         <tr>
                           <td><?php echo ($currentPage - 1) * 10 + $index + 1; ?></td>
-                          <td><?php echo $user['name'] ?? 'N/A'; ?></td>
+                          <td><?php echo $user['name'] ?? 'Chưa cập nhật tên'; ?></td>
                           <td>
                             <?php if (!empty($user['avatar'])): ?>
                               <img src="<?php echo $user['avatar']; ?>" alt="Avatar" width="40px">
@@ -59,7 +61,9 @@ class ListUser extends BaseView
                             <?php endif; ?>
                           </td>
                           <td><?php echo $user['email']; ?></td>
-                          <td><?php echo $user['phone'] ?? 'N/A'; ?></td>
+                          <td><?php echo $user['dob']; ?></td>
+                          <td><?php echo $user['gender']; ?></td>
+                          <td><?php echo $user['phone'] ?? 'Chưa cập nhật SDT'; ?></td>
                           <td><?php echo $user['role'] == 1 ? 'Người dùng' : 'Quản trị viên'; ?></td>
                           <td>
                             <a href="/admin/users-edit/<?php echo $user['id']; ?>?page=<?php echo $currentPage; ?>" class="btn btn-primary">Sửa</a>

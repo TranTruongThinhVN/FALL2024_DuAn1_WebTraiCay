@@ -12,26 +12,17 @@ class Recipe extends BaseModel
     /**
      * Lấy tất cả công thức
      */
-    public function getAllRecipes()
+    public function getAllRecipesByStatus()
     {
         $result = [];
         try {
-            $sql = " SELECT 
-            recipes.id ,
-            recipes.title ,
-            recipes.description ,
-            recipes.image_url,
-            recipes.ingredients,
-            recipes.instructions,
-            recipes.created_at,
-            recipe_categories.name AS category_name
-        FROM 
-            recipes
-        JOIN 
-            recipe_categories
-        ON 
-            recipes.category_id = recipe_categories.id
-    ";
+            $sql = "SELECT recipes.*, recipe_categories.name AS category_name 
+        FROM recipes 
+        INNER JOIN recipe_categories 
+        ON recipes.category_id = recipe_categories.id 
+        WHERE recipes.status = " . self::STATUS_ENABLE . " 
+        AND recipe_categories.status = " . self::STATUS_ENABLE;
+
             $result = $this->_conn->MySQLi()->query($sql);
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (\Throwable $th) {
@@ -267,7 +258,7 @@ class Recipe extends BaseModel
                     WHERE recipes.id = ?";
             $conn = $this->_conn->MySQLi();
             $stmt = $conn->prepare($sql);
-    
+
             $stmt->bind_param('i', $id);
             $stmt->execute();
             return $stmt->get_result()->fetch_assoc();
@@ -276,5 +267,52 @@ class Recipe extends BaseModel
             return $result;
         }
     }
-    
+
+    public function getRecipesByCategory($category_id)
+    {
+        try {
+            $sql = "SELECT recipes.*, recipe_categories.name AS category_name
+                FROM recipes
+                INNER JOIN recipe_categories ON recipes.category_id = recipe_categories.id
+                WHERE recipes.category_id = ? AND recipes.status = " . self::STATUS_ENABLE;
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+
+            if (!$stmt) {
+                throw new \Exception("Error preparing statement: " . $conn->error);
+            }
+
+            $stmt->bind_param("i", $category_id);
+            $stmt->execute();
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            error_log('Error fetching recipes by category: ' . $th->getMessage());
+            return [];
+        }
+    }
+    public function getLatestRecipesWithCategory($limit = 6)
+    {
+        try {
+            $sql = "SELECT recipes.*, recipe_categories.name AS category_name
+                FROM recipes
+                INNER JOIN recipe_categories ON recipes.category_id = recipe_categories.id
+                WHERE recipes.status = 1 AND recipe_categories.status = 1
+                ORDER BY recipes.created_at DESC
+                LIMIT ?";
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+
+            if (!$stmt) {
+                throw new \Exception("Error preparing statement: " . $conn->error);
+            }
+
+            $stmt->bind_param("i", $limit);
+            $stmt->execute();
+
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            error_log('Error fetching latest recipes with categories: ' . $th->getMessage());
+            return [];
+        }
+    }
 }

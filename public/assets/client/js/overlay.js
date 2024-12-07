@@ -32,6 +32,26 @@ function switchToSignup() {
   document.body.classList.add("modal-open");
 }
 
+function updateCart() {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/cart/update", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var data = JSON.parse(xhr.responseText);
+      if (data.success) {
+        document.getElementById("offcanvas-cart-body").innerHTML =
+          data.cartHTML;
+        document.getElementById("cart-total").innerText = data.cartTotal;
+      } else {
+        console.error("Failed to update the cart.");
+      }
+    }
+  };
+  xhr.send();
+}
+
 function switchToLogin() {
   const signupModal = document.getElementById("signupModal");
   const loginModal = document.getElementById("loginModal");
@@ -45,7 +65,7 @@ function switchToLogin() {
 function toggleOffcanvasCart() {
   const cart = document.getElementById("offcanvasCart");
   const overlay = document.getElementById("cartOverlay");
-
+  updateCart();
   // Bật/tắt class để hiển thị hoặc ẩn overlay và giỏ hàng
   cart.classList.toggle("open");
   overlay.classList.toggle("show");

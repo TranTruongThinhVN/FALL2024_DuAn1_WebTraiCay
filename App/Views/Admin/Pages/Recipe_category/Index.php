@@ -35,7 +35,7 @@ class Index extends BaseView
                 <!-- Nút Thêm Danh Mục -->
                 <a href="/admin/add-recipe_category" class="btn btn-primary">Thêm Danh Mục</a>
               </div>
-              <div class="card-filter d-flex" style="gap: 16px; margin:10px">
+              <div class="card-filter d-flex" style="gap: 16px; margin-top: -10px; margin-left: 10px; margin-bottom: 10px;">
                 <form class="d-flex" method="GET" action="/admin/category">
                   <input class="form-control me-2" type="search" name="search" placeholder="Tìm danh mục..." aria-label="Search" value="<?= $_GET['search'] ?? '' ?>">
                   <button class="btn btn-success" type="submit">Tìm</button>

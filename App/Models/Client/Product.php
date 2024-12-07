@@ -42,35 +42,44 @@ class Product extends BaseModel
     {
         try {
             $sql = "
-        SELECT 
-            p.id AS product_id, 
-            p.name AS product_name, 
-            p.type, 
-            p.image, 
-            p.price AS product_price, 
-            p.discount_price AS product_discount_price,
-            p.thumbnails,
-            s.id AS sku_id, 
-            s.name AS sku_name, 
-            s.price AS sku_price, 
-            s.discount_price AS sku_discount_price, 
-            s.image AS sku_image
-        FROM products p
-        LEFT JOIN skus s ON p.id = s.product_variant_id
-        WHERE p.status = 1
-        LIMIT ? OFFSET ?";
+                SELECT  
+                    p.id AS product_id, 
+                    p.name AS product_name, 
+                    p.type, 
+                    p.image, 
+                    p.price AS product_price, 
+                    p.discount_price AS product_discount_price,
+                    p.thumbnails,
+                    s.id AS sku_id, 
+                    s.name AS sku_name, 
+                    s.price AS sku_price, 
+                    s.discount_price AS sku_discount_price, 
+                    s.image AS sku_image
+                FROM products p
+                LEFT JOIN skus s ON p.id = s.product_variant_id
+                WHERE p.status = 1
+                LIMIT ? OFFSET ?";
 
             $conn = $this->_conn->MySQLi();
             $stmt = $conn->prepare($sql);
             $stmt->bind_param('ii', $itemsPerPage, $offset);
             $stmt->execute();
             $result = $stmt->get_result();
-            return $result->fetch_all(MYSQLI_ASSOC);
+            $products = $result->fetch_all(MYSQLI_ASSOC);
+
+            // Correctly calculate final_price and final_discount_price
+            foreach ($products as &$product) {
+                $product['final_price'] = $product['sku_price'] ?? $product['product_price'] ?? 0;
+                $product['final_discount_price'] = $product['sku_discount_price'] ?? $product['product_discount_price'] ?? 0;
+            }
+
+            return $products;
         } catch (\Throwable $th) {
             error_log('Error fetching products with variants: ' . $th->getMessage());
             return [];
         }
     }
+
 
     public function deleteProduct($id)
     {
@@ -184,31 +193,62 @@ class Product extends BaseModel
         return $result;
     }
 
-    public function getFilteredProducts($priceRange, $originFilter, $orderBy, $direction, $offset, $itemsPerPage)
+
+    public function getFilteredProducts($keyword, $priceRange, $originFilter, $orderBy, $direction, $offset, $itemsPerPage)
     {
         try {
-            $sql = "SELECT * FROM $this->table WHERE status = 1";
+            $sql = "SELECT p.id AS product_id, 
+                           p.name AS product_name, 
+                           p.type, 
+                           p.price, 
+                           p.discount_price, 
+                           p.image, 
+                           p.status, 
+                           s.price AS sku_price, 
+                           s.discount_price AS sku_discount_price 
+                    FROM products p
+                    LEFT JOIN skus s ON p.id = s.product_variant_id
+                    WHERE p.status = 1";
 
             $params = [];
             $types = "";
 
-            // Lọc theo khoảng giá
+            // Tìm kiếm
+            if (!empty($keyword)) {
+                $sql .= " AND p.name LIKE ?";
+                $params[] = '%' . $keyword . '%';
+                $types .= "s";
+            }
+
+            // Lọc giá
             if (!empty($priceRange)) {
-                $sql .= " AND price BETWEEN ? AND ?";
+                $sql .= " AND p.price BETWEEN ? AND ?";
                 $params[] = $priceRange[0];
                 $params[] = $priceRange[1];
                 $types .= "ii";
             }
 
-            // Lọc theo xuất xứ
+            // Lọc theo xuất xứ (nếu có)
             if (!empty($originFilter)) {
                 $placeholders = implode(',', array_fill(0, count($originFilter), '?'));
                 $sql .= " AND origin IN ($placeholders)";
-                $params = array_merge($params, $originFilter);
-                $types .= str_repeat("s", count($originFilter));
+                foreach ($originFilter as $origin) {
+                    $params[] = $origin;
+                    $types .= "s";
+                }
             }
 
-            // Sắp xếp
+            // Sắp xếp và phân trang
+            if ($orderBy === 'id') {
+                $orderBy = 'p.id';  // Đảm bảo sắp xếp theo id của product
+            } else if ($orderBy === 'price') {
+                // Sắp xếp theo giá, ưu tiên giá giảm khi có khuyến mãi
+                $orderBy = "CASE 
+                                WHEN p.type = 'variable' AND s.discount_price > 0 THEN s.discount_price
+                                WHEN p.type = 'simple' AND p.discount_price > 0 THEN p.discount_price
+                                ELSE p.price 
+                            END";
+            }
             $sql .= " ORDER BY $orderBy $direction LIMIT ? OFFSET ?";
             $params[] = $itemsPerPage;
             $params[] = $offset;
@@ -218,13 +258,39 @@ class Product extends BaseModel
             $stmt = $conn->prepare($sql);
 
             if (!$stmt) {
-                throw new \Exception('Lỗi prepare: ' . $conn->error);
+                throw new \Exception('Lỗi chuẩn bị truy vấn: ' . $conn->error);
             }
 
             $stmt->bind_param($types, ...$params);
             $stmt->execute();
             $result = $stmt->get_result();
-            return $result->fetch_all(MYSQLI_ASSOC);
+            $products = $result->fetch_all(MYSQLI_ASSOC);
+
+            // Tính toán final_price, phân biệt sản phẩm "simple" và "variable"
+            foreach ($products as &$product) {
+                if ($product['type'] === 'variable') {
+                    // Sản phẩm "variable": lấy giá từ bảng skus
+                    $originalPrice = $product['sku_price'] ?? 0;
+                    $discountPrice = $product['sku_discount_price'] ?? 0;
+
+                    $product['final_price'] = $originalPrice - $discountPrice;
+                    $product['final_discount_price'] = $discountPrice;
+                } else {
+                    // Sản phẩm "simple": lấy giá từ bảng products
+                    $originalPrice = $product['price'] ?? 0;
+                    $discountPrice = $product['discount_price'] ?? 0;
+
+                    $product['final_price'] = $originalPrice - $discountPrice;
+                    $product['final_discount_price'] = $discountPrice;
+                }
+
+                // Đảm bảo final_price không âm
+                if ($product['final_price'] < 0) {
+                    $product['final_price'] = 0;
+                }
+            }
+
+            return $products;
         } catch (\Throwable $th) {
             error_log('Error fetching filtered products: ' . $th->getMessage());
             return [];
@@ -233,52 +299,67 @@ class Product extends BaseModel
 
 
 
-    public function getTotalFilteredProductCount($priceRange, $originFilter)
+
+    public function getTotalFilteredProductCount($keyword, $priceRange, $originFilter)
     {
         try {
-            $sql = "SELECT COUNT(*) as total FROM products WHERE status = 1"; // Thêm điều kiện WHERE nếu cần
+            $sql = "SELECT COUNT(*) as total FROM products WHERE status = 1";
 
-            // Lọc theo khoảng giá
+            $params = [];
+            $types = "";
+
+            // Tìm kiếm
+            if (!empty($keyword)) {
+                $sql .= " AND name LIKE ?";
+                $params[] = '%' . $keyword . '%';
+                $types .= "s";
+            }
+
+            // Lọc giá
             if (!empty($priceRange)) {
                 $sql .= " AND price BETWEEN ? AND ?";
+                $params[] = $priceRange[0];
+                $params[] = $priceRange[1];
+                $types .= "ii";
             }
 
             // Lọc theo xuất xứ
             if (!empty($originFilter)) {
                 $placeholders = implode(',', array_fill(0, count($originFilter), '?'));
                 $sql .= " AND origin IN ($placeholders)";
-            }
-
-            $conn = $this->_conn->MySQLi();
-            $stmt = $conn->prepare($sql);
-
-            $params = [];
-            $types = "";
-
-            if (!empty($priceRange)) {
-                $params[] = $priceRange[0];
-                $params[] = $priceRange[1];
-                $types .= "ii";
-            }
-            if (!empty($originFilter)) {
                 foreach ($originFilter as $origin) {
                     $params[] = $origin;
                     $types .= "s";
                 }
             }
 
+            $conn = $this->_conn->MySQLi();
             if (!empty($params)) {
+                $stmt = $conn->prepare($sql);
                 $stmt->bind_param($types, ...$params);
+            } else {
+                $stmt = $conn->query($sql); // Nếu không có params, chạy trực tiếp SQL
             }
 
-            $stmt->execute();
-            $result = $stmt->get_result()->fetch_assoc();
-            return $result['total'] ?? 0;
+            if ($stmt instanceof \mysqli_stmt) {
+                $stmt->execute();
+                $result = $stmt->get_result()->fetch_assoc();
+                return $result['total'] ?? 0;
+            }
+
+            return $stmt->fetch_assoc()['total'] ?? 0;
         } catch (\Throwable $th) {
             error_log('Error counting filtered products: ' . $th->getMessage());
             return 0;
         }
     }
+
+
+
+
+
+
+
 
 
 

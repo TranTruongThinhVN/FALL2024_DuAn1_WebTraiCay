@@ -187,13 +187,12 @@ class Edit_profile extends BaseView
 
 
             </div>
-
             <section id="purchase-history" class="purchase-history section">
                 <!-- Top Navigation Tabs -->
                 <nav class="purchase-history__tabs">
                     <button class="purchase-history__tab active">Tất cả</button>
                     <button class="purchase-history__tab">Chờ xử lý</button>
-                    <button class="purchase-history__tab">Chờ giao hàng</button>
+                    <button class="purchase-history__tab">Đang giao hàng</button>
                     <button class="purchase-history__tab">Hoàn thành</button>
                     <button class="purchase-history__tab">Đã hủy</button>
                     <button class="purchase-history__tab">Đã hoàn tiền</button>
@@ -201,82 +200,85 @@ class Edit_profile extends BaseView
 
                 <!-- Search bar -->
                 <div class="purchase-history__search">
-                    <input
-                        type="text"
-                        placeholder="Bạn có thể tìm kiếm theo tên Shop, ID đơn hàng hoặc Tên sản phẩm" />
+                    <input type="text" placeholder="Bạn có thể tìm kiếm theo tên Shop, ID đơn hàng hoặc Tên sản phẩm" />
                 </div>
 
-                <!-- Purchase Item 1 -->
-                <div class="purchase-history__item">
-                    <!-- Nội dung chi tiết -->
-                    <div class="purchase-history__item-details">
-                        <img
-                            src="product-image-url.jpg"
-                            alt="Product Image"
-                            class="purchase-history__item-image" />
-                        <div class="purchase-history__item-info">
-                            <p class="purchase-history__item-name">
-                                Bộ nắp sau tay lái | ốp gãy sau Vision (2022-2023)
-                            </p>
-                            <p class="purchase-history__item-description">
-                                Màu Xám xi măng *NHC60P* (53210-K2C-VF0ZC)
-                            </p>
-                            <p class="purchase-history__item-quantity">Số lượng: x1</p>
-                            <p class="purchase-history__item-price-single">₫198,000</p>
+                <!-- Đổ dữ liệu từ PHP -->
+                <?php if (!empty($data['orders'])): ?>
+                    <?php foreach ($data['orders'] as $order): ?>
+                        <div class="purchase-history__item">
+                            <!-- Nội dung chi tiết -->
+                            <div class="purchase-history__item-details">
+                                <img
+                                    src="/uploads/products/<?= htmlspecialchars($order['details'][0]['product_image'] ?? 'default.jpg') ?>"
+                                    alt="<?= htmlspecialchars($order['details'][0]['product_name'] ?? 'Không có') ?>"
+                                    class="purchase-history__item-image" />
+                                <div class="purchase-history__item-info">
+                                    <p class="purchase-history__item-name">
+                                        <?= htmlspecialchars($order['details'][0]['product_name'] ?? 'Sản phẩm không xác định') ?>
+                                    </p>
+                                    <p class="purchase-history__item-description">
+                                        <?php if (!empty($order['details'][0]['variant_name'])): ?>
+                                            <!-- Sản phẩm biến thể -->
+                                            <?= htmlspecialchars($order['details'][0]['variant_name']) ?>
+                                            <?= !empty($order['details'][0]['variant_options']) ? ' | ' . htmlspecialchars($order['details'][0]['variant_options']) : '' ?>
+                                        <?php else: ?>
+                                            <!-- Sản phẩm đơn giản -->
+                                            <?= htmlspecialchars($order['details'][0]['product_origin'] ?? 'Không có mô tả') ?>
+                                        <?php endif; ?>
+                                    </p>
+
+                                    <p class="purchase-history__item-quantity">Số lượng: x<?= htmlspecialchars($order['details'][0]['quantity'] ?? 0) ?></p>
+                                    <p class="purchase-history__item-price-single">₫<?= number_format($order['details'][0]['price'] ?? 0, 0) ?></p>
+                                </div>
+
+                                <!-- Hiển thị trạng thái -->
+                                <p class="purchase-history__item-status">
+                                    <?php
+                                    switch ($order['order_status']) {
+                                        case 0:
+                                            echo 'Chờ xử lý';
+                                            break;
+                                        case 1:
+                                            echo 'Đang giao hàng';
+                                            break;
+                                        case 2:
+                                            echo 'Đã hủy';
+                                            break;
+                                        case 3:
+                                            echo 'Hoàn thành';
+                                            break;
+                                        case 4:
+                                            echo 'Đã hoàn tiền';
+                                            break;
+                                        default:
+                                            echo 'Không xác định';
+                                            break;
+                                    }
+                                    ?>
+                                </p>
+                            </div>
+
+                            <!-- Footer (Thành tiền và Nút hành động) -->
+                            <div class="purchase-history__item-footer">
+                                <p class="purchase-history__item-total">
+                                    Thành tiền: <span class="purchase-history__item-total-price">₫<?= number_format($order['total_price'] ?? 0, 0) ?></span>
+                                </p>
+                                <div class="purchase-history__item-actions">
+                                    <button class="purchase-history__item-reorder">Mua lại</button>
+                                    <button class="purchase-history__item-detail">Xem chi tiết đơn hàng</button>
+                                </div>
+                            </div>
                         </div>
-                        <p class="purchase-history__item-status cancelled">ĐÃ HỦY</p>
-                    </div>
-
-                    <!-- Footer (Thành tiền và Nút hành động) -->
-                    <div class="purchase-history__item-footer">
-                        <p class="purchase-history__item-total">
-                            Thành tiền: <span class="purchase-history__item-total-price">₫190,952</span>
-                        </p>
-                        <div class="purchase-history__item-actions">
-                            <button class="purchase-history__item-reorder">Mua lại</button>
-                            <button class="purchase-history__item-detail">Xem chi tiết hủy đơn</button>
-                        </div>
-                    </div>
-                </div>
-
-
-
-
-
-
-                <!-- Purchase Item 2 -->
-                <div class="purchase-history__item">
-                    <!-- Nội dung chi tiết -->
-                    <div class="purchase-history__item-details">
-                        <img
-                            src="product-image-url.jpg"
-                            alt="Product Image"
-                            class="purchase-history__item-image" />
-                        <div class="purchase-history__item-info">
-                            <p class="purchase-history__item-name">
-                                Bộ nắp sau tay lái | ốp gãy sau Vision (2022-2023)
-                            </p>
-                            <p class="purchase-history__item-description">
-                                Màu Xám xi măng *NHC60P* (53210-K2C-VF0ZC)
-                            </p>
-                            <p class="purchase-history__item-quantity">Số lượng: x1</p>
-                            <p class="purchase-history__item-price-single">₫198,000</p>
-                        </div>
-                        <p class="purchase-history__item-status cancelled">ĐÃ HỦY</p>
-                    </div>
-
-                    <!-- Footer (Thành tiền và Nút hành động) -->
-                    <div class="purchase-history__item-footer">
-                        <p class="purchase-history__item-total">
-                            Thành tiền: <span class="purchase-history__item-total-price">₫190,952</span>
-                        </p>
-                        <div class="purchase-history__item-actions">
-                            <button class="purchase-history__item-reorder">Mua lại</button>
-                            <button class="purchase-history__item-detail">Xem chi tiết hủy đơn</button>
-                        </div>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Không có đơn hàng nào để hiển thị.</p>
+                <?php endif; ?>
             </section>
+
+
+
+
 
         </div>
         <div id="addPhoneForm" class="hidden add-phone-form">
@@ -322,47 +324,61 @@ class Edit_profile extends BaseView
                 const phoneInput = document.getElementById("newPhone");
                 const otpInput = document.getElementById("otp");
 
-                // Khi nhấn "Gửi Mã xác minh"
-                document.getElementById("sendOtpBtn").addEventListener("click", function() {
-                    const phoneNumber = document.getElementById("newPhone").value.trim();
+                // Gửi OTP khi nhấn nút "Gửi Mã xác minh"
+                sendOtpBtn.addEventListener("click", async function() {
+                    const phoneNumber = phoneInput.value.trim();
 
                     if (!phoneNumber) {
                         alert("Vui lòng nhập số điện thoại!");
                         return;
                     }
 
-                    fetch('/add-phone', {
-                            method: 'POST',
+                    try {
+                        const response = await fetch("http://localhost:8081/add-phone", {
+                            method: "POST",
                             headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
+                                "Content-Type": "application/x-www-form-urlencoded",
                             },
                             body: new URLSearchParams({
-                                new_phone: phoneNumber
+                                new_phone: phoneNumber,
+                                method: "POST",
                             }),
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            return response.json(); // Nếu JSON không hợp lệ, sẽ vào `.catch`
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                alert(data.message || "OTP đã được gửi!");
-                            } else {
-                                alert(data.message || "Lỗi gửi OTP!");
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert("Không thể kết nối với máy chủ hoặc phản hồi không hợp lệ.");
                         });
 
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
 
+                        const data = await response.json();
+
+                        console.log("Response Data:", data);
+                        if (data.success) {
+                            alert(data.message);
+                            otpInput.disabled = false; // Kích hoạt trường OTP
+                            otpInput.focus(); // Đưa con trỏ vào input OTP
+                        } else {
+                            alert(data.message || "Lỗi gửi OTP!");
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                        alert("Không thể kết nối với server!");
+                    }
                 });
 
-                // Khi nhấn "XÁC NHẬN"
-                confirmBtn.addEventListener("click", function() {
+                // Theo dõi sự kiện nhập OTP
+                otpInput.addEventListener("input", function() {
+                    const otpValue = otpInput.value.trim();
+
+                    // Kích hoạt nút "Xác Nhận" khi OTP có độ dài >= 6 ký tự
+                    if (otpValue.length === 6) {
+                        confirmBtn.disabled = false;
+                    } else {
+                        confirmBtn.disabled = true;
+                    }
+                });
+
+                // Khi nhấn "Xác Nhận"
+                confirmBtn.addEventListener("click", async function() {
                     const otp = otpInput.value.trim();
                     const phoneNumber = phoneInput.value.trim();
 
@@ -371,35 +387,33 @@ class Edit_profile extends BaseView
                         return;
                     }
 
-                    // Gửi yêu cầu xác minh OTP
-                    fetch('/phone-verify-otp', {
-                            method: 'POST',
+                    try {
+                        const response = await fetch("http://localhost:8081/phone-verify-otp", {
+                            method: "POST",
                             headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
+                                "Content-Type": "application/x-www-form-urlencoded",
                             },
                             body: new URLSearchParams({
                                 otp: otp,
-                                new_phone: phoneNumber
+                                new_phone: phoneNumber,
                             }),
-                        })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            if (data.success) {
-                                alert("Xác minh thành công!");
-                                // Reset form hoặc chuyển hướng
-                                otpInput.value = "";
-                                phoneInput.value = "";
-                                otpInput.disabled = true;
-                                confirmBtn.disabled = true;
-                                // Thực hiện hành động tiếp theo nếu cần
-                            } else {
-                                alert(data.message || "Mã OTP không hợp lệ. Vui lòng thử lại.");
-                            }
-                        })
-                        .catch((error) => {
-                            console.error("Error:", error);
-                            alert("Không thể kết nối với máy chủ. Vui lòng thử lại!");
                         });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            alert("Xác minh thành công!");
+                            otpInput.value = "";
+                            otpInput.disabled = true;
+                            confirmBtn.disabled = true;
+                            // Thực hiện các hành động tiếp theo
+                        } else {
+                            alert(data.message || "Mã OTP không hợp lệ. Vui lòng thử lại.");
+                        }
+                    } catch (error) {
+                        console.error("Error:", error);
+                        alert("Không thể kết nối với máy chủ. Vui lòng thử lại!");
+                    }
                 });
             });
         </script>

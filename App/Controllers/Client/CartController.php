@@ -25,9 +25,7 @@ class CartController
         $cart = new Cart();
         $cartItems = $cart->getCartItems($user_id); // Lấy dữ liệu giỏ hàng
         $cartTotal = $cart->getCartTotal($user_id); // Lấy tổng giá trị giỏ hàng
-        echo '<pre>';
-        print_r($cartItems);
-        echo '</pre>';
+
 
         // Truyền dữ liệu cho header
         Header::render(['cartItems' => $cartItems, 'cartTotal' => $cartTotal]);
@@ -39,6 +37,15 @@ class CartController
     }
     public function addToCart()
     {
+        if (!isset($_SESSION['user']) || empty($_SESSION['user']['id'])) {
+            echo json_encode([
+                'success' => false,
+                'redirect' => '/login',
+                'message' => 'Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.',
+            ]);
+            exit();
+        }
+
         try {
             $productId = $_POST['product_id'] ?? null;
             $variantId = $_POST['variant_id'] ?? null;
@@ -49,18 +56,19 @@ class CartController
                 throw new \Exception('Sản phẩm không tồn tại.');
             }
 
-            // Khởi tạo model
-            $productModel = new Product(); // Đảm bảo model sản phẩm
-            $cartModel = new Cart(); // Đảm bảo model giỏ hàng
+            $productModel = new Product();
+            $cartModel = new Cart();
 
-            // Lấy sản phẩm từ bảng products
             $product = $productModel->getOneProduct($productId);
-
             if (!$product) {
                 throw new \Exception('Sản phẩm không hợp lệ.');
             }
 
-            // Nếu sản phẩm là loại biến thể
+            $price = $product['price'];
+            $discountPrice = $product['discount_price'];
+            $finalPrice = $price - ($discountPrice ?? 0);
+
+            // Nếu là sản phẩm có biến thể, lấy giá từ SKU
             if ($product['type'] === 'variable') {
                 $sku = $cartModel->getSkuByVariantAndOption($variantId, $optionId);
 
@@ -68,31 +76,39 @@ class CartController
                     throw new \Exception('Không tìm thấy SKU cho sản phẩm biến thể.');
                 }
 
-                $cartItem = [
-                    'user_id' => $_SESSION['user']['id'], // ID người dùng
-                    'sku_id' => $sku['id'], // SKU ID của sản phẩm biến thể
-                    'quantity' => $quantity,
-                    'price' => $sku['price'], // Giá của SKU
-                    'discount_price' => $sku['discount_price'], // Giá giảm của SKU
-                ];
-            } else {
-                $cartItem = [
-                    'user_id' => $_SESSION['user']['id'], // ID người dùng
-                    'product_id' => $productId, // ID sản phẩm đơn giản
-                    'quantity' => $quantity,
-                    'price' => $product['price'], // Giá của sản phẩm đơn giản
-                    'discount_price' => $product['discount_price'], // Giá giảm của sản phẩm đơn giản
-                ];
+                $price = $sku['price'];
+                $discountPrice = $sku['discount_price'];
+                $finalPrice = $price - ($discountPrice ?? 0);
             }
 
+            // Đảm bảo giá không âm
+            $finalPrice = max($finalPrice, 0);
+
             // Thêm sản phẩm vào giỏ hàng
+            $cartItem = [
+                'user_id' => $_SESSION['user']['id'],
+                'product_id' => $productId,
+                'sku_id' => $sku['id'] ?? null,
+                'quantity' => $quantity,
+                'price' => $price,
+                'discount_price' => $discountPrice,
+            ];
             $cartModel->addItem($cartItem);
 
-            echo json_encode(['success' => true, 'message' => 'Thêm sản phẩm vào giỏ hàng thành công!']);
+            echo json_encode([
+                'success' => true,
+                'message' => 'Thêm sản phẩm vào giỏ hàng thành công!',
+                'name' => $product['name'],
+                'price' => number_format($finalPrice),
+                'image' => $sku['image'] ?? $product['image'], // Hình ảnh từ SKU nếu có
+            ]);
         } catch (\Exception $e) {
             echo json_encode(['success' => false, 'message' => $e->getMessage()]);
         }
     }
+
+
+
 
 
 
@@ -144,9 +160,7 @@ class CartController
         $cart = new Cart();
         $cartItems = $cart->getCartItems($user_id); // Lấy dữ liệu giỏ hàng
         $cartTotal = $cart->getCartTotal($user_id); // Lấy tổng giá trị giỏ hàng
-        echo '<pre>';
-        print_r($cartItems);
-        echo '</pre>';
+
 
         // Truyền dữ liệu cho header
         Header::render(['cartItems' => $cartItems, 'cartTotal' => $cartTotal]);
@@ -214,13 +228,20 @@ class CartController
             $cartId = $_POST['cart_id'] ?? null;
             $quantity = $_POST['quantity'] ?? null;
 
-            if (!$cartId || !$quantity) {
-                throw new \Exception("Dữ liệu không hợp lệ.");
+            if (!$cartId || !$quantity || !is_numeric($quantity) || $quantity <= 0) {
+                throw new \Exception("Dữ liệu không hợp lệ: Vui lòng kiểm tra `cart_id` và `quantity`.");
             }
 
             $cart = new Cart();
-            $success = $cart->updateProductQuantity($cartId, $quantity);
 
+            // Kiểm tra tồn tại của sản phẩm trong giỏ hàng
+            $cartItem = $cart->getCartItemById($cartId);
+            if (!$cartItem) {
+                throw new \Exception("Không tìm thấy sản phẩm trong giỏ hàng.");
+            }
+
+            // Cập nhật số lượng sản phẩm
+            $success = $cart->updateProductQuantity($cartId, $quantity);
             if ($success) {
                 $updatedCartItem = $cart->getCartItemById($cartId);
                 $cartTotal = $cart->getCartTotal($_SESSION['user']['id']);
@@ -229,12 +250,15 @@ class CartController
                     'success' => true,
                     'new_total_price' => $updatedCartItem['sku_price'] * $updatedCartItem['quantity'],
                     'cart_total' => $cartTotal,
+                    'message' => 'Cập nhật số lượng thành công.'
                 ]);
             } else {
                 throw new \Exception("Không thể cập nhật số lượng sản phẩm.");
             }
         } catch (\Exception $e) {
-            http_response_code(400); // Đặt HTTP status code là 400
+            // Trả HTTP code lỗi và log thông báo
+            http_response_code(400);
+            error_log("Lỗi cập nhật số lượng: " . $e->getMessage());
             echo json_encode([
                 'success' => false,
                 'message' => $e->getMessage(),

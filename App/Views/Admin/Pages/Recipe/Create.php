@@ -19,6 +19,18 @@ class Create extends BaseView
                 color: red;
                 font-weight: bold;
             }
+
+            .form-group {
+                margin-bottom: 1rem;
+                position: relative;
+                padding-bottom: 1rem;
+            }
+
+            small.text-danger {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+            }
         </style>
         <div class="page-wrapper">
             <div class="page-breadcrumb">
@@ -133,6 +145,20 @@ class Create extends BaseView
                                             <?php endif; ?>
                                         </div>
                                     </div>
+                                    <!-- Trạng thái Ẩn/Hiển thị -->
+                                    <div class="form-group">
+                                        <label for="status">Trạng thái</label>
+                                        <select class="form-control <?= isset($_SESSION['errors']['status']) ? 'error-border' : '' ?>" id="status" name="status">
+                                            <option value="" selected disabled>Chọn trạng thái...</option>
+                                            <option value="1" <?= isset($_POST['status']) && $_POST['status'] == '1' ? 'selected' : '' ?>>Hiển thị</option>
+                                            <option value="0" <?= isset($_POST['status']) && $_POST['status'] == '0' ? 'selected' : '' ?>>Ẩn</option>
+                                        </select>
+                                        <?php if (isset($_SESSION['errors']['status'])): ?>
+                                            <small class="text-danger"><?= $_SESSION['errors']['status'] ?></small>
+                                        <?php endif; ?>
+                                    </div>
+
+
                                     <!-- Buttons -->
                                     <div class="border-top">
                                         <div class="card-body">
@@ -159,6 +185,7 @@ class Create extends BaseView
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <!-- Thêm CKEditor -->
         <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
 
 
 

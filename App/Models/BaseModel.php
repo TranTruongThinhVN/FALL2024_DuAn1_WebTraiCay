@@ -156,4 +156,96 @@ abstract class BaseModel implements CrudInterface
             return $result;
         }
     }
+    public function countOrders()
+    {
+        try {
+            $sql = "SELECT COUNT(*) AS total FROM $this->table";
+            $result = $this->_conn->MySQLi()->query($sql);
+
+            if ($result) {
+                $total = $result->fetch_assoc()['total'];
+                return (int) $total;
+            }
+
+            return 0; // Trả về 0 nếu truy vấn thất bại
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi đếm số đơn hàng: ' . $th->getMessage());
+            return 0;
+        }
+    }
+    public function getOrderById($id)
+    {
+        try {
+            $mysqli = $this->_conn->MySQLi();
+            $sql = "SELECT * FROM $this->table WHERE id = ?";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                return $result->fetch_assoc();
+            }
+
+            return null;
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi lấy đơn hàng: ' . $th->getMessage());
+            return null;
+        }
+    }
+    public function updatePaymentStatus($id, $status)
+    {
+        try {
+            $mysqli = $this->_conn->MySQLi();
+            $sql = "UPDATE $this->table SET payment_status = ? WHERE id = ?";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("ii", $status, $id);
+            return $stmt->execute();
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi cập nhật trạng thái thanh toán: ' . $th->getMessage());
+            return false;
+        }
+    }
+    public function createOrder($data)
+    {
+
+        try {
+            $mysqli = $this->_conn->MySQLi();
+
+
+
+            $sql = "INSERT INTO $this->table 
+                    (order_date, total_price, name, address, phone, order_status, payment_method, shipping_method, payment_status, user_id)
+                    VALUES (CURRENT_TIMESTAMP, ?, ?, ?, ?, 0, ?, ?, 0, ?)";
+
+            $stmt = $mysqli->prepare($sql);
+
+            $stmt->bind_param(
+                "dsssssi",
+                $data['total'],
+                $data['fullName'],
+                $data['address'],
+                $data['phoneNumber'],
+                $data['paymentMethod'],
+                $data['deliveryMethod'],
+                $data['userId']
+            );
+
+            if ($stmt->execute()) {
+                $insertedId = $mysqli->insert_id;
+                if ($insertedId > 0) {
+                    return $insertedId;
+                } else {
+                    error_log("Insert ID is 0, check AUTO_INCREMENT field.");
+                    return false;
+                }
+            } else {
+                error_log("Failed to execute statement: " . $stmt->error);
+                return false;
+            }
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi tạo đơn hàng: ' . $th->getMessage());
+            return false;
+        }
+    }
 }

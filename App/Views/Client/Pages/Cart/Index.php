@@ -12,9 +12,10 @@ class index extends BaseView
 ?>
         <div class="main-container">
             <div class="cart-container">
+                <!-- Tiêu đề giỏ hàng -->
                 <div class="cart-header">
                     <div class="cart-header__checkbox">
-                        <input type="checkbox" class="cart-header__checkbox-input custom-checkbox">
+                        <input type="checkbox" id="selectAllCheckbox" class="custom-checkbox">
                     </div>
                     <div class="cart-header__title">Sản Phẩm</div>
                     <div class="cart-header__price">Đơn Giá</div>
@@ -23,33 +24,36 @@ class index extends BaseView
                     <div class="cart-header__action">Thao Tác</div>
                 </div>
 
+                <!-- Danh sách sản phẩm -->
                 <?php if (!empty($data['cartItems'])): ?>
                     <?php foreach ($data['cartItems'] as $item): ?>
                         <div class="cart-item">
                             <div class="cart-item__checkbox">
-                                <input type="checkbox" class="custom-checkbox">
+                                <input type="checkbox" class="custom-checkbox" data-cart-id="<?= $item['cart_id'] ?>">
                             </div>
                             <div class="cart-item__details">
-                                <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($item['sku_image']) ?>" alt="Sản phẩm" class="cart-item__image" width="50px">
+                                <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($item['sku_image']) ?>" class="cart-item__image">
                                 <div class="cart-item__info">
-                                    <h2 class="cart-item__name">
-                                        <?= isset($item['product_name']) ? htmlspecialchars($item['product_name']) : 'Sản phẩm không có tên' ?>
-                                    </h2>
-                                    <p class="cart-item__variant">
-                                        <!-- Hiển thị tên variant hoặc option, nếu có -->
-                                        Phân loại hàng: <?= isset($item['variant_name']) ? htmlspecialchars($item['variant_name']) : (isset($item['option_name']) ? htmlspecialchars($item['option_name']) : 'Không xác định') ?>
-                                    </p>
+                                    <h3 class="cart-item__name"><?= htmlspecialchars($item['product_name']) ?></h3>
+                                    <p class="cart-item__variant">Phân loại: <?= htmlspecialchars($item['variant_name'] ?? 'Không xác định') ?></p>
                                 </div>
-
                             </div>
-                            <div class="cart-item__price"><?= number_format($item['sku_price']) ?>₫</div>
+                            <div class="cart-item__price">
+                                <?php if (!empty($item['discount_price']) && $item['discount_price'] < $item['sku_price']): ?>
+                                    <span class="discount-price"><?= number_format($item['discount_price']) ?>₫</span>
+                                <?php else: ?>
+                                    <span class="normal-price"><?= number_format($item['sku_price']) ?>₫</span>
+                                <?php endif; ?>
+                            </div>
+
                             <div class="cart-item__quantity">
                                 <button class="cart-item__quantity-btn" data-cart-id="<?= $item['cart_id'] ?>" data-action="decrease">-</button>
                                 <input type="text" value="<?= htmlspecialchars($item['quantity']) ?>" class="cart-item__quantity-input" readonly>
                                 <button class="cart-item__quantity-btn" data-cart-id="<?= $item['cart_id'] ?>" data-action="increase">+</button>
                             </div>
-
-                            <div class="cart-item__total"><?= number_format($item['sku_price'] * $item['quantity']) ?>₫</div>
+                            <div class="cart-item__total">
+                                <?= number_format(($item['discount_price'] ?? $item['sku_price']) * $item['quantity']) ?>₫
+                            </div>
                             <div class="cart-item__action">
                                 <form method="POST" action="/cart-delete-single">
                                     <input type="hidden" name="method" value="DELETE">
@@ -58,191 +62,166 @@ class index extends BaseView
                                 </form>
                             </div>
                         </div>
-
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p>Giỏ hàng của bạn đang trống!</p>
+                    <p class="empty-cart">Giỏ hàng của bạn đang trống!</p>
                 <?php endif; ?>
-
-
             </div>
 
+            <!-- Phần tổng kết -->
             <div class="shopping-cart__summary">
-                <div class="voucher-section">
-                    <span class="voucher-icon">🎟️</span>
-                    <span class="voucher-title">Shopee Voucher</span>
-                    <a href="#" class="voucher-link">Chọn hoặc nhập mã</a>
-                </div>
                 <div class="shopping-cart__summary-bottom">
                     <div class="shopping-cart__summary-lefts">
-                        <input type="checkbox" class="shopping-cart__summary-select-all custom-checkbox">
-                        <span class="click-all-lefts">Chọn tất cả</span>
-                        <form id="deleteMultipleForm" method="POST" action="/cart-delete-multiple">
-                            <input type="hidden" name="method" value="DELETE">
-                            <div id="selectedCartIds"></div> <!-- Nơi lưu danh sách cart_id -->
-                            <button type="submit" id="deleteSelectedButton">Xóa tất cả</button>
-                        </form>
-
-
+                        <input type="checkbox" id="selectAllSummary" class="custom-checkbox">
+                        <span>Chọn tất cả</span>
+                        <button id="deleteSelectedButton" class="btn-delete-all">Xóa tất cả</button>
                     </div>
                     <div class="summary-right">
-                        <div class="shopping-cart__summary-right">
-                            <span class="summary-total-label">Tổng thanh toán (1 sản phẩm):</span>
-                            <?php $totalAmount = 0; ?>
-                            <?php foreach ($data['cartItems'] as $item): ?>
-                                <?php $totalAmount += $item['sku_price'] * $item['quantity']; ?>
-                            <?php endforeach; ?>
-                            <span class="summary-total-amount"><?= number_format($totalAmount) ?>₫</span>
-                        </div>
-
-                        <button class="cta-button checkout-btn">Mua Hàng</button>
+                        <span class="summary-total-label">Tổng thanh toán:</span>
+                        <span class="summary-total-amount">0₫</span>
+                        <button class="cta-button checkout-btn" id="buyNowButton">Mua Hàng</button>
                     </div>
                 </div>
             </div>
         </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const selectAllCheckbox = document.querySelector('.shopping-cart__summary-select-all');
-                const itemCheckboxes = document.querySelectorAll('.custom-checkbox');
-                const deleteButton = document.getElementById('deleteSelectedButton');
-                const selectedCartIdsContainer = document.getElementById('selectedCartIds');
+        <form id="checkoutForm" action="/checkout" method="POST">
+            <input type="hidden" name="method" value="POST">
+            <input type="hidden" name="selected_items" id="selectedItemsInput" value="">
+        </form>
 
-                // Xử lý chọn tất cả checkbox
-                selectAllCheckbox.addEventListener('change', function() {
-                    itemCheckboxes.forEach((checkbox) => {
-                        checkbox.checked = this.checked;
-                    });
-                });
 
-                // Xử lý xóa các sản phẩm đã chọn
-                deleteButton.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const selectedIds = [];
-                    itemCheckboxes.forEach((checkbox) => {
-                        if (checkbox.checked) {
-                            const cartId = checkbox.closest('.cart-item').querySelector('input[name="cart_id"]').value;
-                            selectedIds.push(cartId);
-                        }
-                    });
-
-                    if (selectedIds.length === 0) {
-                        alert('Vui lòng chọn ít nhất một sản phẩm để xóa.');
-                        return;
-                    }
-
-                    // Thêm các input ẩn chứa cart_id vào form
-                    selectedCartIdsContainer.innerHTML = '';
-                    selectedIds.forEach((id) => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = 'cart_ids[]';
-                        input.value = id;
-                        selectedCartIdsContainer.appendChild(input);
-                    });
-
-                    document.getElementById('deleteMultipleForm').submit();
-                });
-            });
-        </script>
         <!-- + - số luojng á  -->
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const quantityButtons = document.querySelectorAll('.cart-item__quantity-btn');
+                const totalAmountElement = document.querySelector('.summary-total-amount');
+                const itemCheckboxes = document.querySelectorAll('.cart-item input[type="checkbox"]');
+                const selectAllCheckbox = document.getElementById('selectAllCheckbox');
 
-                quantityButtons.forEach(button => {
-                    button.addEventListener('click', function() {
-                        const cartId = this.dataset.cartId;
-                        const action = this.dataset.action; // "increase" or "decrease"
-                        const quantityInput = this.closest('.cart-item__quantity').querySelector('.cart-item__quantity-input');
-                        const totalElement = this.closest('.cart-item').querySelector('.cart-item__total');
-
-                        let currentQuantity = parseInt(quantityInput.value);
-
-                        // Increase or decrease quantity
-                        if (action === 'increase') {
-                            currentQuantity++;
-                        } else if (action === 'decrease') {
-                            currentQuantity = Math.max(currentQuantity - 1, 1); // Don't allow decreasing below 1
-                        }
-
-                        // Update the UI immediately
-                        quantityInput.value = currentQuantity;
-                        totalElement.innerHTML = `${numberWithCommas(currentQuantity * parseInt(totalElement.dataset.price))}₫`;
-
-                        // Update the quantity on the server
-                        updateCartQuantity(cartId, currentQuantity, totalElement);
+                // Kiểm tra sự tồn tại của phần tử trước khi thêm sự kiện
+                if (selectAllCheckbox) {
+                    selectAllCheckbox.addEventListener('change', () => {
+                        const isChecked = selectAllCheckbox.checked;
+                        itemCheckboxes.forEach(checkbox => checkbox.checked = isChecked);
+                        updateCartTotal();
                     });
-                });
-            });
-
-            // Hàm để chuyển đổi giá thành số
-            function parsePrice(priceStr) {
-                return parseInt(priceStr.replace(/[^\d]/g, ''), 10); // Loại bỏ mọi ký tự không phải số
-            }
-
-            // Sửa lại code trong hàm updateCartQuantity
-            function updateCartQuantity(cartId, newQuantity, totalElement) {
-                const priceElement = totalElement.closest('.cart-item').querySelector('.cart-item__price');
-
-                // Chuyển giá trị giá thành số
-                const price = parsePrice(priceElement.innerText);
-
-                if (isNaN(price)) {
-                    console.error('Giá sản phẩm không hợp lệ!');
-                    return;
                 }
 
-                // Tính toán lại tổng
-                const totalPrice = newQuantity * price;
-                totalElement.innerHTML = `${numberWithCommas(totalPrice)}₫`;
+                if (quantityButtons.length > 0) {
+                    quantityButtons.forEach(button => {
+                        button.addEventListener('click', function() {
+                            const cartId = this.dataset.cartId;
+                            const action = this.dataset.action; // "increase" hoặc "decrease"
+                            const quantityInput = this.closest('.cart-item__quantity').querySelector('.cart-item__quantity-input');
+                            const totalElement = this.closest('.cart-item').querySelector('.cart-item__total');
+                            const priceElement = this.closest('.cart-item').querySelector('.discount-price, .normal-price');
 
-                fetch('/cart-update-quantity', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            cart_id: cartId,
-                            quantity: newQuantity,
-                        }),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Cập nhật lại tổng giá cho giỏ hàng
-                            updateCartTotal();
-                        } else {
-                            alert(data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error updating cart quantity:', error);
+                            if (!quantityInput || !totalElement || !priceElement) {
+                                console.error('Thiếu thông tin để xử lý sự kiện tăng/giảm số lượng.');
+                                return;
+                            }
+
+                            let currentQuantity = parseInt(quantityInput.value, 10);
+                            const price = parseInt(priceElement.innerText.replace(/[^0-9]/g, ''), 10);
+
+                            // Cập nhật số lượng sản phẩm
+                            if (action === 'increase') {
+                                currentQuantity++;
+                            } else if (action === 'decrease') {
+                                currentQuantity = Math.max(currentQuantity - 1, 1); // Không cho phép giảm dưới 1
+                            }
+
+                            fetch('/cart-update-quantity', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        cart_id: cartId,
+                                        quantity: currentQuantity,
+                                    }),
+                                })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Network response was not ok');
+                                    }
+                                    return response.json(); // Cố gắng parse JSON
+                                })
+                                .then(data => {
+                                    if (data.success) {
+                                        // Cập nhật giao diện nếu thành công
+                                        quantityInput.value = currentQuantity; // Cập nhật số lượng
+                                        totalElement.innerText = `${(currentQuantity * price).toLocaleString()}₫`; // Cập nhật tổng tiền của sản phẩm
+                                        updateCartTotal(); // Cập nhật tổng tiền giỏ hàng
+                                    } else {
+                                        alert(data.message || 'Cập nhật số lượng thất bại!');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Lỗi khi cập nhật số lượng:', error);
+                                    alert('Đã xảy ra lỗi khi cập nhật số lượng. Vui lòng thử lại!');
+                                });
+
+                        });
                     });
-            }
+                }
 
+                const updateCartTotal = () => {
+                    let totalAmount = 0;
 
+                    // Lấy tất cả các sản phẩm được chọn
+                    document.querySelectorAll('.cart-item input[type="checkbox"]:checked').forEach(item => {
+                        const cartItem = item.closest('.cart-item');
+                        const priceElement = cartItem.querySelector('.cart-item__price .discount-price, .cart-item__price .normal-price');
+                        const quantityInput = cartItem.querySelector('.cart-item__quantity-input');
 
-            function updateCartTotal() {
-                let totalAmount = 0;
-                document.querySelectorAll('.cart-item').forEach(item => {
-                    const price = parseInt(item.querySelector('.cart-item__price').dataset.price, 10);
-                    const quantity = parseInt(item.querySelector('.cart-item__quantity-input').value, 10);
+                        if (priceElement && quantityInput) {
+                            const price = parseInt(priceElement.innerText.replace(/[^0-9]/g, ''), 10);
+                            const quantity = parseInt(quantityInput.value, 10);
 
-                    if (isNaN(price) || isNaN(quantity)) {
-                        console.error('Giá hoặc số lượng không hợp lệ!');
-                        return; // Không tính nếu giá hoặc số lượng không hợp lệ
+                            if (!isNaN(price) && !isNaN(quantity)) {
+                                totalAmount += price * quantity;
+                            }
+                        }
+                    });
+
+                    // Cập nhật tổng tiền
+                    if (totalAmountElement) {
+                        totalAmountElement.innerText = `${totalAmount.toLocaleString()}₫`;
+                    }
+                };
+
+                // Cập nhật tổng tiền khi thay đổi checkbox
+                itemCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', updateCartTotal);
+                });
+            });
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const buyNowButton = document.getElementById('buyNowButton');
+                const itemCheckboxes = document.querySelectorAll('.cart-item input[type="checkbox"]');
+                const checkoutForm = document.getElementById('checkoutForm');
+                const selectedItemsInput = document.getElementById('selectedItemsInput');
+
+                buyNowButton.addEventListener('click', () => {
+                    // Lấy danh sách sản phẩm được chọn
+                    const selectedItems = Array.from(itemCheckboxes)
+                        .filter(checkbox => checkbox.checked)
+                        .map(checkbox => checkbox.dataset.cartId);
+
+                    if (selectedItems.length === 0) {
+                        alert('Vui lòng chọn ít nhất một sản phẩm để mua!');
+                        return;
                     }
 
-                    totalAmount += price * quantity;
+                    // Gắn danh sách cart_id đã chọn vào input ẩn
+                    selectedItemsInput.value = selectedItems.join(',');
+
+                    // Submit form
+                    checkoutForm.submit();
                 });
-                document.querySelector('.summary-total-amount').innerText = `${numberWithCommas(totalAmount)}₫`;
-            }
-
-
-            // Helper function to format number with commas
-            function numberWithCommas(x) {
-                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            }
+            });
         </script>
 <?php
 

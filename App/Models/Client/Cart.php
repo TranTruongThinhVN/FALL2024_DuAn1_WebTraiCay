@@ -31,38 +31,38 @@ class Cart extends BaseModel
     // {
     //     return $this->delete($id);
     // }
-    public function addProductToCart($user_id, $sku_id, $variant_id, $quantity)
-    {
-        try {
-            $mysqli = $this->_conn->MySQLi();
+    // public function addProductToCart($user_id, $sku_id, $variant_id, $quantity)
+    // {
+    //     try {
+    //         $mysqli = $this->_conn->MySQLi();
 
-            if ($variant_id) {
-                // Lấy `product_variant_id` từ bảng `product_variants`
-                $query = "SELECT id FROM product_variants WHERE id = ?";
-                $stmt = $mysqli->prepare($query);
-                $stmt->bind_param('i', $variant_id);
-                $stmt->execute();
-                $result = $stmt->get_result()->fetch_assoc();
+    //         if ($variant_id) {
+    //             // Lấy `product_variant_id` từ bảng `product_variants`
+    //             $query = "SELECT id FROM product_variants WHERE id = ?";
+    //             $stmt = $mysqli->prepare($query);
+    //             $stmt->bind_param('i', $variant_id);
+    //             $stmt->execute();
+    //             $result = $stmt->get_result()->fetch_assoc();
 
-                if (!$result) {
-                    throw new \Exception("Biến thể không tồn tại: Variant ID: $variant_id");
-                }
-            }
+    //             if (!$result) {
+    //                 throw new \Exception("Biến thể không tồn tại: Variant ID: $variant_id");
+    //             }
+    //         }
 
-            // Chèn dữ liệu vào bảng `cart_products`
-            $query = "INSERT INTO cart_products (user_id, sku_id, product_variant_id, quantity, created_at)
-                      VALUES (?, ?, ?, ?, NOW())
-                      ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)";
-            $stmt = $mysqli->prepare($query);
-            $stmt->bind_param('iiii', $user_id, $sku_id, $variant_id, $quantity);
-            $stmt->execute();
+    //         // Chèn dữ liệu vào bảng `cart_products`
+    //         $query = "INSERT INTO cart_products (user_id, sku_id, product_variant_id, quantity, created_at)
+    //                   VALUES (?, ?, ?, ?, NOW())
+    //                   ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)";
+    //         $stmt = $mysqli->prepare($query);
+    //         $stmt->bind_param('iiii', $user_id, $sku_id, $variant_id, $quantity);
+    //         $stmt->execute();
 
-            return true;
-        } catch (\Exception $e) {
-            error_log('Error adding product to cart: ' . $e->getMessage());
-            return false;
-        }
-    }
+    //         return true;
+    //     } catch (\Exception $e) {
+    //         error_log('Error adding product to cart: ' . $e->getMessage());
+    //         return false;
+    //     }
+    // }
     // Trả giá theo variant-options phụ trợ để hiện giá trên giao diện
     public function getSkuPrice()
     {
@@ -114,6 +114,177 @@ class Cart extends BaseModel
         }
     }
 
+
+    public function clearCartByUserId($userId)
+    {
+        try {
+            $mysqli = $this->_conn->MySQLi();
+            $sql = "DELETE FROM $this->table WHERE user_id = ?";
+            $stmt = $mysqli->prepare($sql);
+            $stmt->bind_param("i", $userId);
+
+            if ($stmt->execute()) {
+                return true;
+            }
+            return false;
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi xóa giỏ hàng người dùng ID ' . $userId . ': ' . $th->getMessage());
+            return false;
+        }
+    }
+
+
+    public function addProductToCart($user_id, $product_id, $quantity)
+    {
+        try {
+            $mysqli = $this->_conn->MySQLi();
+
+            if (!$mysqli->ping()) {
+                error_log('Kết nối MySQL đã mất. Tạo lại kết nối...');
+                $this->_conn = new \App\Models\Database();
+                $mysqli = $this->_conn->MySQLi();
+                if (!$mysqli->ping()) {
+                    throw new \Exception("Không thể tái tạo kết nối MySQL.");
+                }
+                error_log('Kết nối MySQL đã được tái tạo.');
+            }
+            $query = "SELECT id FROM product_variants WHERE product_id = ?";
+            $stmt = $mysqli->prepare($query);
+
+            if (!$stmt) {
+                throw new \Exception("Lỗi prepare SELECT product_variant: " . $mysqli->error);
+            }
+            $stmt->bind_param('i', $product_id);
+            if (!$stmt->execute()) {
+                throw new \Exception("Lỗi execute SELECT product_variant: " . $stmt->error);
+            }
+            $stmt->store_result();
+
+            // Nếu sku_id không tồn tại trong product_variants
+            if ($stmt->num_rows === 0) {
+                throw new \Exception("Sản phẩm variant không tồn tại.");
+            }
+            $stmt->bind_result($product_variant_id);
+            $stmt->fetch();
+
+            print_r($product_variant_id);
+            // Kiểm tra xem sku_id có tồn tại trong skus không
+            $query = "SELECT id FROM skus WHERE product_variant_id = ?";
+
+            $stmt = $mysqli->prepare($query);
+            if (!$stmt) {
+                throw new \Exception("Lỗi prepare SELECT skus: " . $mysqli->error);
+            }
+            $stmt->bind_param('i', $product_variant_id);
+            if (!$stmt->execute()) {
+                throw new \Exception("Lỗi execute SELECT skus: " . $stmt->error);
+            }
+            $stmt->store_result();
+
+            // Nếu sku_id không tồn tại trong skus
+            if ($stmt->num_rows === 0) {
+                throw new \Exception("sku_id không tồn tại trong bảng skus.");
+            }
+            // Kiểm tra xem sku_id có tồn tại trong product_variants không
+            $stmt->bind_result($sku_id);
+            $stmt->fetch();
+
+            // Kiểm tra sản phẩm đã tồn tại trong giỏ hàng chưa
+            $query = "SELECT * FROM cart_products WHERE user_id = ? AND sku_id = ?";
+            $stmt = $mysqli->prepare($query);
+            if (!$stmt) {
+                throw new \Exception("Lỗi prepare SELECT: " . $mysqli->error);
+            }
+            $stmt->bind_param('ii', $user_id, $sku_id);
+            if (!$stmt->execute()) {
+                throw new \Exception("Lỗi execute SELECT: " . $stmt->error);
+            }
+            $result = $stmt->get_result()->fetch_assoc();
+
+            if ($result) {
+                // Nếu sản phẩm đã tồn tại, cập nhật số lượng
+                $query = "UPDATE cart_products SET quantity = quantity + ?, updated_at = NOW() WHERE user_id = ? AND sku_id = ?";
+                $stmt = $mysqli->prepare($query);
+                if (!$stmt) {
+                    throw new \Exception("Lỗi prepare UPDATE: " . $mysqli->error);
+                }
+                $stmt->bind_param('iii', $quantity, $user_id, $sku_id);
+                if (!$stmt->execute()) {
+                    throw new \Exception("Lỗi execute UPDATE: " . $stmt->error);
+                }
+                error_log("UPDATE thành công: user_id = $user_id, sku_id = $sku_id, quantity = $quantity");
+            } else {
+                // Nếu sản phẩm chưa tồn tại, thêm mới
+                $query = "INSERT INTO cart_products (user_id, sku_id, product_variant_id, quantity, created_at) VALUES (?, ?, ?, ?, NOW())";
+                $stmt = $mysqli->prepare($query);
+                if (!$stmt) {
+                    throw new \Exception("Lỗi prepare INSERT: " . $mysqli->error);
+                }
+                // Bind all 4 parameters: user_id, sku_id, product_variant_id, and quantity
+                $stmt->bind_param('iiis', $user_id, $sku_id, $product_variant_id, $quantity);
+                if (!$stmt->execute()) {
+                    throw new \Exception("Lỗi execute INSERT: " . $stmt->error);
+                }
+                error_log("INSERT thành công: user_id = $user_id, sku_id = $sku_id, product_variant_id = $product_variant_id, quantity = $quantity");
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            error_log('Error adding product to cart: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getCartProducts($userId)
+    {
+        try {
+            $mysqli = $this->_conn->MySQLi();
+            if (!$mysqli->ping()) {
+                error_log('Kết nối MySQL đã mất. Tạo lại kết nối...');
+                $this->_conn = new \App\Models\Database();
+                $mysqli = $this->_conn->MySQLi();
+                if (!$mysqli->ping()) {
+                    throw new \Exception("Không thể tái tạo kết nối MySQL.");
+                }
+                error_log('Kết nối MySQL đã được tái tạo.');
+            }
+
+            $query = "
+                SELECT 
+                    cp.quantity,
+                    p.name AS sku_name,
+                    p.price,
+                    p.discount_price,
+                    p.image,
+                    pv.name AS variant_name,
+                    p.id AS product_id
+                FROM cart_products cp
+                INNER JOIN product_variants pv ON cp.product_variant_id = pv.id
+                INNER JOIN skus s ON cp.sku_id = s.id
+                INNER JOIN products p ON pv.product_id = p.id  
+                WHERE cp.user_id = ?
+            ";
+
+            $stmt = $mysqli->prepare($query);
+            if (!$stmt) {
+                die("Prepare failed: " . $mysqli->error);
+            }
+            $stmt->bind_param("i", $userId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $cartProducts = [];
+            while ($row = $result->fetch_assoc()) {
+                $cartProducts[] = $row;
+            }
+
+            $stmt->close();
+
+            return $cartProducts;
+        } catch (\Exception $e) {
+            error_log('Error adding product to cart: ' . $e->getMessage());
+            return false;
+        }
+    }
 
 
 

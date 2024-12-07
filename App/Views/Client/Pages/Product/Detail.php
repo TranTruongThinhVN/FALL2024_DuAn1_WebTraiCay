@@ -125,7 +125,31 @@ class Detail extends BaseView
               <span class="product__code">Mã sản phẩm: CP12345</span>|
               <span class="product__brand">Thương hiệu: Nestle</span>
             </div>
-            <div class="product__price"><?= number_format($data['product']['price']) ?> VNĐ</div>
+            <div class="product__price">
+              <?php
+              // Lấy giá gốc và số tiền giảm giá
+              $original_price = $data['product']['price'];
+              $discount_price = $data['product']['discount_price'];
+
+              // Tính giá sau khi giảm
+              $final_price = $original_price - ($discount_price ?? 0); // Trừ giá giảm nếu có
+
+              // Đảm bảo giá giảm không âm
+              if ($final_price < 0) {
+                $final_price = 0;
+              }
+              ?>
+
+              <?php if (!empty($discount_price) && $discount_price > 0): ?>
+                <!-- Hiển thị giá gốc và giá sau giảm -->
+                <s><?= number_format($original_price) ?> VNĐ</s>
+                <span><?= number_format($final_price) ?> VNĐ</span>
+              <?php else: ?>
+                <!-- Hiển thị giá gốc nếu không có giảm giá -->
+                <?= number_format($original_price) ?> VNĐ
+              <?php endif; ?>
+            </div>
+
             <div class="product__variants">
               <?php foreach ($data['variants'] as $variant): ?>
                 <div class="product__variant">
@@ -271,7 +295,7 @@ class Detail extends BaseView
       </div>
       <script>
         document.getElementById('addToCartForm').addEventListener('submit', async function(e) {
-          e.preventDefault();
+          e.preventDefault(); // Ngăn form tự submit
 
           const formData = new FormData(this);
 
@@ -289,16 +313,21 @@ class Detail extends BaseView
             const data = await response.json();
 
             if (data.success) {
+              // Hiển thị thông báo khi thêm vào giỏ hàng thành công
               showNotification({
-                name: data.name,
-                price: data.price,
-                image: `/public/uploads/products/${data.image}`,
+                name: data.name || 'Sản phẩm không xác định', // Đặt giá trị mặc định nếu undefined
+                price: data.price || '0', // Đặt giá trị mặc định
+                image: data.image ? `/public/uploads/products/${data.image}` : 'default-image.jpg', // Kiểm tra nếu không có ảnh
               });
             } else {
-              alert(data.message); // Hiển thị lỗi nếu có
+              if (data.redirect) {
+                // Chuyển hướng đến trang đăng nhập
+                window.location.href = data.redirect;
+              } else {
+                alert(data.message || 'Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.');
+              }
             }
           } catch (error) {
-            // Log lỗi để debug
             console.error('Fetch API Error:', error);
             alert('Có lỗi xảy ra, vui lòng thử lại!');
           }
@@ -621,18 +650,14 @@ class Detail extends BaseView
       function showNotification(data) {
         const notification = document.getElementById('cartNotification');
         document.getElementById('notificationImage').src = data.image || 'default-image.jpg';
-        document.getElementById('notificationName').textContent = data.name;
-        document.getElementById('notificationPrice').textContent = `${data.price}₫`;
+        document.getElementById('notificationName').textContent = data.name || 'Sản phẩm không xác định';
+        document.getElementById('notificationPrice').textContent = `${data.price || '0'}₫`;
 
         notification.classList.remove('hidden');
 
         setTimeout(() => {
           notification.classList.add('hidden');
-        }, 5000); // Ẩn sau 5 giây
-      }
-
-      function hideNotification() {
-        document.getElementById('cartNotification').classList.add('hidden');
+        }, 5000);
       }
     </script>
     <!-- comment

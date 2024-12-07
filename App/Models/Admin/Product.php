@@ -215,7 +215,16 @@ class Product extends BaseModel
             $stmt->execute();
             $result = $stmt->get_result();
 
-            return $result->fetch_all(MYSQLI_ASSOC);
+            $products = $result->fetch_all(MYSQLI_ASSOC);
+
+            // **Thêm đoạn mã này để tính toán final_price và final_discount_price**
+            foreach ($products as &$product) {
+                $product['final_price'] = $product['discount_price'] ?? $product['price'] ?? 0;
+                $product['final_discount_price'] = $product['discount_price'] ?? 0; // Nếu không có discount_price, mặc định là 0
+            }
+
+            return $products; // Trả về mảng products sau khi đã tính toán giá
+
         } catch (\Throwable $th) {
             error_log('Error fetching filtered products: ' . $th->getMessage());
             return [];

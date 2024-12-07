@@ -2,7 +2,8 @@
   "dependencies": {
     "bootstrap": "^5.3.3",
     "concurrently": "^9.0.1",
-    "sass": "^1.80.6"
+    "sass": "^1.80.6",
+    "twilio": "^5.3.7"
   },
   "scripts": {
     "sass": "sass --quiet-deps ./App/Styles/main.scss ./public/styles/main.css --watch",

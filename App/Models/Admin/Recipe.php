@@ -12,33 +12,46 @@ class Recipe extends BaseModel
     /**
      * Lấy tất cả công thức
      */
-    public function getAllRecipes()
+    public function getAllRecipes($limit = 10, $offset = 0)
     {
         $result = [];
         try {
-            $sql = " SELECT 
-            recipes.id ,
-            recipes.title ,
-            recipes.description ,
-            recipes.image_url,
-            recipes.ingredients,
-            recipes.instructions,
-            recipes.created_at,
-            recipe_categories.name AS category_name
-        FROM 
-            recipes
-        JOIN 
-            recipe_categories
-        ON 
-            recipes.category_id = recipe_categories.id
-    ";
-            $result = $this->_conn->MySQLi()->query($sql);
-            return $result->fetch_all(MYSQLI_ASSOC);
+            $sql = "SELECT 
+                        recipes.id,
+                        recipes.title,
+                        recipes.description,
+                        recipes.image_url,
+                        recipes.ingredients,
+                        recipes.instructions,
+                        recipes.created_at,
+                        recipe_categories.name AS category_name
+                    FROM 
+                        recipes
+                    JOIN 
+                        recipe_categories
+                    ON 
+                        recipes.category_id = recipe_categories.id
+                    ORDER BY 
+                        recipes.created_at DESC
+                    LIMIT ? OFFSET ?";
+
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+
+            if (!$stmt) {
+                throw new \Exception("Error preparing statement: " . $conn->error);
+            }
+
+            $stmt->bind_param("ii", $limit, $offset);
+            $stmt->execute();
+
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         } catch (\Throwable $th) {
-            error_log('Lỗi khi hiển thị tất cả dữ liệu: ' . $th->getMessage());
+            error_log('Error fetching paginated recipes: ' . $th->getMessage());
             return $result;
         }
     }
+
 
     /**
      * Lấy thông tin chi tiết công thức theo ID
@@ -182,7 +195,7 @@ class Recipe extends BaseModel
     public function countFilteredRecipes($keyword, $category_id, $status)
     {
         try {
-            $sql = "SELECT COUNT(*) as total
+            $sql = "SELECT COUNT(*) AS total
                     FROM recipes
                     INNER JOIN recipe_categories ON recipes.category_id = recipe_categories.id
                     WHERE 1=1";
@@ -220,13 +233,15 @@ class Recipe extends BaseModel
 
             $stmt->bind_param($types, ...$params);
             $stmt->execute();
+            $result = $stmt->get_result()->fetch_assoc();
 
-            return $stmt->get_result()->fetch_assoc()['total'];
+            return $result['total'];
         } catch (\Throwable $th) {
             error_log('Error counting filtered recipes: ' . $th->getMessage());
             return 0;
         }
     }
+
 
     public function isTitleExists($title)
     {
@@ -259,6 +274,41 @@ class Recipe extends BaseModel
         }
     }
 
-    
+    public function getRecipesByCategory($category_id)
+    {
+        try {
+            $sql = "SELECT recipes.*, recipe_categories.name AS category_name
+                FROM recipes
+                INNER JOIN recipe_categories ON recipes.category_id = recipe_categories.id
+                WHERE recipes.category_id = ?";
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
 
+            if (!$stmt) {
+                throw new \Exception("Prepare statement failed: " . $conn->error);
+            }
+
+            $stmt->bind_param("i", $category_id);
+            $stmt->execute();
+
+            return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            error_log('Error fetching recipes by category: ' . $th->getMessage());
+            return [];
+        }
+    }
+
+    public function countAllRecipes()
+    {
+        try {
+            $sql = "SELECT COUNT(*) as total FROM recipes";
+            $conn = $this->_conn->MySQLi();
+            $result = $conn->query($sql);
+
+            return $result->fetch_assoc()['total'];
+        } catch (\Throwable $th) {
+            error_log('Error counting all recipes: ' . $th->getMessage());
+            return 0;
+        }
+    }
 }

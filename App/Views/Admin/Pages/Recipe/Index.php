@@ -65,8 +65,28 @@ class Index extends BaseView
       #closeModal:hover {
         color: #555;
       }
+    </style>
+    <style>
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        gap: 10px;
+      }
 
-      
+      .pagination a {
+        text-decoration: none;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        color: #333;
+      }
+
+      .pagination a.active {
+        background-color: #14532D;
+        color: #fff;
+        border-color: #14532D;
+      }
     </style>
 
     <div class="page-wrapper">
@@ -74,11 +94,11 @@ class Index extends BaseView
         <div class="row">
           <div class="col-12 d-flex no-block align-items-center">
             <h4 class="page-title">QUẢN LÝ LOẠI SẢN PHẨM</h4>
-            <div class="ms-auto text-end"> 
+            <div class="ms-auto text-end">
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item"><a href="/admin">Trang chủ</a></li>
-                  <li class="breadcrumb-item active" aria-current="page">Danh sách loại sản phẩm</li>
+                  <li class="breadcrumb-item active" aria-current="page">Danh sách công thức</li>
                 </ol>
               </nav>
             </div>
@@ -90,13 +110,24 @@ class Index extends BaseView
           <div class="col-12">
             <div class="card">
               <div class="card-body d-flex justify-content-between align-items-center">
-                <h5 class="card-title mb-0">Danh mục sản phẩm</h5>
+                <h5 class="card-title mb-0">Danh sách Công thức</h5>
                 <a href="/admin/add_recipe" class="btn btn-primary">Thêm công thức</a>
               </div>
-              <div class="card-filter d-flex" style="gap: 16px; margin-top: -15px ; margin-left: 10px ; margin-bottom: 10px ;" >
+              <div class="card-filter d-flex" style="gap: 16px; margin-top: -15px ; margin-left: 10px ; margin-bottom: 10px ;">
                 <form class="d-flex" method="GET" action="/admin/recipe">
                   <input class="form-control me-2" type="search" name="search" placeholder="Tìm danh mục..." aria-label="Search" value="<?= $_GET['search'] ?? '' ?>">
                   <button class="btn btn-success" type="submit">Tìm</button>
+                </form>
+                <form class="d-flex" method="GET" action="/admin/recipe">
+                  <select class="form-control me-2" name="category">
+                    <option value="">-- Chọn danh mục --</option>
+                    <?php foreach ($data['categories'] as $category): ?>
+                      <option value="<?= $category['id'] ?>" <?= (isset($_GET['category']) && $_GET['category'] == $category['id']) ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($category['name']) ?>
+                      </option>
+                    <?php endforeach; ?>
+                  </select>
+                  <button class="btn btn-success" type="submit">Lọc</button>
                 </form>
               </div>
               <div class="table-responsive">
@@ -106,12 +137,13 @@ class Index extends BaseView
                       <th style="font-weight: bold;" scope="col">Id</th>
 
                       <th style="font-weight: bold;" scope="col">Tiêu đề</th>
-                      <th style="font-weight: bold;" scope="col">Mô tả</th>
                       <th style="font-weight: bold;" scope="col">Hình ảnh</th>
                       <th style="font-weight: bold;" scope="col">Danh mục</th>
                       <th style="font-weight: bold;" scope="col">Nguyên liệu</th>
                       <th style="font-weight: bold;" scope="col">Hướng dẫn</th>
+
                       <th style="font-weight: bold;" scope="col">Ngày thêm</th>
+                      <th style="font-weight: bold;" scope="col">Trạng thái</th>
                       <th></th>
                       <th></th>
                     </tr>
@@ -122,10 +154,8 @@ class Index extends BaseView
                         <tr>
                           <td><?= htmlspecialchars($recipe['id']) ?></td>
                           <td><?= htmlspecialchars($recipe['title']) ?></td>
-                          <td><?= htmlspecialchars($recipe['description']) ?></td>
                           <td><img src="<?= htmlspecialchars($recipe['image_url']) ?>" alt="Image" style="width: 100px;"></td>
                           <td><?= htmlspecialchars($recipe['category_name']) ?></td>
-
                           <td>
                             <button class="btn btn-info btn-sm btn-view" data-content="<?= $recipe["ingredients"] ?>">
                               Xem
@@ -140,6 +170,7 @@ class Index extends BaseView
                           </td>
 
                           <td><?= $recipe['created_at'] ?></td>
+                          <td><?= $recipe['status'] == 1 ? 'Hiển thị' : 'Ẩn' ?></td>
 
                           <td>
                             <a href="/admin/update_recipe/<?= $recipe['id'] ?>">
@@ -176,7 +207,21 @@ class Index extends BaseView
             </div>
           </div>
         </div>
+        <?php if (isset($data['pagination'])): ?>
+          <div class="pagination">
+            <?php
+            $totalPages = ceil($data['pagination']['total'] / $data['pagination']['perPage']);
+            $currentPage = $data['pagination']['currentPage'];
+
+            for ($i = 1; $i <= $totalPages; $i++): ?>
+              <a href="?page=<?= $i ?>" class="<?= $i == $currentPage ? 'active' : '' ?>">
+                <?= $i ?>
+              </a>
+            <?php endfor; ?>
+          </div>
+        <?php endif; ?>
       </div>
+
     </div>
     <script src="<?= APP_URL ?>/public/assets/admin/dist/js/categoryValidation.js">
     </script>

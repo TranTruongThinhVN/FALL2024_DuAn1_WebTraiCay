@@ -2,11 +2,11 @@
 
 namespace App\Helpers;
 
-use Twilio\Rest\Client;
 use App\Models\Client\User;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Twilio\Http\CurlClient;
+use Twilio\Rest\Client;
 
 // use App\Models\Client\User;
 // <!-- Thực tế nếu chia quyền admin, client, hay nhân viên thì chia thành các form đăng nhập riêng thì truy vấn lặp lại các lệnh nên trung gian qa đây -->
@@ -30,6 +30,36 @@ class AuthHelper
         }
         return false;
         // 
+    }
+    public static function findOrCreateUser($userData)
+    {
+        $userModel = new User();
+
+        // Tìm user theo Google ID hoặc email
+        $existingUser = $userModel->getUserByGoogleIdOrEmail($userData['google_id'], $userData['email']);
+
+        if ($existingUser) {
+            // Nếu user đã tồn tại, cập nhật thông tin nếu cần
+            return $existingUser;
+        } else {
+            // Nếu user chưa tồn tại, tạo mới
+            $newUserData = [
+                'google_id' => $userData['google_id'],
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'avatar' => $userData['avatar'],
+                'password' => '', // Mật khẩu trống vì đăng nhập bằng Google
+            ];
+
+            $userId = $userModel->createUser($newUserData);
+
+            if ($userId) {
+                // Lấy thông tin user vừa tạo
+                return $userModel->getOneUser($userId);
+            } else {
+                return false;
+            }
+        }
     }
 
 
@@ -215,31 +245,26 @@ class AuthHelper
     }
     public static function middleware()
     {
-        // var_dump($_SERVER['REQUEST_URI']);
-        $admin = explode('/', $_SERVER['REQUEST_URI']);
-        $admin = $admin[1];
-        if ($admin == 'admin') {
-            // if(!isset($_SESSION['user'])|| $_SESSION['user']['role'] != 1){
-            //     NotificationHelper::error('admin','Tài khoản này không có quyền truy cập');
-            //     header('location: /login');
-            //     exit;
+        // Xác định nếu truy cập admin
+        $path = explode('/', $_SERVER['REQUEST_URI'])[1];
 
-            // }
+        if ($path === 'admin') {
+            // Kiểm tra nếu người dùng đã đăng nhập
             if (!isset($_SESSION['user'])) {
-                NotificationHelper::error('admin', 'Vui lòng đăng nhập');
+                NotificationHelper::error('admin', 'Vui lòng đăng nhập trước khi truy cập!');
                 header('location: /login');
-                // exit;
-                // var_dump($_SESSION['user']); // Thêm dòng này để kiểm tra
-                exit;
+                exit();
             }
 
-            if ($_SESSION['user']['role'] != 0) {
-                NotificationHelper::error('admin', 'Tài khoản này không có quyền truy cập');
+            // Kiểm tra nếu vai trò không phải admin
+            if ($_SESSION['user']['role'] !== 0) {
+                NotificationHelper::error('admin', 'Bạn không có quyền truy cập khu vực này!');
                 header('location: /login');
-                exit;
+                exit();
             }
         }
     }
+
     // use Twilio\Rest\Client;
 
     public static function sendOtpToPhone($phoneNumber, $otp)

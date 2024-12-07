@@ -13,9 +13,9 @@ class Route
     }
     public static function post($url, $controllerMethod)
     {
-        if (isset($_POST['method']))
-            if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['method'] == 'POST')
-                self::$routes[$url] = $controllerMethod;
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            self::$routes[$url] = $controllerMethod;
+        }
     }
     public static function put($url, $controllerMethod)
     {
@@ -26,15 +26,15 @@ class Route
     public static function delete($url, $controllerMethod)
     {
         if (isset($_POST['method']))
-        
-            if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['method'] == 'DELETE'){
-                self::$routes[$url] = $controllerMethod; 
+
+            if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['method'] == 'DELETE') {
+                self::$routes[$url] = $controllerMethod;
             }
     }
 
     public static function dispatch($uri)
     {
-      
+
         if ($uri != '/') {
             // tách thành mảng nếu có ? trên URL
             $uri = explode('?', $uri);
@@ -104,8 +104,8 @@ class Route
         }
         // không khớp với route đã định nghĩa
         else {
-              
-       
+
+
             echo 'not found';
         }
     }

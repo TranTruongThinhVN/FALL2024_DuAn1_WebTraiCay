@@ -289,19 +289,23 @@ class Header extends BaseView
                   resultItem.classList.add("search-result-item");
 
                   resultItem.innerHTML = `
-        <div class="result-item-image">
-            <img src="${item.image}" alt="${item.name}" />
-        </div>
-        <div class="result-item-info">
-            <h4>${item.name}</h4>
-            <p class="current-price">${item.price}</p>
-            ${
-                item.old_price
-                    ? `<span class="old-price"><del>${item.old_price}</del></span>`
-                    : ""
-            }
-        </div>
-    `;
+  <div class="result-item-image">
+      <img src="${item.image}" alt="${item.name}" />
+  </div>
+  <div class="result-item-info">
+      <h4>${item.name}</h4>
+      <div class="result-item-prices">
+          <span class="current-price">${item.price}</span>
+          ${
+            item.discount_price
+              ? `<span class="old-price">${item.discount_price}</span>`
+              : ""
+          }
+      </div>
+  </div>
+`;
+
+
 
                   resultsContainer.appendChild(resultItem);
                 });
@@ -351,53 +355,79 @@ class Header extends BaseView
         .search-results {
           margin-top: 10px;
           background: #fff;
-          /* padding: 10px; */
-          border-radius: 4px;
-          max-height: 550px;
+          border-radius: 8px;
+          max-height: 500px;
           overflow-y: auto;
         }
+
+        .search-results p {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 1.7rem;
+          font-weight: 450;
+          color: #000;
+          margin-top: 50%;
+        }
+
 
         .search-result-item {
           display: flex;
           align-items: center;
-          padding: 20px 10px;
-          /* border-bottom: 1px solid #eee; */
+          padding: 15px;
+          border-bottom: 1px solid #f0f0f0;
           transition: background 0.3s;
+          cursor: pointer;
         }
 
         .search-result-item:hover {
-          background: #f9f9f9;
+          background: #f8f9fa;
         }
 
         .result-item-image img {
-          width: 50px;
-          height: 50px;
+          width: 90px;
+          height: 90px;
           object-fit: cover;
-          border-radius: 4px;
-          margin-right: 10px;
+          border-radius: 6px;
+          margin-right: 15px;
+          border: 1px solid #ddd;
         }
 
         .result-item-info {
           display: flex;
           flex-direction: column;
+          flex: 1;
         }
 
         .result-item-info h4 {
           margin: 0;
-          font-size: 14px;
-          font-weight: bold;
+          font-size: 16px;
+          font-weight: 600;
+          color: #333;
+          line-height: 1.2;
+        }
+
+        .result-item-prices {
+          display: flex;
+          align-items: center;
+          /* Căn giữa theo chiều dọc */
+          gap: 10px;
+          /* Khoảng cách giữa giá và giá giảm */
+          margin-top: 5px;
         }
 
         .result-item-info .current-price {
           color: #e60023;
+          font-size: 14px;
           font-weight: bold;
-          margin: 5px 0;
+          margin: 5px 0 0;
         }
 
         .result-item-info .old-price {
           color: #999;
-          text-decoration: line-through;
           font-size: 12px;
+          text-decoration: line-through;
+          margin-top: 5px;
         }
       </style>
       <script src="<?= APP_URL ?>/public/assets/client/js/overlay.js"></script>

@@ -19,6 +19,18 @@ class Edit extends BaseView
                 color: red;
                 font-weight: bold;
             }
+
+            .form-group {
+                margin-bottom: 1rem;
+                position: relative;
+                padding-bottom: 1rem;
+            }
+
+            small.text-danger {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+            }
         </style>
         <div class="page-wrapper">
             <div class="page-breadcrumb">
@@ -120,6 +132,24 @@ class Edit extends BaseView
                                             <small class="text-danger"><?= $_SESSION['errors']['instructions'] ?></small>
                                         <?php endif; ?>
                                     </div>
+
+                                    <!-- Trạng thái -->
+                                    <!-- Trạng thái -->
+                                    <div class="form-group">
+                                        <label for="status">Trạng thái</label>
+                                        <select class="form-control <?= isset($_SESSION['errors']['status']) ? 'error-border' : '' ?>" id="status" name="status">
+                                            <option value="" disabled>Chọn trạng thái...</option>
+                                            <!-- Hiển thị trạng thái hiện tại hoặc giá trị đã nhập nếu có lỗi -->
+                                            <option value="1" <?= isset($_POST['status']) ? ($_POST['status'] == '1' ? 'selected' : '') : ($data['recipe']['status'] == 1 ? 'selected' : '') ?>>Hiện</option>
+                                            <option value="0" <?= isset($_POST['status']) ? ($_POST['status'] == '0' ? 'selected' : '') : ($data['recipe']['status'] == 0 ? 'selected' : '') ?>>Ẩn</option>
+                                        </select>
+                                        <?php if (isset($_SESSION['errors']['status'])): ?>
+                                            <small class="text-danger"><?= $_SESSION['errors']['status'] ?></small>
+                                        <?php endif; ?>
+                                    </div>
+
+
+
 
                                     <!-- Buttons -->
                                     <div class="border-top">

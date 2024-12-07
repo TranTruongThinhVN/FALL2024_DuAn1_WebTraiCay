@@ -177,6 +177,7 @@
   border: 1px solid #ddd;
   padding: 10px 15px;
   border-radius: 8px;
+  z-index: 9999;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -194,6 +195,7 @@
 .sort-dropdown__menu {
   visibility: hidden;
   opacity: 0;
+  z-index: 999;
   position: absolute;
   top: calc(100% + 5px);
   right: 0;
