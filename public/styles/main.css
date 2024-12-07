@@ -15741,7 +15741,6 @@ a:hover {
   }
 }
 .review-form {
-  max-width: 600px;
   padding: 10px;
   background: linear-gradient(145deg, #fdfdfd, #f3f3f3);
   border-radius: 15px;
