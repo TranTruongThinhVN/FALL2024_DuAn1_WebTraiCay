@@ -29,9 +29,6 @@ class CartController
 
         // Truyền dữ liệu cho header
         Header::render(['cartItems' => $cartItems, 'cartTotal' => $cartTotal]);
-
-
-
         Index::render(['cartItems' => $cartItems]); // Truyền dữ liệu giỏ hàng vào view
         Footer::render(); // Render Footer
     }
@@ -158,12 +155,12 @@ class CartController
         }
 
         $cart = new Cart();
-        $cartItems = $cart->getCartItems($user_id); // Lấy dữ liệu giỏ hàng
+        $cartItems = $cart->getCartProducts($user_id); // Lấy dữ liệu giỏ hàng
         $cartTotal = $cart->getCartTotal($user_id); // Lấy tổng giá trị giỏ hàng
-
 
         // Truyền dữ liệu cho header
         Header::render(['cartItems' => $cartItems, 'cartTotal' => $cartTotal]);
+
 
         // Tiếp tục render phần giỏ hàng trong main content
         Index::render(['cartItems' => $cartItems]);
@@ -174,6 +171,7 @@ class CartController
     {
         try {
             $cartId = $_POST['cart_id'] ?? null; // Lấy `cart_id` từ form
+            error_log("Lỗi cập nhật số lượng: " . print_r($_POST['cart_id']));
             if (!$cartId) {
                 throw new \Exception("Không tìm thấy sản phẩm cần xóa.");
             }
@@ -200,6 +198,7 @@ class CartController
     {
         try {
             $cartIds = $_POST['cart_ids'] ?? null; // Lấy danh sách `cart_ids` từ form
+
             if (!$cartIds || !is_array($cartIds)) {
                 throw new \Exception("Không có sản phẩm nào được chọn.");
             }
@@ -221,6 +220,66 @@ class CartController
                 'message' => $e->getMessage()
             ]);
         }
+    }
+    public static function getProductCart($userId)
+    {
+        $cartModel = new Cart();
+        $cartProducts = $cartModel->getCartProducts($userId);
+
+
+        return $cartProducts;
+    }
+    public function updateCart()
+    {
+        $userid = ($_SESSION['user']['id']);
+        $dataCart = CartController::getProductCart($userid);
+
+        ob_start();
+        ?>
+        <div class="offcanvas-cart-body" id="offcanvas-cart-body">
+            <?php if (!empty($dataCart)): ?>
+                <p class="free-shipping-text">Bạn được giao hàng miễn phí!</p>
+                <hr>
+                <?php foreach ($dataCart as $product): ?>
+                    <div class="cart-item">
+                        <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($product['image']) ?>"
+                            alt="<?= htmlspecialchars($product['sku_name']) ?>">
+                        <div class="item-details">
+                            <h4><?= htmlspecialchars($product['sku_name']) ?></h4>
+                            <span><?= number_format($product['discount_price'] ?? $product['price'], 0, ',', '.') ?>đ</span>
+                            <!-- <span>Xuất xứ: <?= htmlspecialchars($product['variant_name']) ?></span> -->
+                        </div>
+                        <div class="item-quantity-container">
+                            <input type="number" value="<?= $product['quantity'] ?>" class="item-quantity">
+                            <a href="/cart/remove/<?= $product['product_id'] ?>" class="remove-item">Bỏ</a>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Giỏ hàng của bạn đang trống.</p>
+            <?php endif; ?>
+        </div>
+        <div>
+            <p><strong>Tổng: </strong><?= number_format($this->getCartTotal($dataCart), 0, ',', '.') ?> đ</p>
+        </div>
+        <?php
+        $cartHTML = ob_get_clean();
+        echo json_encode([
+            'success' => true,
+            'cartHTML' => $cartHTML,
+            'cartTotal' => number_format($this->getCartTotal($dataCart), 0, ',', '.')
+        ]);
+        exit;
+    }
+    public function getCartTotal($cartItems)
+    {
+
+        $total = 0;
+        foreach ($cartItems as $item) {
+            $price = $item['discount_price'] ?? $item['price'];
+            $total += $price * $item['quantity'];
+        }
+        return $total;
     }
     public function updateQuantity()
     {

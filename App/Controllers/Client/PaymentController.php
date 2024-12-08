@@ -7,7 +7,6 @@ use App\Views\Client\Layouts\Footer;
 use App\Views\Client\Layouts\Header;
 use App\Views\Client\Pages\Cart\Index;
 use App\Models\Client\Cart;
-use App\Models\Client\Order as ClientOrder;
 use App\Views\Client\Pages\PaymentSuccess;
 
 class PaymentController
@@ -133,7 +132,7 @@ class PaymentController
         $orderId = $matches[0] ?? null;
 
         if ($resultCode == '0') {
-            $orderModel = new ClientOrder();
+            $orderModel = new Order();
             $order = $orderModel->getOrderById($orderId);
             $updated = $orderModel->updatePaymentStatus($orderId, 1);
             if ($updated) {

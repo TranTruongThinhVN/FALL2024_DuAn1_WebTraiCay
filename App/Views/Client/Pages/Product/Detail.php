@@ -21,8 +21,8 @@ class Detail extends BaseView
         position: fixed;
         top: 10%;
         right: 2%;
-        background-color: #ffe5e5;
-        border: 1px solid #ff424e;
+        background-color: #e5ffe5;
+        border: 1px solid #28a745;
         border-radius: 8px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         padding: 15px;
@@ -31,6 +31,8 @@ class Detail extends BaseView
         font-family: Arial, sans-serif;
         animation: fadeIn 0.5s ease;
       }
+
+
 
       .cart-notification h4 {
         margin: 0;
@@ -84,10 +86,7 @@ class Detail extends BaseView
       }
     </style>
 
-
     <section>
-
-
       <div class="main-container">
         <div class="product">
           <div class="product__image-section">
@@ -99,11 +98,21 @@ class Detail extends BaseView
 
             <div class="product__thumbnails">
 
-              <img class="product__thumbnail" src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 1" onclick="changeImage(this)">
-              <img class="product__thumbnail" src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 2" onclick="changeImage(this)">
-              <img class="product__thumbnail" src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 3" onclick="changeImage(this)">
-              <img class="product__thumbnail" src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 4" onclick="changeImage(this)">
-              <img class="product__thumbnail" src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 5" onclick="changeImage(this)">
+              <img class="product__thumbnail"
+                src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 1"
+                onclick="changeImage(this)">
+              <img class="product__thumbnail"
+                src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 2"
+                onclick="changeImage(this)">
+              <img class="product__thumbnail"
+                src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 3"
+                onclick="changeImage(this)">
+              <img class="product__thumbnail"
+                src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 4"
+                onclick="changeImage(this)">
+              <img class="product__thumbnail"
+                src="<?= APP_URL ?>/public/uploads/thumbnails/<?= $data['product']['thumbnails'] ?>" alt="Thumbnail 5"
+                onclick="changeImage(this)">
             </div>
             <div class="product__share-like">
               <div class="share-buttons">
@@ -156,12 +165,8 @@ class Detail extends BaseView
                   <label><?= htmlspecialchars($variant['name']) ?></label>
                   <div class="product__variant-options">
                     <?php foreach ($variant['options'] as $option): ?>
-                      <button
-                        type="button"
-                        class="product__variant-option"
-                        data-variant-id="<?= $variant['id'] ?>"
-                        data-option-id="<?= $option['id'] ?>"
-                        onclick="selectOption(this)">
+                      <button type="button" class="product__variant-option" data-variant-id="<?= $variant['id'] ?>"
+                        data-option-id="<?= $option['id'] ?>" onclick="selectOption(this)">
                         <?= htmlspecialchars($option['name']) ?>
                       </button>
 
@@ -244,6 +249,28 @@ class Detail extends BaseView
                     button.classList.add('selected');
                   });
                 });
+
+                function updateHiddenQuantity() {
+                  const quantityInput = document.getElementById('productQuantity');
+                  const hiddenQuantityInput = document.querySelector('input[name="quantity"]');
+                  hiddenQuantityInput.value = quantityInput.value;
+                }
+
+                function incrementQuantity() {
+                  var quantityInput = document.getElementById('productQuantity');
+                  var currentValue = parseInt(quantityInput.value, 10);
+                  quantityInput.value = currentValue + 1;
+                  updateHiddenQuantity();
+                }
+
+                function decrementQuantity() {
+                  var quantityInput = document.getElementById('productQuantity');
+                  var currentValue = parseInt(quantityInput.value, 10);
+                  if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                    updateHiddenQuantity();
+                  }
+                }
 
                 async function updatePrice(variantId, optionId) {
                   console.log("Sending Request: ", {
@@ -339,7 +366,8 @@ class Detail extends BaseView
       <div class="main-container">
         <h2 class="product-description-title">Mô tả sản phẩm</h2>
         <p class="product-description-text">
-          Sản phẩm cà phê sữa đá hòa tan mang đến hương vị đậm đà, dễ pha chế và tiện lợi. Được sản xuất từ nguồn nguyên liệu chọn lọc, đảm bảo mang lại trải nghiệm tuyệt vời cho người thưởng thức.
+          Sản phẩm cà phê sữa đá hòa tan mang đến hương vị đậm đà, dễ pha chế và tiện lợi. Được sản xuất từ nguồn nguyên
+          liệu chọn lọc, đảm bảo mang lại trải nghiệm tuyệt vời cho người thưởng thức.
         </p>
       </div>
     </section>
@@ -426,17 +454,19 @@ class Detail extends BaseView
               </div>
               <div class="form-group mt-3">
                 <label for="content" class="form-label">Để lại ý kiến</label>
-                <textarea class="form-control form-control-lg" id="content" name="content" placeholder="Chúng tôi muốn nghe ý kiến của bạn" rows="6"></textarea>
+                <textarea class="form-control form-control-lg" id="content" name="content"
+                  placeholder="Chúng tôi muốn nghe ý kiến của bạn" rows="6"></textarea>
               </div>
               <button type="submit" class="submit-btn">Đánh giá</button>
             </div>
           </form>
-          <?php if (!empty($data['comments'])) : ?>
+          <?php if (!empty($data['comments'])): ?>
             <div class="review-list ">
               <?php foreach ($data['comments'] as $item): ?>
                 <div class="review-item border-bottom-0">
                   <div class="review-header">
-                    <img src="<?= APP_URL ?>/public/assets/client/images/product/chomchom_giong_thai.webp" alt="User Avatar" class="avatar">
+                    <img src="<?= APP_URL ?>/public/assets/client/images/product/chomchom_giong_thai.webp" alt="User Avatar"
+                      class="avatar">
                     <div class="review-info">
                       <span class="reviewer-name"><?= $item['username'] ?></span>
                       <span class="review-rating">
@@ -470,10 +500,12 @@ class Detail extends BaseView
                     <div class="review-likes">
                       <i class="fas fa-thumbs-up"></i> <span>0</span>
                     </div>
-                    <button class="review-update-text" onclick="toggleForm('edit-btn', 'edit-form-2')" id="edit-btn">Chỉnh sửa</button>
+                    <button class="review-update-text" onclick="toggleForm('edit-btn', 'edit-form-2')" id="edit-btn">Chỉnh
+                      sửa</button>
                     <button class="review-reply">Phản hồi</button>
                   </div>
-                  <form id="edit-form-2" class="review-form" action="/update-comment" method="POST" enctype="multipart/form-data">
+                  <form id="edit-form-2" class="review-form" action="/update-comment" method="POST"
+                    enctype="multipart/form-data">
                     <input type="hidden" name="method" value="PUT">
                     <input type="hidden" name="id" value="<?= $item['id'] ?>">
                     <input type="hidden" name="rating" id="rating-2" value="5">
@@ -494,7 +526,8 @@ class Detail extends BaseView
                       </div>
                       <div class="form-group mt-3">
                         <label for="content" class="form-label">Để lại ý kiến</label>
-                        <textarea class="form-control form-control-lg" id="content" name="content" placeholder="Chúng tôi muốn nghe ý kiến của bạn" rows="6"></textarea>
+                        <textarea class="form-control form-control-lg" id="content" name="content"
+                          placeholder="Chúng tôi muốn nghe ý kiến của bạn" rows="6"></textarea>
                       </div>
                       <button type="submit" class="submit-btn">Cập nhật</button>
                     </div>
@@ -503,7 +536,8 @@ class Detail extends BaseView
               <?php endforeach; ?>
             </div>
             <div class="pagination">
-              <a class="page-number page-item <?= $data['currentPage'] == 1 ? 'disabled' : '' ?>" href="?page=<?= $data['currentPage'] - 1 ?>" style="width: auto;">Previous</a>
+              <a class="page-number page-item <?= $data['currentPage'] == 1 ? 'disabled' : '' ?>"
+                href="?page=<?= $data['currentPage'] - 1 ?>" style="width: auto;">Previous</a>
 
               <?php
               // Hiển thị 3 số trang gần nhau
@@ -522,12 +556,12 @@ class Detail extends BaseView
               }
 
               for ($i = $start; $i <= $end; $i++): ?>
-                <a class="page-number page-item <?= $i == $data['currentPage'] ? 'active' : '' ?>" href="?page=<?= $i ?>"><?= $i ?></a>
+                <a class="page-number page-item <?= $i == $data['currentPage'] ? 'active' : '' ?>"
+                  href="?page=<?= $i ?>"><?= $i ?></a>
               <?php endfor; ?>
 
               <a class="page-number page-item <?= $data['currentPage'] == $data['totalPages'] ? 'disabled' : '' ?>"
-                href="?page=<?= min($data['currentPage'] + 1, $data['totalPages']) ?>"
-                style="width: auto;">Next</a>
+                href="?page=<?= min($data['currentPage'] + 1, $data['totalPages']) ?>" style="width: auto;">Next</a>
             </div>
 
 
@@ -550,7 +584,8 @@ class Detail extends BaseView
           <div class="related-products__grid">
             <!-- Product Card 1 -->
             <div class="related-products__card">
-              <img src="<?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc" class="related-products__image">
+              <img src="<?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc"
+                class="related-products__image">
               <div class="related-products__info">
                 <h3 class="related-products__name">Dừa xiêm gọt trọc</h3>
                 <p class="related-products__price">15,500₫</p>
@@ -560,7 +595,8 @@ class Detail extends BaseView
               </div>
             </div>
             <div class="related-products__card">
-              <img src="<?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc" class="related-products__image">
+              <img src="<?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc"
+                class="related-products__image">
               <div class="related-products__info">
                 <h3 class="related-products__name">Dừa xiêm gọt trọc</h3>
                 <p class="related-products__price">15,500₫</p>
@@ -570,7 +606,8 @@ class Detail extends BaseView
               </div>
             </div>
             <div class="related-products__card">
-              <img src="<?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc" class="related-products__image">
+              <img src="<?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc"
+                class="related-products__image">
               <div class="related-products__info">
                 <h3 class="related-products__name">Dừa xiêm gọt trọc</h3>
                 <p class="related-products__price">15,500₫</p>
@@ -580,7 +617,8 @@ class Detail extends BaseView
               </div>
             </div>
             <div class="related-products__card">
-              <img src="<?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc" class="related-products__image">
+              <img src="<?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc"
+                class="related-products__image">
               <div class="related-products__info">
                 <h3 class="related-products__name">Dừa xiêm gọt trọc</h3>
                 <p class="related-products__price">15,500₫</p>
@@ -590,7 +628,8 @@ class Detail extends BaseView
               </div>
             </div>
             <div class="related-products__card">
-              <img src="<?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc" class="related-products__image">
+              <img src="<?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc"
+                class="related-products__image">
               <div class="related-products__info">
                 <h3 class="related-products__name">Dừa xiêm gọt trọc</h3>
                 <p class="related-products__price">15,500₫</p>
@@ -600,7 +639,8 @@ class Detail extends BaseView
               </div>
             </div>
             <div class="related-products__card">
-              <img src="<?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc" class="related-products__image">
+              <img src="<?= APP_URL ?>public/assets/client/images/home/dua_xiem_got_troc.webp" alt="Dừa xiêm gọt trọc"
+                class="related-products__image">
               <div class="related-products__info">
                 <h3 class="related-products__name">Dừa xiêm gọt trọc</h3>
                 <p class="related-products__price">15,500₫</p>

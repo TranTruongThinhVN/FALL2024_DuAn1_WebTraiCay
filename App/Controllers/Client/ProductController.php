@@ -17,24 +17,24 @@ use App\Views\Client\Pages\Product\Index;
 
 class ProductController
 {
-    // hiển thị danh sách
+    // Hiển thị danh sách sản phẩm
     public static function index()
     {
         $productModel = new Product();
 
-        // Pagination parameters
+        // Tham số phân trang
         $currentPage = isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] > 0 ? (int)$_GET['page'] : 1;
         $itemsPerPage = 12;
         $offset = ($currentPage - 1) * $itemsPerPage;
 
-        // Filtering logic
+        // Lọc sản phẩm
         $keyword = isset($_GET['keyword']) ? trim($_GET['keyword']) : null;
         $priceRange = isset($_GET['price_range']) && preg_match('/^\d+-\d+$/', $_GET['price_range'])
             ? explode('-', $_GET['price_range'])
             : null;
         $originFilter = isset($_GET['origin']) ? (array)$_GET['origin'] : [];
 
-        // Sorting criteria
+        // Sắp xếp sản phẩm
         $validSortOptions = ['default', 'price_asc', 'price_desc', 'name_asc', 'name_desc', 'newest', 'oldest'];
         $sort = isset($_GET['sort']) && in_array($_GET['sort'], $validSortOptions) ? $_GET['sort'] : 'default';
 
@@ -68,20 +68,20 @@ class ProductController
                 break;
         }
 
-        // Fetch filtered, sorted, and paginated products
+        // Lấy danh sách sản phẩm đã lọc, sắp xếp và phân trang
         $products = $productModel->getFilteredProducts($keyword, $priceRange, $originFilter, $orderBy, $direction, $offset, $itemsPerPage);
         $totalProducts = $productModel->getTotalFilteredProductCount($keyword, $priceRange, $originFilter);
 
         $totalPages = ceil($totalProducts / $itemsPerPage);
 
-        // Fetch categories
+        // Lấy danh mục sản phẩm
         $categoryModel = new ClientCategory();
         $categories = $categoryModel->getAllCategoryByStatus();
 
-        // Count products by status (if needed)
+        // Đếm sản phẩm theo trạng thái
         $productCount = $productModel->countProductsByStatus('1');
 
-        // Pass data to the view
+        // Truyền dữ liệu cho view
         $data = [
             'products' => $products,
             'categories' => $categories,
@@ -98,13 +98,7 @@ class ProductController
         Footer::render();
     }
 
-
-
-
-
-
-
-
+    // Hiển thị chi tiết sản phẩm
     public static function detail($id)
     {
         $productModel = new Product();
@@ -116,6 +110,7 @@ class ProductController
             throw new \Exception('Sản phẩm không tồn tại.');
         }
 
+        // Mặc định giá trị cho biến thể và SKU mặc định
         $variants = [];
         $defaultSku = null;
 
@@ -136,18 +131,27 @@ class ProductController
 
         // Lấy bình luận và phân trang cho sản phẩm từ phương thức getCommentProduct
         $comment = new CommentValidation();
-        $commentData = $comment->getCommentProduct($id); // Sử dụng hàm này từ lớp Validations (isValid)
+        $commentData = $comment->getCommentProduct($id); // Đảm bảo hàm này luôn trả về một mảng
 
+        // Mặc định giá trị nếu dữ liệu bình luận thiếu
+        $comments = isset($commentData['comments']) ? $commentData['comments'] : [];
+        $countComment = isset($commentData['countComment']) ? $commentData['countComment'] : 0;
+        $currentPage = isset($commentData['currentPage']) ? $commentData['currentPage'] : 1;
+        $totalPages = isset($commentData['totalPages']) ? $commentData['totalPages'] : 1;
+        $countRating = isset($commentData['countRating']) ? $commentData['countRating'] : 0;
+        $countImages = isset($commentData['countImages']) ? $commentData['countImages'] : 0;
+
+        // Chuẩn bị dữ liệu truyền vào view
         $data = [
             'product' => $product,
             'variants' => $variants,
             'defaultSku' => $defaultSku, // Thêm defaultSku để sử dụng nếu cần
-            'comments' => $commentData['comments'], // Bình luận đã phân trang
-            'countComment' => $commentData['countComment'], // Tổng số bình luận
-            'currentPage' => $commentData['currentPage'], // Trang hiện tại
-            'totalPages' => $commentData['totalPages'], // Tổng số trang
-            'countRating' => $commentData['countRating'],
-            'countImages' => $commentData['countImages']
+            'comments' => $comments, // Bình luận đã phân trang
+            'countComment' => $countComment, // Tổng số bình luận
+            'currentPage' => $currentPage, // Trang hiện tại
+            'totalPages' => $totalPages, // Tổng số trang
+            'countRating' => $countRating,
+            'countImages' => $countImages
         ];
 
         Header::render();

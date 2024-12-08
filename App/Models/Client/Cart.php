@@ -238,6 +238,7 @@ class Cart extends BaseModel
     public function getCartProducts($userId)
     {
         try {
+
             $mysqli = $this->_conn->MySQLi();
             if (!$mysqli->ping()) {
                 error_log('Kết nối MySQL đã mất. Tạo lại kết nối...');
@@ -256,12 +257,12 @@ class Cart extends BaseModel
                     p.price,
                     p.discount_price,
                     p.image,
-                    pv.name AS variant_name,
-                    p.id AS product_id
+                    p.id AS product_id,
+                    p.name AS product_name,
+                    p.type,
+                    cp.cart_id as cart_id
                 FROM cart_products cp
-                INNER JOIN product_variants pv ON cp.product_variant_id = pv.id
-                INNER JOIN skus s ON cp.sku_id = s.id
-                INNER JOIN products p ON pv.product_id = p.id  
+                INNER JOIN products p ON cp.product_id = p.id  
                 WHERE cp.user_id = ?
             ";
 
@@ -338,36 +339,44 @@ class Cart extends BaseModel
             $mysqli = $this->_conn->MySQLi();
 
             // Lấy thông tin từ session và mảng $cartItem
-            $user_id = $_SESSION['user']['id'] ?? null; // Đảm bảo lấy được user_id
-            $product_id = $cartItem['product_id'] ?? null; // Lấy product_id từ cartItem
-            $sku_id = $cartItem['sku_id'] ?? null; // Lấy sku_id từ cartItem
-            $quantity = $cartItem['quantity'] ?? 1; // Đặt số lượng mặc định là 1
+            $user_id = $_SESSION['user']['id'] ?? null;
+            $product_id = $cartItem['product_id'] ?? null;
+            $sku_id = $cartItem['sku_id'] ?? null;
+            $quantity = $cartItem['quantity'] ?? 1;
 
-            // Ghi log giá trị để kiểm tra
-            error_log("User ID: $user_id, Product ID: $product_id, SKU ID: $sku_id, Quantity: $quantity");
-
-            // Kiểm tra giá trị đầu vào
+            // Kiểm tra đầu vào
             if ($user_id === null || $quantity === null || ($sku_id === null && $product_id === null)) {
                 throw new \Exception("Thông tin thêm vào giỏ hàng không đầy đủ.");
             }
 
-            // Câu lệnh SQL
-            $sql = "INSERT INTO cart_products (user_id, product_id, sku_id, quantity, created_at) 
-                VALUES (?, ?, ?, ?, NOW())
-                ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)";
-            $stmt = $mysqli->prepare($sql);
+            // Kiểm tra nếu sản phẩm đã tồn tại
+            $sqlCheck = "SELECT quantity FROM cart_products WHERE user_id = ? AND product_id = ? AND (sku_id = ? OR ? IS NULL)";
+            $stmtCheck = $mysqli->prepare($sqlCheck);
+            $stmtCheck->bind_param('iiii', $user_id, $product_id, $sku_id, $sku_id);
+            $stmtCheck->execute();
+            $result = $stmtCheck->get_result();
 
-            // Gắn các biến vào câu lệnh
-            $stmt->bind_param('iiii', $user_id, $product_id, $sku_id, $quantity);
+            if ($result->num_rows > 0) {
+                // Nếu sản phẩm đã tồn tại, tăng số lượng
+                $row = $result->fetch_assoc();
+                $newQuantity = $row['quantity'] + $quantity;
 
-            // Thực thi câu lệnh
-            if (!$stmt->execute()) {
-                throw new \Exception("Lỗi thêm sản phẩm vào giỏ hàng: " . $stmt->error);
+                $sqlUpdate = "UPDATE cart_products SET quantity = ?, updated_at = NOW() WHERE user_id = ? AND product_id = ? AND (sku_id = ? OR ? IS NULL)";
+                $stmtUpdate = $mysqli->prepare($sqlUpdate);
+                $stmtUpdate->bind_param('iiiii', $newQuantity, $user_id, $product_id, $sku_id, $sku_id);
+                $stmtUpdate->execute();
+            } else {
+                // Nếu sản phẩm chưa tồn tại, thêm mới
+                $sqlInsert = "INSERT INTO cart_products (user_id, product_id, sku_id, quantity, created_at) 
+                          VALUES (?, ?, ?, ?, NOW())";
+                $stmtInsert = $mysqli->prepare($sqlInsert);
+                $stmtInsert->bind_param('iiii', $user_id, $product_id, $sku_id, $quantity);
+                $stmtInsert->execute();
             }
         } catch (\Exception $e) {
-            // Ghi log lỗi để debug
+            // Ghi log lỗi
             error_log("Error adding item to cart: " . $e->getMessage());
-            throw $e; // Bắn lại lỗi để controller xử lý
+            throw $e; // Để controller xử lý tiếp
         }
     }
 

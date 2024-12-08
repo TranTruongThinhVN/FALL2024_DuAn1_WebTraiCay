@@ -4,7 +4,7 @@ namespace App\Views\Client\Pages\Cart;
 
 use App\Views\BaseView;
 
-class index extends BaseView
+class Index extends BaseView
 {
     public static function render($data = null)
     {
@@ -32,40 +32,52 @@ class index extends BaseView
                                 <input type="checkbox" class="custom-checkbox" data-cart-id="<?= $item['cart_id'] ?>">
                             </div>
                             <div class="cart-item__details">
-                                <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($item['sku_image']) ?>" class="cart-item__image">
+                                <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($item['type'] === 'simple' ? $item['image'] : $item['sku_image']) ?>"
+                                    class="cart-item__image">
                                 <div class="cart-item__info">
-                                    <h3 class="cart-item__name"><?= htmlspecialchars($item['product_name']) ?></h3>
-                                    <p class="cart-item__variant">Phân loại: <?= htmlspecialchars($item['variant_name'] ?? 'Không xác định') ?></p>
+                                    <h3 class="cart-item__name"><?= htmlspecialchars($item['sku_name']) ?></h3>
+                                    <p class="cart-item__variant">Phân loại:
+                                        <?= htmlspecialchars($item['variant_name'] ?? 'Không xác định') ?>
+                                    </p>
                                 </div>
                             </div>
                             <div class="cart-item__price">
-                                <?php if (!empty($item['discount_price']) && $item['discount_price'] < $item['sku_price']): ?>
-                                    <span class="discount-price"><?= number_format($item['discount_price']) ?>₫</span>
+                                <?php
+                                $price = $item['type'] === 'simple' ? $item['price'] : $item['sku_price'];
+                                $discountPrice = $item['discount_price'] ?? null;
+                                ?>
+                                <?php if (!empty($discountPrice) && $discountPrice < $price): ?>
+                                    <span class="discount-price"><?= number_format($discountPrice) ?>₫</span>
                                 <?php else: ?>
-                                    <span class="normal-price"><?= number_format($item['sku_price']) ?>₫</span>
+                                    <span class="normal-price"><?= number_format($price) ?>₫</span>
                                 <?php endif; ?>
                             </div>
 
                             <div class="cart-item__quantity">
-                                <button class="cart-item__quantity-btn" data-cart-id="<?= $item['cart_id'] ?>" data-action="decrease">-</button>
-                                <input type="text" value="<?= htmlspecialchars($item['quantity']) ?>" class="cart-item__quantity-input" readonly>
-                                <button class="cart-item__quantity-btn" data-cart-id="<?= $item['cart_id'] ?>" data-action="increase">+</button>
+                                <button class="cart-item__quantity-btn" data-cart-id="<?= $item['cart_id'] ?>"
+                                    data-action="decrease">-</button>
+                                <input type="text" value="<?= htmlspecialchars($item['quantity']) ?>" class="cart-item__quantity-input"
+                                    readonly>
+                                <button class="cart-item__quantity-btn" data-cart-id="<?= $item['cart_id'] ?>"
+                                    data-action="increase">+</button>
                             </div>
                             <div class="cart-item__total">
-                                <?= number_format(($item['discount_price'] ?? $item['sku_price']) * $item['quantity']) ?>₫
+                                <?= number_format(($discountPrice ?? $price) * $item['quantity']) ?>₫
                             </div>
                             <div class="cart-item__action">
-                                <form method="POST" action="/cart-delete-single">
+                                <form id="deleteCartItemForm" data-cart-id="<?= htmlspecialchars($item['cart_id']) ?>">
                                     <input type="hidden" name="method" value="DELETE">
-                                    <input type="hidden" name="cart_id" value="<?= htmlspecialchars($item['cart_id']) ?>">
                                     <button type="submit" class="cart-item__delete-btn">Xóa</button>
                                 </form>
                             </div>
+
+
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <p class="empty-cart">Giỏ hàng của bạn đang trống!</p>
                 <?php endif; ?>
+
             </div>
 
             <!-- Phần tổng kết -->
@@ -217,12 +229,40 @@ class index extends BaseView
 
                     // Gắn danh sách cart_id đã chọn vào input ẩn
                     selectedItemsInput.value = selectedItems.join(',');
-
-                    // Submit form
-                    checkoutForm.submit();
+                    window.location.href = "/checkout";
+                    // // Submit form
+                    // checkoutForm.submit();
                 });
             });
         </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.cart-item__delete-btn').forEach(function(button) {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        var form = button.closest('form'); // Tìm form cha của button
+                        var cartId = form.querySelector('input[name="cart_id"]').value;
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('DELETE', '/cart-delete-single', true);
+                        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        xhr.onreadystatechange = function() {
+                            if (xhr.readyState === XMLHttpRequest.DONE) {
+                                if (xhr.status === 200) {
+                                    console.log('Xóa sản phẩm thành công');
+                                    // Xử lý khi xóa thành công, ví dụ: remove the item from the UI
+                                } else {
+                                    console.error('Lỗi khi xóa sản phẩm');
+                                }
+                            }
+                        };
+                        xhr.send('cart_id=' + encodeURIComponent(cartId));
+                    });
+                });
+            });
+        </script>
+
+
+
 <?php
 
     }

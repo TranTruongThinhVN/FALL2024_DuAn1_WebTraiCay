@@ -49,6 +49,8 @@ Route::get('/policy', 'App\Controllers\Client\PolicyController@index');
 // cart
 Route::post('/cart-add', 'App\Controllers\Client\CartController@addToCart');
 Route::get('/cart', 'App\Controllers\Client\CartController@showCart');
+Route::get('/cart/update', 'App\Controllers\Client\CartController@updateCart');
+
 // Auth *** //// Auth *** //// Auth *** //// Auth *** //// Auth *** //// Auth *** //// Auth *** //// Auth *** //// Auth *** //// Auth *** //
 Route::get('/register', 'App\Controllers\Client\AuthController@register');
 Route::post('/register', 'App\Controllers\Client\AuthController@registerAction');
@@ -200,6 +202,8 @@ Route::delete('/admin/contact/{id}', 'App\Controllers\Admin\ContactController@de
 Route::put('/admin/contact/update-status/{id}', 'App\Controllers\Admin\ContactController@update');
 Route::post('/admin/contacts/reply/{id}', 'App\Controllers\Admin\ContactController@replyEmail');
 Route::post('/process-cash-on-delivery', 'App\Controllers\Client\CheckoutController@processCashOnDelivery');
-Route::post('/checkout', 'App\Controllers\Client\CheckoutController@processCheckout');
+Route::post('/checkout', 'App\Controllers\Client\CheckoutController@store');
+Route::get('/ipn-momo', 'App\Controllers\Client\PaymentController@ipnMomo');
+Route::get('/payment-success', 'App\Controllers\Client\PaymentController@success');
 
 Route::dispatch($_SERVER['REQUEST_URI']);

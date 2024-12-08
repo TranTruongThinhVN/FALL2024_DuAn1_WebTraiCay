@@ -179,19 +179,19 @@ class AuthController
             }
         }
 
-        $orderModel = new Order(); // Import model Order
-        $orders = $orderModel->getOrdersByUserId($id); // Lấy danh sách đơn hàng theo user_id
+        // $orderModel = new Order(); // Import model Order
+        // $orders = $orderModel->getOrdersByUserId($id); // Lấy danh sách đơn hàng theo user_id
 
         // Lấy chi tiết từng đơn hàng
-        foreach ($orders as &$order) {
-            $order['details'] = $orderModel->getOrderDetails($order['id']); // Gọi hàm getOrderDetails
-        }
+        // foreach ($orders as &$order) {
+        //     $order['details'] = $orderModel->getOrderDetails($order['id']); // Gọi hàm getOrderDetails
+        // }
 
         // Lấy thông tin user từ session
         $data = $_SESSION['user'];
 
         // Thêm danh sách đơn hàng vào $data
-        $data['orders'] = $orders;
+        // $data['orders'] = $orders;
 
         // Debug để kiểm tra dữ liệu được truyền vào view
 
