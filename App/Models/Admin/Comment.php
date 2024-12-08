@@ -346,7 +346,40 @@ class Comment extends BaseModel
             'detailedRatings' => $detailedRatings // Chi tiết từng loại đánh giá
         ];
     }
+    public function getMostCommentedProducts($limit = 5)
+    {
+        try {
+            $sql = "
+                SELECT 
+                    p.name AS product_name, 
+                    COUNT(c.id) AS comment_count 
+                FROM 
+                    products p 
+                LEFT JOIN 
+                    comments c 
+                ON 
+                    p.id = c.product_id 
+                GROUP BY 
+                    p.id 
+                ORDER BY 
+                    comment_count DESC 
+                LIMIT ?";
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
 
+            if (!$stmt) {
+                throw new \Exception("Error preparing statement: " . $conn->error);
+            }
+
+            $stmt->bind_param("i", $limit);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $result->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            error_log('Error fetching most commented products: ' . $th->getMessage());
+            return [];
+        }
+    }
     public function updateComment($id, $data)
     {
         try {

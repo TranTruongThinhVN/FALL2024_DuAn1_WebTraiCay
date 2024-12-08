@@ -10,6 +10,15 @@ class Recipe_category extends BaseView
     {
 
 ?>
+<style>
+    .CulinaryRoots__CategoryCardName {
+        color: rgb(20, 83, 45); 
+    }
+
+    .CulinaryRoots__CategoryCardName:hover {
+        color: aliceblue; 
+    }
+</style>
         <section class="CulinaryRoots__Categories">
             <h3 class="CulinaryRoots__CategoriesTitle">Danh Mục Công Thức</h3>
             <div class="CulinaryRoots__SearchBar">
@@ -18,14 +27,14 @@ class Recipe_category extends BaseView
             </div>
             <div class="CulinaryRoots__CategoriesItems">
             <div class="CulinaryRoots__CategoryCard">
-                        <h4 class="CulinaryRoots__CategoryCardName">Tất cả</h4>
+            <a class="CulinaryRoots__CategoryCardName" href="/culinary_roots">Tất cả</a>
                     </div>
                 <?php
                 
                 foreach ($data as $item) :
                 ?>
                     <div class="CulinaryRoots__CategoryCard">
-                        <h4 class="CulinaryRoots__CategoryCardName"><?=$item["name"]?></h4>
+                    <a class="CulinaryRoots__CategoryCardName" href="/culinary_roots/category/<?= $item['id'] ?>"><?= $item['name'] ?></a>
                     </div>
                 <?php
                 endforeach;

@@ -142,4 +142,25 @@ class User extends BaseModel
             return 0;
         }
     }
+
+    public function countUsersByRole($role)
+    {
+        try {
+            $sql = "SELECT COUNT(*) as total FROM {$this->table} WHERE role = ?";
+            $conn = $this->_conn->MySQLi();
+            $stmt = $conn->prepare($sql);
+
+            if (!$stmt) {
+                throw new \Exception("Error preparing statement: " . $conn->error);
+            }
+
+            $stmt->bind_param("s", $role);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            return $result->fetch_assoc()['total'] ?? 0;
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi đếm người dùng theo vai trò: ' . $th->getMessage());
+            return 0;
+        }
+    }
 }

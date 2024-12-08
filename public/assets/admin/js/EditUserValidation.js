@@ -1,76 +1,123 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const nameInput = document.getElementById("name");
-  const nameError = document.getElementById("nameError");
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.querySelector('form');
+  const inputs = {
+      title: document.getElementById('title'),
+      category: document.getElementById('category_id'),
+      image: document.getElementById('image_url'),
+  };
 
-  const emailInput = document.getElementById("email");
-  const emailError = document.getElementById("emailError");
+  const errors = {};
 
-  const passwordInput = document.getElementById("password");
-  const passwordError = document.getElementById("passwordError");
+  // Hàm hiển thị lỗi
+  const showError = (field, message) => {
+      const errorElement = field.nextElementSibling;
 
-  const form = document.getElementById("editUserForm");
+      if (message) {
+          errors[field.id] = message;
+          field.classList.add('error-border');
+          if (!errorElement || !errorElement.classList.contains('text-danger')) {
+              const error = document.createElement('small');
+              error.classList.add('text-danger');
+              error.innerText = message;
+              field.insertAdjacentElement('afterend', error);
+          }
+      } else {
+          delete errors[field.id];
+          field.classList.remove('error-border');
+          if (errorElement && errorElement.classList.contains('text-danger')) {
+              errorElement.remove();
+          }
+      }
+  };
 
-  // Hàm kiểm tra lỗi và hiển thị thông báo
-  function validateInput(input, errorElement, errorMessage) {
-    if (!input.value.trim()) {
-      errorElement.textContent = errorMessage;
-      errorElement.style.display = "block";
-      input.style.border = "1px solid #dc2626";
-    } else {
-      errorElement.style.display = "none";
-      input.style.border = "";
-    }
-  }
+  // Hàm validate từng trường
+  const validateField = (field, value = null) => {
+      const fieldValue = value !== null ? value : field.value.trim();
+      switch (field.id) {
+          case 'title':
+              showError(field, fieldValue.length < 3 ? 'Tiêu đề phải có ít nhất 3 ký tự.' : '');
+              break;
+          
+          case 'category_id':
+              showError(field, !fieldValue ? 'Vui lòng chọn danh mục.' : '');
+              break;
+          case 'image_url':
+              if (field.files[0]) {
+                  const file = field.files[0];
+                  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                  const maxSize = 5 * 1024 * 1024; // 5MB
+                  if (!allowedTypes.includes(file.type)) {
+                      showError(field, 'Chỉ chấp nhận các định dạng JPEG, PNG, hoặc GIF.');
+                  } else if (file.size > maxSize) {
+                      showError(field, 'Dung lượng file không được vượt quá 5MB.');
+                  } else {
+                      showError(field, '');
+                  }
+              } 
+              break;
+              
+      }
+  };
 
-  // Gắn sự kiện `blur` để kiểm tra khi rời khỏi input
-  nameInput.addEventListener("blur", function () {
-    validateInput(nameInput, nameError, "Tên người dùng không được để trống.");
+  // Xử lý các sự kiện của input
+  Object.values(inputs).forEach(input => {
+      input.addEventListener('input', () => validateField(input));
+      input.addEventListener('change', () => validateField(input));
   });
 
-  emailInput.addEventListener("blur", function () {
-    validateInput(emailInput, emailError, "Email không được để trống.");
-  });
+  // Hàm validate CKEditor
+  const validateCKEditor = (fieldId, editorInstance) => {
+      const value = editorInstance.getData().trim();
+      const field = document.getElementById(fieldId);
+      if (!value) {
+          errors[fieldId] = `${field.previousElementSibling.textContent} không được để trống.`;
+          field.classList.add('error-border');
+          let errorElement = field.nextElementSibling;
+          if (!errorElement || !errorElement.classList.contains('text-danger')) {
+              const error = document.createElement('small');
+              error.classList.add('text-danger');
+              error.innerText = errors[fieldId];
+              field.insertAdjacentElement('afterend', error);
+          }
+      } else {
+          delete errors[fieldId];
+          field.classList.remove('error-border');
+          const errorElement = field.nextElementSibling;
+          if (errorElement && errorElement.classList.contains('text-danger')) {
+              errorElement.remove();
+          }
+      }
+  };
 
-  passwordInput.addEventListener("blur", function () {
-    validateInput(
-      passwordInput,
-      passwordError,
-      "Mật khẩu không được để trống."
-    );
-  });
+  let ingredientsEditor, instructionsEditor;
 
-  // Gắn sự kiện `input` để xóa lỗi khi người dùng bắt đầu nhập
-  nameInput.addEventListener("input", function () {
-    nameError.style.display = "none";
-    nameInput.style.border = "";
-  });
+  // Tạo CKEditor cho trường nguyên liệu (ingredients)
+  ClassicEditor
+      .create(document.querySelector('#ingredients'))
+      .then(editor => {
+          ingredientsEditor = editor;
+          editor.model.document.on('change:data', () => validateCKEditor('ingredients', editor));
+      })
+      .catch(error => console.error('CKEditor Ingredients Error:', error));
 
-  emailInput.addEventListener("input", function () {
-    emailError.style.display = "none";
-    emailInput.style.border = "";
-  });
+  // Tạo CKEditor cho trường hướng dẫn (instructions)
+  ClassicEditor
+      .create(document.querySelector('#instructions'))
+      .then(editor => {
+          instructionsEditor = editor;
+          editor.model.document.on('change:data', () => validateCKEditor('instructions', editor));
+      })
+      .catch(error => console.error('CKEditor Instructions Error:', error));
 
-  passwordInput.addEventListener("input", function () {
-    passwordError.style.display = "none";
-    passwordInput.style.border = "";
-  });
+  // Xử lý sự kiện submit form
+  form.addEventListener('submit', function (e) {
+      Object.values(inputs).forEach(input => validateField(input));
+      validateCKEditor('ingredients', ingredientsEditor);
+      validateCKEditor('instructions', instructionsEditor);
 
-  // Kiểm tra form trước khi submit
-  form.addEventListener("submit", function (e) {
-    validateInput(nameInput, nameError, "Tên người dùng không được để trống.");
-    validateInput(emailInput, emailError, "Email không được để trống.");
-    validateInput(
-      passwordInput,
-      passwordError,
-      "Mật khẩu không được để trống."
-    );
-
-    if (
-      !nameInput.value.trim() ||
-      !emailInput.value.trim() ||
-      !passwordInput.value.trim()
-    ) {
-      e.preventDefault(); // Ngăn form submit nếu có lỗi
-    }
+      // Nếu có lỗi, ngăn form submit
+      if (Object.keys(errors).length > 0) {
+          e.preventDefault();
+      }
   });
 });

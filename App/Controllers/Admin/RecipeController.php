@@ -29,43 +29,43 @@ class RecipeController
 
     // hiển thị danh sách
     public static function index()
-    {
-        $keyword = $_GET['search'] ?? ''; // Từ khóa tìm kiếm
-        $category_id = $_GET['category'] ?? ''; // Lọc theo danh mục
-        $status = Recipe::STATUS_ENABLE; // Trạng thái mặc định là hiển thị
-        $recipeModel = new Recipe();
+{
+    $keyword = $_GET['search'] ?? ''; // Từ khóa tìm kiếm
+    $category_id = $_GET['category'] ?? ''; // Lọc theo danh mục
+    $status = Recipe::STATUS_ENABLE; // Trạng thái mặc định là hiển thị
+    $recipeModel = new Recipe();
 
-        // Lấy thông tin phân trang từ URL (nếu không có, mặc định là trang 1)
-        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $recipesPerPage = 9; // Số công thức mỗi trang
-        $offset = ($currentPage - 1) * $recipesPerPage;
+    // Lấy thông tin phân trang từ URL (nếu không có, mặc định là trang 1)
+    $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+    $recipesPerPage = 9; // Số công thức mỗi trang
+    $offset = ($currentPage - 1) * $recipesPerPage;
 
-        // Lấy tổng số công thức theo bộ lọc
-        $totalRecipes = $recipeModel->countFilteredRecipes($keyword, $category_id, $status);
+    // Lấy tổng số công thức theo bộ lọc
+    $totalRecipes = $recipeModel->countFilteredRecipes($keyword, $category_id, $status);
 
-        // Lấy công thức cho trang hiện tại
-        $recipes = $recipeModel->getFilteredRecipes($keyword, $category_id, $status, $recipesPerPage, $offset);
+    // Lấy công thức cho trang hiện tại
+    $recipes = $recipeModel->getFilteredRecipes($keyword, $category_id, $status, $recipesPerPage, $offset);
 
-        // Lấy danh sách danh mục để hiển thị trong bộ lọc
-        $categories = (new Recipe_category())->getAllRecipe_category();
+    // Lấy danh sách danh mục để hiển thị trong bộ lọc
+    $categories = (new Recipe_category())->getAllRecipe_category();
 
-        // Gửi dữ liệu tới View
-        Header::render();
-        Notification::render();
-        NotificationHelper::unset();
-        RecipeIndex::render([
-            'recipes' => $recipes,
-            'search' => $keyword,
-            'categories' => $categories,
-            'selected_category' => $category_id,
-            'pagination' => [
-                'total' => $totalRecipes,
-                'perPage' => $recipesPerPage,
-                'currentPage' => $currentPage,
-            ],
-        ]); // Truyền dữ liệu vào View
-        Footer::render();
-    }
+    // Gửi dữ liệu tới View
+    Header::render();
+    Notification::render();
+    NotificationHelper::unset();
+    RecipeIndex::render([
+        'recipes' => $recipes,
+        'search' => $keyword,
+        'categories' => $categories,
+        'selected_category' => $category_id,
+        'pagination' => [
+            'total' => $totalRecipes,
+            'perPage' => $recipesPerPage,
+            'currentPage' => $currentPage,
+        ],
+    ]); // Truyền dữ liệu vào View
+    Footer::render();
+}
 
 
 

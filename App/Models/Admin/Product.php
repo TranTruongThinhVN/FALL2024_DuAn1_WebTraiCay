@@ -284,4 +284,64 @@ class Product extends BaseModel
             return 0;
         }
     }
+
+    public function getTotalRevenue()
+    {
+        try {
+            $sql = "SELECT SUM(price * quantity_sold) as total_revenue FROM {$this->table}";
+            $conn = $this->_conn->MySQLi();
+            $result = $conn->query($sql);
+            return $result->fetch_assoc()['total_revenue'] ?? 0;
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi tính tổng doanh thu: ' . $th->getMessage());
+            return 0;
+        }
+    }
+
+    // Lấy giá trung bình của các sản phẩm
+    public function getAveragePrice()
+    {
+        try {
+            $sql = "SELECT AVG(price) as average_price FROM {$this->table}";
+            $conn = $this->_conn->MySQLi();
+            $result = $conn->query($sql);
+            return $result->fetch_assoc()['average_price'] ?? 0;
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi tính giá trung bình: ' . $th->getMessage());
+            return 0;
+        }
+    }
+
+    // Thống kê sản phẩm theo danh mục
+    public function getProductsByCategory()
+    {
+        try {
+            $sql = "SELECT categories.name AS category_name, COUNT(*) AS total_products
+                    FROM {$this->table}
+                    INNER JOIN categories ON {$this->table}.category_id = categories.id
+                    GROUP BY categories.name";
+            $conn = $this->_conn->MySQLi();
+            $result = $conn->query($sql);
+            return $result->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi thống kê sản phẩm theo danh mục: ' . $th->getMessage());
+            return [];
+        }
+    }
+
+    // Thống kê số lượng bán được của từng sản phẩm
+    public function getProductSalesStatistics()
+    {
+        try {
+            $sql = "SELECT name, quantity_sold, price, (quantity_sold * price) AS revenue
+                    FROM {$this->table}
+                    ORDER BY revenue DESC";
+            $conn = $this->_conn->MySQLi();
+            $result = $conn->query($sql);
+            return $result->fetch_all(MYSQLI_ASSOC);
+        } catch (\Throwable $th) {
+            error_log('Lỗi khi thống kê số lượng bán được: ' . $th->getMessage());
+            return [];
+        }
+    }
 }

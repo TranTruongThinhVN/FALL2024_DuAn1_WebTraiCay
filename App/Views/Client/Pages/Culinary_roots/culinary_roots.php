@@ -5,11 +5,35 @@ namespace App\Views\Client\Pages\Culinary_roots;
 use App\Views\BaseView;
 use App\Views\Client\Components\Recipe_category;
 
-class Culinary_roots extends BaseView
+class culinary_roots extends BaseView
 {
     public static function render($data = null)
     {
 ?>
+<style>
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.pagination a {
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    color: #333;
+}
+
+.pagination a.active {
+    background-color: #14532D;
+    color: #fff;
+    border-color: #14532D;
+}
+
+</style>
         <!-- Banner -->
         <section class="CulinaryRoots__Banner" style="background-image: url('<?= APP_URL ?>/public/assets/client/images/Culinary_roots/banner.jpg');">
             <div class="CulinaryRoots__BannerContent">
@@ -53,12 +77,22 @@ class Culinary_roots extends BaseView
 
                     </div>
 
-                    <!-- Nút xem thêm công thức -->
-                    <div class="CulinaryRoots__LoadMoreContainer" style="text-align: center;">
-                        <button class="cta-button CulinaryRoots__LoadMoreButton" onclick="loadMoreRecipes()">Xem Thêm Công Thức</button>
-                    </div>
                 </section>
             </main>
+            <?php if (isset($data['pagination'])): ?>
+                <div class="pagination">
+                    <?php
+                    $totalPages = ceil($data['pagination']['total'] / $data['pagination']['perPage']);
+                    $currentPage = $data['pagination']['currentPage'];
+
+                    for ($i = 1; $i <= $totalPages; $i++): ?>
+                        <a href="?page=<?= $i ?>" class="<?= $i == $currentPage ? 'active' : '' ?>">
+                            <?= $i ?>
+                        </a>
+                    <?php endfor; ?>
+                </div>
+            <?php endif; ?>
+
         </div>
         <script src="<?= APP_URL ?>/public/assets/client/js/culinary_roots.js"></script>
 

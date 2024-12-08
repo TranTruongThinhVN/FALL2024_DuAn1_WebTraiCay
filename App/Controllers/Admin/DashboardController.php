@@ -2,42 +2,49 @@
 
 namespace App\Controllers\Admin;
 
+use App\Models\Admin\Comment;
+use App\Models\Admin\Product;
 use App\Models\Admin\User;
-use App\Models\Category;
-use App\Models\Comment;
-use App\Models\Product;
 use App\Views\Admin\Index;
 use App\Views\Admin\Layouts\Footer;
 use App\Views\Admin\Layouts\Header;
 
-
 class DashboardController
 {
-    // hiển thị danh sách
     public static function index()
     {
-        $users = new User();
-        $userData = $users->getAllUser();
-        $userNew = $users->getUserNew();
+        $userModel = new User();
+        $productModel = new Product();
+        $commentModel = new Comment();
+        
+        $totalUsers = $userModel->getTotalUsers();
+        $totalAdmins = $userModel->countUsersByRole('admin');
+        $totalRegularUsers = $userModel->countUsersByRole('user');
 
-        // $products = new Product();
-        // $countProducts = $products->countProduct();
+        $totalProducts = $productModel->getTotalProducts();
+        $totalRevenue = $productModel->getTotalRevenue();
+        $averagePrice = $productModel->getAveragePrice();
+        $productsByCategory = $productModel->getProductsByCategory();
+        $productSalesStats = $productModel->getProductSalesStatistics();
 
-        $category = new Category();
-        $countCategory = $category->countCategory();
-
-        // $comments = new Comment();
-        // $commentNew = $comments->getLatestComment();
+        $totalComments = $commentModel->getTotalComments();
+        $mostCommentedProducts = $commentModel->getMostCommentedProducts();
         $data = [
-            'users' => $userData,
-            'user_new' => $userNew,
-            // 'countProducts' => $countProducts,
-            // 'countCategory' => $countCategory,
-            // 'comment_new' => $commentNew,
-            // 'countProducts' => $countProducts,
+            'totalUsers' => $totalUsers,
+            'totalAdmins' => $totalAdmins,
+            'totalRegularUsers' => $totalRegularUsers,
+            'totalProducts' => $totalProducts,
+            'totalRevenue' => $totalRevenue,
+            'averagePrice' => $averagePrice,
+            'productsByCategory' => $productsByCategory,
+            'productSalesStats' => $productSalesStats,
+            'totalComments' => $totalComments,
+            'mostCommentedProducts' => $mostCommentedProducts,
         ];
+
         Header::render();
         Index::render($data);
         Footer::render();
     }
 }
+

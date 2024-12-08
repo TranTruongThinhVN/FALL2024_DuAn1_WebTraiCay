@@ -46,6 +46,10 @@ Route::get('/cart', 'App\Controllers\Client\CartController@index');
 Route::get('/culinary_roots', 'App\Controllers\Client\Culinary_rootsController@index');
 Route::get('/culinary_roots_detail', 'App\Controllers\Client\culinary_rootsController@detail');
 Route::get('/policy', 'App\Controllers\Client\PolicyController@index');
+
+Route::get('/culinary_roots/category/{id}', 'App\Controllers\Client\Culinary_rootsController@category');
+Route::get('/api/culinary_roots/category/{id}', 'App\Controllers\Client\Culinary_rootsController@fetchRecipesByCategory');
+
 // cart
 Route::post('/cart-add', 'App\Controllers\Client\CartController@addToCart');
 Route::get('/cart', 'App\Controllers\Client\CartController@showCart');
