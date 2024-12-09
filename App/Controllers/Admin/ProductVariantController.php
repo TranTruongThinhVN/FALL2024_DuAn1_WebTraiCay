@@ -81,9 +81,10 @@ class ProductVariantController
         $result = $model->createVariant($data);
 
         if ($result) {
+            NotificationHelper::success('store_variant', 'Thêm thuộc tính sản phẩm thành công');
             header('Location: /admin/product-variants');
         } else {
-            // NotificationHelper::error('Lỗi khi thêm biến thể.');
+            NotificationHelper::error('store_variant', 'Thêm thuộc tính sản phẩm thất bại');
         }
     }
 

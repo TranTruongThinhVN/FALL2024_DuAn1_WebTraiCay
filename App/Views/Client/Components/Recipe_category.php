@@ -12,20 +12,17 @@ class Recipe_category extends BaseView
 ?>
         <section class="CulinaryRoots__Categories">
             <h3 class="CulinaryRoots__CategoriesTitle">Danh Mục Công Thức</h3>
-            <div class="CulinaryRoots__SearchBar">
-                <input type="text" class="CulinaryRoots__SearchBarInput" placeholder="Tìm công thức...">
-                <button class="CulinaryRoots__SearchBarButton">Tìm</button>
-            </div>
+
             <div class="CulinaryRoots__CategoriesItems">
-            <div class="CulinaryRoots__CategoryCard">
-                        <h4 class="CulinaryRoots__CategoryCardName">Tất cả</h4>
-                    </div>
+                <div class="CulinaryRoots__CategoryCard">
+                    <h4 class="CulinaryRoots__CategoryCardName">Tất cả</h4>
+                </div>
                 <?php
-                
+
                 foreach ($data as $item) :
                 ?>
                     <div class="CulinaryRoots__CategoryCard">
-                        <h4 class="CulinaryRoots__CategoryCardName"><?=$item["name"]?></h4>
+                        <h4 class="CulinaryRoots__CategoryCardName"><?= $item["name"] ?></h4>
                     </div>
                 <?php
                 endforeach;

@@ -86,7 +86,7 @@ class Product extends BaseView
                 <table class="table">
                   <thead>
                     <tr>
-                      <th class="text-center"><i class="fas fa-image"></i></th>
+                      <th>Ảnh</th>
                       <th>Tên sản phẩm</th>
                       <th>Danh mục</th>
                       <th>Giá</th>
@@ -102,7 +102,7 @@ class Product extends BaseView
                       <?php foreach ($data['products'] as $product): ?>
                         <tr>
                           <td>
-                            <img src="/public/uploads/products/<?= htmlspecialchars($product['image']) ?>" alt="Ảnh sản phẩm" style="width: 60px; height: 60px;">
+                            <img style="width: 80px; height:80px; object-fit:cover;" src="/public/uploads/products/<?= htmlspecialchars($product['image']) ?>" alt="Ảnh sản phẩm" style="width: 60px; height: 60px;">
                           </td>
                           <td>
                             <!-- Tên sản phẩm -->

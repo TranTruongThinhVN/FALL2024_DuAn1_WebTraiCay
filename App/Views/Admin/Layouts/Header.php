@@ -214,17 +214,7 @@ class Header extends BaseView
                                         </li>
                                     </ul>
                                 </li>
-                                <li class="sidebar-item">
-                                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-regular fa-credit-card"></i></i></i><span class="hide-menu">Thanh toán </span></a>
-                                    <ul aria-expanded="false" class="collapse  first-level">
-                                        <li class="sidebar-item">
-                                            <a href="/admin/checkout" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Danh sách </span></a>
-                                        </li>
-                                        <li class="sidebar-item">
-                                            <a href="/admin/add-category" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Thêm mới </span></a>
-                                        </li>
-                                    </ul>
-                                </li>
+
                                 <li class="sidebar-item">
                                     <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-solid fa-user"></i><span class="hide-menu">Người dùng </span></a>
                                     <ul aria-expanded="false" class="collapse  first-level">
@@ -240,14 +230,12 @@ class Header extends BaseView
                                     </ul>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-solid fa-user"></i><span class="hide-menu">Người dùng </span></a>
+                                    <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i class="fa-solid fa-user"></i><span class="hide-menu">Liên hệ</span></a>
                                     <ul aria-expanded="false" class="collapse  first-level">
                                         <li class="sidebar-item">
                                             <a href="/admin/contact" class="sidebar-link"><i class="mdi mdi-note-outline"></i><span class="hide-menu"> Danh sách </span></a>
                                         </li>
-                                        <li class="sidebar-item">
-                                            <a href="/admin/user-create" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Thêm mới </span></a>
-                                        </li>
+
                                         <!-- <li class="sidebar-item">
                                             <a href="/admin/user-details" class="sidebar-link"><i class="mdi mdi-note-plus"></i><span class="hide-menu"> Chi tiết </span></a>
                                         </li> -->

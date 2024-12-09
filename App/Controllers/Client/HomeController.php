@@ -16,7 +16,7 @@ class HomeController
         $product = new Product();
         $featuredProducts = $product->getAllFeaturedProducts(); // Lấy danh sách sản phẩm nổi bật
         $recipeModel = new Recipe();
-        $latestRecipes = $recipeModel->getLatestRecipesWithCategory(6); // Lấy 6 công thức mới nhất
+        $latestRecipes = $recipeModel->getLatestRecipesWithCategory(8); // Lấy 6 công thức mới nhất
 
         $data = [
             'featuredProducts' => $featuredProducts,

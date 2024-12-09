@@ -10,6 +10,28 @@ class Culinary_roots extends BaseView
     public static function render($data = null)
     {
 ?>
+        <style>
+            .pagination {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+                gap: 10px;
+            }
+
+            .pagination a {
+                text-decoration: none;
+                padding: 5px 10px;
+                border: 1px solid #ccc;
+                border-radius: 3px;
+                color: #333;
+            }
+
+            .pagination a.active {
+                background-color: #14532D;
+                color: #fff;
+                border-color: #14532D;
+            }
+        </style>
         <!-- Banner -->
         <section class="CulinaryRoots__Banner" style="background-image: url('<?= APP_URL ?>/public/assets/client/images/Culinary_roots/banner.jpg');">
             <div class="CulinaryRoots__BannerContent">
@@ -37,7 +59,15 @@ class Culinary_roots extends BaseView
                                     <img src="<?= ($item['image_url']); ?>" alt="Mô tả hình ảnh" class="recipe-image">
                                     <div class="recipe-content">
                                         <h3 class="recipe-title"><?= $item["title"] ?></h3>
-                                        <p class="recipe-description"><?= $item["description"] ?></p>
+                                        <p style="
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    font-size: 16px;
+    line-height: 1.5;
+" class="recipe-description"><?= $item["description"] ?></p>
                                         <a href="#" class="recipe-link">CHI TIẾT <span>→</span></a>
                                     </div>
                                 </div>
@@ -53,12 +83,34 @@ class Culinary_roots extends BaseView
 
                     </div>
 
-                    <!-- Nút xem thêm công thức -->
-                    <div class="CulinaryRoots__LoadMoreContainer" style="text-align: center;">
-                        <button class="cta-button CulinaryRoots__LoadMoreButton" onclick="loadMoreRecipes()">Xem Thêm Công Thức</button>
-                    </div>
                 </section>
             </main>
+            <style>
+                p {
+                    font-size: 1.2rem;
+                    color: #666;
+                    line-height: 1.5;
+                    display: -webkit-box !important;
+                    -webkit-line-clamp: 2 !important;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+            </style>
+            <?php if (isset($data['pagination'])): ?>
+                <div class="pagination">
+                    <?php
+                    $totalPages = ceil($data['pagination']['total'] / $data['pagination']['perPage']);
+                    $currentPage = $data['pagination']['currentPage'];
+
+                    for ($i = 1; $i <= $totalPages; $i++): ?>
+                        <a href="?page=<?= $i ?>" class="<?= $i == $currentPage ? 'active' : '' ?>">
+                            <?= $i ?>
+                        </a>
+                    <?php endfor; ?>
+                </div>
+            <?php endif; ?>
+
         </div>
         <script src="<?= APP_URL ?>/public/assets/client/js/culinary_roots.js"></script>
 

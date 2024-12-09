@@ -125,7 +125,7 @@ Route::put('/admin/variant-options/update/{id}', 'App\Controllers\Admin\ProductV
 Route::delete('/admin/variant-options/delete/{id}', 'App\Controllers\Admin\ProductVariantOptionController@delete');
 Route::get('/admin/product-variants/options', 'App\Controllers\Admin\ProductVariantOptionController@getVariantOptions');
 // Route cho xóa một sản phẩm
-Route::delete('/cart-delete-single', 'App\Controllers\Client\CartController@deleteSingle');
+Route::delete('/cart/remove/{id}', 'App\Controllers\Client\CartController@deleteSingle');
 
 // Route cho xóa nhiều sản phẩm
 Route::delete('/cart-delete-multiple', 'App\Controllers\Client\CartController@deleteMultiple');

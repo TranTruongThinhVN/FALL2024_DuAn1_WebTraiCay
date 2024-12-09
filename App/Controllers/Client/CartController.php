@@ -235,7 +235,7 @@ class CartController
         $dataCart = CartController::getProductCart($userid);
 
         ob_start();
-        ?>
+?>
         <div class="offcanvas-cart-body" id="offcanvas-cart-body">
             <?php if (!empty($dataCart)): ?>
                 <p class="free-shipping-text">Bạn được giao hàng miễn phí!</p>
@@ -262,7 +262,7 @@ class CartController
         <div>
             <p><strong>Tổng: </strong><?= number_format($this->getCartTotal($dataCart), 0, ',', '.') ?> đ</p>
         </div>
-        <?php
+<?php
         $cartHTML = ob_get_clean();
         echo json_encode([
             'success' => true,

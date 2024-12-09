@@ -290,7 +290,7 @@ class Recipe extends BaseModel
             return [];
         }
     }
-    public function getLatestRecipesWithCategory($limit = 6)
+    public function getLatestRecipesWithCategory($limit = 8)
     {
         try {
             $sql = "SELECT recipes.*, recipe_categories.name AS category_name

@@ -141,28 +141,38 @@ class Index extends BaseView
 
             .product-card__price {
               margin: 10px 0;
-              font-size: 16px;
+              font-size: 13px;
+              display: flex;
+              /* Đặt flexbox để căn ngang */
+              justify-content: flex-start;
+              /* Căn trái */
+              align-items: center;
+              /* Căn giữa theo chiều dọc */
+              gap: 8px;
+              /* Khoảng cách giữa giá gốc và giá giảm */
             }
 
             .product-card__price s {
               color: #888;
-              margin-right: 5px;
-              font-size: 13px;
+              font-size: 12px;
+              /* Kích thước giá gốc nhỏ hơn */
+              margin: 0;
+              /* Xóa khoảng cách mặc định */
             }
 
             .product-card__price span {
               color: red;
               font-weight: bold;
-              font-size: 16px;
-              display: block;
-              /* Thêm thuộc tính này */
+              font-size: 14px;
+              /* Kích thước giá giảm lớn hơn giá gốc */
             }
+
 
             .product-card__price .discount-price {
               /* Tạo class mới */
               color: red;
               font-weight: bold;
-              font-size: 16px;
+              font-size: 15px;
               display: block;
             }
           </style>

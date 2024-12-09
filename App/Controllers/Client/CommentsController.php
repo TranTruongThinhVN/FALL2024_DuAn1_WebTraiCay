@@ -35,8 +35,8 @@ class CommentsController
                 'rating' => $_POST['rating'],
                 'content' => $_POST['content'],
                 'user_id' => $_POST['user_id'],
-                'product_id' => 115, //$_POST['product_id'],
-                'created_at' => date('Y-m-d H:i:s'),
+                'product_id' => $_POST['product_id'],
+
             ];
             try {
                 $comments = new Comment();

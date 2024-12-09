@@ -195,15 +195,16 @@ class Header extends BaseView
                   <hr>
                   <?php foreach ($cartItems as $product): ?>
                     <div class="cart-item">
-                      <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($product['image']) ?>"
-                        alt="<?= htmlspecialchars($product['sku_name']) ?>">
+                      <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['sku_name'] ?? $product['product_name']) ?>">
                       <div class="item-details">
-                        <h4><?= htmlspecialchars($product['product_name']) ?></h4>
-                        <span><?= number_format($product['discount_price'] ?? $product['price'], 0, ',', '.') ?>đ</span>
-                      </div>
-                      <div class="item-quantity-container">
-                        <input type="text" value="<?= $product['quantity'] ?>" class="item-quantity">
-                        <a href="#" class="remove-item">Bỏ</a>
+                        <h4><?= htmlspecialchars($product['sku_name'] ?? $product['product_name']) ?></h4>
+                        <span>
+                          <?php
+                          $originalPrice = $product['price'];
+                          $discountPrice = $product['discount_price'] ?? 0;
+                          $finalPrice = max($originalPrice - $discountPrice, 0); // Không âm
+                          echo number_format($finalPrice, 0, ',', '.'); ?>₫
+                        </span>
                       </div>
                     </div>
                   <?php endforeach; ?>
@@ -211,6 +212,8 @@ class Header extends BaseView
                   <p>Giỏ hàng của bạn đang trống.</p>
                 <?php endif; ?>
               </div>
+
+
 
               <div class="offcanvas-cart-footer">
                 <div class="cart-total">
@@ -449,6 +452,82 @@ class Header extends BaseView
           margin-top: 5px;
         }
       </style>
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          const removeButtons = document.querySelectorAll(".remove-item");
+
+          removeButtons.forEach((button) => {
+            button.addEventListener("click", function(event) {
+              event.preventDefault();
+
+              const cartId = this.getAttribute("data-cart-id");
+              if (!cartId) {
+                alert("Không tìm thấy sản phẩm để xóa!");
+                return;
+              }
+
+              // Gửi yêu cầu xóa sản phẩm
+              fetch(`/cart/deleteSingle`, {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                  },
+                  body: `cart_id=${cartId}`,
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.success) {
+                    alert(data.message || "Sản phẩm đã được xóa!");
+                    // Xóa sản phẩm khỏi giao diện
+                    this.closest(".cart-item").remove();
+
+                    // Cập nhật tổng giá trị giỏ hàng
+                    updateCartTotal();
+                  } else {
+                    alert(data.message || "Không thể xóa sản phẩm!");
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                  alert("Đã xảy ra lỗi khi xóa sản phẩm!");
+                });
+            });
+          });
+        });
+      </script>
+      <script>
+        document.querySelectorAll('.remove-item').forEach(button => {
+          button.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            const cartId = this.getAttribute('data-cart-id');
+            if (!cartId) {
+              alert('Không tìm thấy sản phẩm để xóa!');
+              return;
+            }
+
+            fetch(`/cart/remove/${cartId}`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  alert(data.message || 'Sản phẩm đã được xóa!');
+                  this.closest('.cart-item').remove();
+                } else {
+                  alert(data.message || 'Không thể xóa sản phẩm!');
+                }
+              })
+              .catch(error => {
+                console.error('Error:', error);
+                alert('Đã xảy ra lỗi khi xóa sản phẩm!');
+              });
+          });
+        });
+      </script>
       <script src="<?= APP_URL ?>/public/assets/client/js/overlay.js"></script>
       <!-- Css tìm kiếm + css nội dung tìm kiếm -->
   <?php

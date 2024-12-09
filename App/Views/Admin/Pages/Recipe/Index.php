@@ -154,7 +154,7 @@ class Index extends BaseView
                         <tr>
                           <td><?= htmlspecialchars($recipe['id']) ?></td>
                           <td><?= htmlspecialchars($recipe['title']) ?></td>
-                          <td><img src="<?= htmlspecialchars($recipe['image_url']) ?>" alt="Image" style="width: 100px;"></td>
+                          <td><img src="<?= htmlspecialchars($recipe['image_url']) ?>" alt="Image" style="width: 80px; height:80px; object-fit:cover;"></td>
                           <td><?= htmlspecialchars($recipe['category_name']) ?></td>
                           <td>
                             <button class="btn btn-info btn-sm btn-view" data-content="<?= $recipe["ingredients"] ?>">

@@ -65,14 +65,13 @@ class Home extends BaseView
       </div>
     </section>
 
-    <section class="product-section">
+    <s class="product-section">
       <div class="main-container">
         <div class="featured-products">
           <?php if (!empty($data['featuredProducts'])): ?>
             <h1 class="title-featured-products">TRÁI NGON HÔM NAY</h1>
 
             <div class="product-grid">
-
               <?php foreach ($data['featuredProducts'] as $product): ?>
                 <div class="product-card">
                   <img src="<?= APP_URL ?>/public/uploads/products/<?= htmlspecialchars($product['image']) ?>"
@@ -80,24 +79,71 @@ class Home extends BaseView
                     class="product-image">
                   <div class="product-info">
                     <h3 class="product-name"><?= htmlspecialchars($product['name']) ?></h3>
-                    <p class="product-price"><?= number_format($product['price'], 0, ',', '.') ?>₫</p>
+                    <p class="product-price">
+                      <?php if (!empty($product['final_discount_price']) && $product['final_discount_price'] > 0): ?>
+                        <!-- Giá gốc có gạch ngang -->
+                        <del><?= number_format($product['price'], 0, ',', '.') ?>₫</del>
+                        <!-- Giá giảm -->
+                        <span class="discount-price"><?= number_format($product['final_price'], 0, ',', '.') ?>₫</span>
+                      <?php else: ?>
+                        <!-- Nếu không có giá giảm, chỉ hiển thị giá gốc -->
+                        <span class="regular-price"><?= number_format($product['price'], 0, ',', '.') ?>₫</span>
+                      <?php endif; ?>
+                    </p>
+
+
+
+
+
+
                     <a href="/product-detail/<?= $product['id'] ?>" class="buy-button">
                       <i class="fas fa-shopping-bag"></i> Chọn Mua
                     </a>
                   </div>
                 </div>
               <?php endforeach; ?>
-
-            <?php else: ?>
-              <!-- <p class="no-products text-center">Hiện tại không có sản phẩm nổi bật nào.</p> -->
-
             </div>
+
           <?php endif; ?>
           <!-- Nút "Xem Thêm" -->
           <!-- <button class="show-more-btn" data-category="featured" onclick="showMoreProducts('featured')">Xem Thêm</button> -->
         </div>
       </div>
-    </section>
+      <style>
+        .product-price {
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          /* Khoảng cách giữa giá gốc và giá giảm */
+        }
+
+        .product-price del {
+          color: #888;
+          font-size: 12px;
+          text-decoration: line-through !important;
+          /* Chỉ gạch ngang giá gốc */
+          margin-right: 8px;
+        }
+
+        * {
+          text-decoration: none !important;
+          /* Không áp dụng chung cho toàn bộ các phần tử */
+        }
+
+        .product-price .discount-price {
+          color: red;
+          font-weight: bold;
+          font-size: 14px;
+        }
+
+        .product-price .regular-price {
+          color: #000;
+          font-weight: bold;
+          font-size: 14px;
+        }
+      </style>
+    </s>
     <!-- Section 1: Ảnh bên trái, nội dung bên phải -->
     <section class="brand-introduction">
       <div class="main-container">
@@ -149,7 +195,7 @@ class Home extends BaseView
           <div class="news-grid">
             <?php foreach ($data['latestRecipes'] as $recipe): ?>
               <!-- Tin Tức 1 -->
-              <div class="news-card">
+              <div class="news-card" onclick="location.href='/culinary_roots_detail/<?= $recipe['id'] ?>'">
                 <img src="<?= ($recipe['image_url']); ?>" alt="Bắt gặp Sài Gòn xưa trong món uống...">
 
                 <div class="news-content">

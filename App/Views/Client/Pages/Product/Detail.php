@@ -149,6 +149,7 @@ class Detail extends BaseView
               }
               ?>
 
+
               <?php if (!empty($discount_price) && $discount_price > 0): ?>
                 <!-- Hiển thị giá gốc và giá sau giảm -->
                 <s><?= number_format($original_price) ?> VNĐ</s>
@@ -223,7 +224,41 @@ class Detail extends BaseView
               </div>
             </div>
 
+            <style>
+              .product__price {
+                font-size: 18px;
+                display: flex;
+                /* Sử dụng flexbox để căn chỉnh ngang */
+                align-items: center;
+                /* Căn giữa theo chiều dọc */
+                gap: 10px;
+                /* Khoảng cách giữa các phần tử */
+              }
 
+              .product__price s {
+                color: #888;
+                /* Màu xám cho giá gốc */
+                font-size: 16px;
+                /* Kích thước chữ giá gốc */
+                /* Khoảng cách giữa giá gốc và giá giảm */
+              }
+
+              .product__price span {
+                color: #ff424e;
+                /* Màu đỏ nổi bật cho giá giảm */
+                font-weight: bold;
+                /* Làm đậm giá giảm */
+                font-size: 20px;
+                /* Tăng kích thước chữ cho giá giảm */
+              }
+
+              .product__price .discount-price {
+                color: #ff424e;
+                /* Màu đỏ cho giá giảm */
+                font-weight: bold;
+                font-size: 20px;
+              }
+            </style>
             <div class="product__actions">
               <button class="cta-button product__buy-now">Mua ngay</button>
               <form id="addToCartForm" action="/cart-add" method="post">

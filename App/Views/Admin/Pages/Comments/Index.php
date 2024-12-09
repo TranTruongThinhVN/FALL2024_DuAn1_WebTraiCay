@@ -57,9 +57,9 @@ class Index extends BaseView
                                             <a class="dropdown-item" href="#">Bình luận dài</a>
                                             <a class="dropdown-item" href="#">Bình luận ngắn</a>
                                         </div>
-                                    </div> 
-                                    <form class="d-flex" method="GET" action=""> 
-                                        <input type="text" name="keyword" class="form-control me-2" type="search" placeholder="Tìm mã sản phẩm" aria-label="Search" value="<?= htmlspecialchars($data['keyword'])?>">
+                                    </div>
+                                    <form class="d-flex" method="GET" action="">
+                                        <input type="text" name="keyword" class="form-control me-2" type="search" placeholder="Tìm mã sản phẩm" aria-label="Search" value="<?= htmlspecialchars($data['keyword']) ?>">
                                         <button class="btn btn-success text-white" type="submit">Search</button>
                                     </form>
                                 </div>
@@ -205,7 +205,54 @@ class Index extends BaseView
                 });
             });
         </script>
+        <style>
+            .modal {
+                display: block;
+                /* Ẩn modal mặc định */
+                position: fixed;
+                /* Đảm bảo modal ở vị trí cố định */
+                top: 50%;
+                /* Đưa modal đến giữa theo chiều dọc */
+                left: 50%;
+                /* Đưa modal đến giữa theo chiều ngang */
+                transform: translate(-50%, -50%);
+                /* Đẩy modal ra khỏi điểm 50% của chiều rộng và chiều cao để căn chính xác vào giữa */
+                width: 560px;
+                /* Chiều rộng modal, có thể thay đổi theo nhu cầu */
+                height: 340px;
+                max-width: 600px;
+                /* Chiều rộng tối đa của modal */
+                background-color: rgba(0, 0, 0, 0.5);
+                /* Lớp nền mờ */
+                z-index: 9999;
+                /* Đảm bảo modal nằm trên tất cả các phần tử khác */
+                align-items: center;
+                justify-content: center;
+                box-sizing: border-box;
+                box-shadow: 0 6px 11px rgba(0, 0, 0, 0.2);
+                /* Thêm shadow */
 
+            }
+
+            .modal-content {
+                background-color: white;
+                padding: 20px;
+                height: 100%;
+                /* border-radius: 8px; */
+                max-height: 80vh;
+                overflow-y: auto;
+                border: none;
+                outline: none;
+            }
+
+            .close {
+                cursor: pointer;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                font-size: 24px;
+            }
+        </style>
 <?php
     }
 }

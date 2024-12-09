@@ -69,8 +69,16 @@ class Product extends BaseModel
 
             // Correctly calculate final_price and final_discount_price
             foreach ($products as &$product) {
-                $product['final_price'] = $product['sku_price'] ?? $product['product_price'] ?? 0;
-                $product['final_discount_price'] = $product['sku_discount_price'] ?? $product['product_discount_price'] ?? 0;
+                if ($product['type'] === 'variable') {
+                    $originalPrice = $product['sku_price'] ?? 0;
+                    $discountPrice = $product['sku_discount_price'] ?? 0;
+                } else {
+                    $originalPrice = $product['product_price'] ?? 0;
+                    $discountPrice = $product['product_discount_price'] ?? 0;
+                }
+
+                $product['final_price'] = max(0, $originalPrice - $discountPrice); // Đảm bảo không âm
+                $product['final_discount_price'] = ($discountPrice > $originalPrice) ? 0 : $discountPrice; // Không cho phép giá giảm > giá gốc
             }
 
             return $products;
@@ -368,14 +376,13 @@ class Product extends BaseModel
     {
         try {
             $sql = "SELECT products.*, categories.name AS category_name 
-FROM products 
-INNER JOIN categories ON products.category_id = categories.id 
-WHERE products.is_featured = 1 
-  AND products.status = 1 
-  AND categories.status = 1 
-ORDER BY products.updated_at DESC, products.created_at DESC 
-LIMIT 12;
-"; // Lấy 12 sản phẩm nổi bật mới nhất
+                    FROM products 
+                    INNER JOIN categories ON products.category_id = categories.id 
+                    WHERE products.is_featured = 1 
+                      AND products.status = 1 
+                      AND categories.status = 1 
+                    ORDER BY products.updated_at DESC, products.created_at DESC 
+                    LIMIT 12";
 
             $result = $this->_conn->MySQLi()->query($sql);
 
@@ -383,12 +390,43 @@ LIMIT 12;
                 throw new \Exception($this->_conn->MySQLi()->error);
             }
 
-            return $result->fetch_all(MYSQLI_ASSOC);
+            $products = $result->fetch_all(MYSQLI_ASSOC);
+
+            // Xử lý giá sản phẩm
+            // Xử lý logic tính toán giá (update đoạn foreach tính toán giá)
+            foreach ($products as &$product) {
+                if ($product['type'] === 'variable') {
+                    // Sản phẩm "variable": giá từ bảng skus
+                    $originalPrice = $product['sku_price'] ?? 0;
+                    $discountPrice = $product['sku_discount_price'] ?? 0;
+
+                    // Tính toán giá cuối cùng
+                    $product['final_price'] = $originalPrice - $discountPrice;
+                } else {
+                    // Sản phẩm "simple": giá từ bảng products
+                    $originalPrice = $product['price'] ?? 0;
+                    $discountPrice = $product['discount_price'] ?? 0;
+
+                    // Tính toán giá cuối cùng
+                    $product['final_price'] = $originalPrice - $discountPrice;
+                }
+
+                // Kiểm tra giá cuối cùng không được âm
+                if ($product['final_price'] < 0) {
+                    $product['final_price'] = 0;
+                }
+
+                // Xử lý giá giảm hiển thị
+                $product['final_discount_price'] = $discountPrice > $originalPrice ? 0 : $discountPrice;
+            }
+
+            return $products;
         } catch (\Throwable $th) {
             error_log('Lỗi khi hiển thị sản phẩm nổi bật: ' . $th->getMessage());
             return [];
         }
     }
+
 
     public function getVariantsByProductId($id)
     {

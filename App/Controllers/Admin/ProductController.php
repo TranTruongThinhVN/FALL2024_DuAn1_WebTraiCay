@@ -210,7 +210,7 @@ class ProductController
             }
         }
 
-        header('Location: /admin/products');
+        header('Location: /admin/product');
     }
 
 

@@ -4,7 +4,7 @@ namespace App\Views\Client\Pages\Cart;
 
 use App\Views\BaseView;
 
-class Index extends BaseView
+class index extends BaseView
 {
     public static function render($data = null)
     {
